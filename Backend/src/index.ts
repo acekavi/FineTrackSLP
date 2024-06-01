@@ -1,10 +1,14 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { Sequelize, DataTypes } from 'sequelize';
+import { config } from 'dotenv';
 
-const sequelize = new Sequelize('FineTrackDB_dev', 'root', 'root', {
-    host: 'localhost',
-    dialect: 'postgres'
+// Import the config.json file
+const dbConfig = require('../config/config.json');
+
+const sequelize = new Sequelize(dbConfig.development.database, dbConfig.development.username, dbConfig.development.password, {
+    host: dbConfig.development.host,
+    dialect: dbConfig.development.dialect
 });
 
 const app = express();
