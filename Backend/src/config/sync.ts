@@ -38,6 +38,8 @@ sequelize.sync({ force: false })
 	})
 	.catch((err) => {
 		console.error('Error creating database tables:', err);
-	});
+	}).finally(() => {
+		sequelize.close();
+	})
 
 export { sequelize, Officer, Station, FineRecord, Citizen, Evidence, Feedback, IfDriver, Offence, OffenceRecord };
