@@ -1,0 +1,52 @@
+import { Model, DataTypes, Sequelize } from 'sequelize';
+
+interface OffenceAttributes {
+  offence_ID: number;
+  offence_description: string;
+  score: number;
+  enable_stat: boolean;
+  fee: number;
+}
+
+class Offence extends Model<OffenceAttributes> implements OffenceAttributes {
+  public offence_ID!: number;
+  public offence_description!: string;
+  public score!: number;
+  public enable_stat!: boolean;
+  public fee!: number;
+
+  static associate(models: any) {
+    // define association here
+  }
+}
+
+export default (sequelize: Sequelize) => {
+  Offence.init({
+    offence_ID: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+    },
+    offence_description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    score: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+    },
+    enable_stat: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    fee: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+    },
+  }, {
+    sequelize,
+    modelName: 'Offence',
+  });
+
+  return Offence;
+};

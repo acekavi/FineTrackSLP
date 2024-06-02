@@ -19,5 +19,9 @@
         "database": "FineTrackDB_prod",
         "host": "127.0.0.1",
         "dialect": "postgres"
+    },
+    "jwt": {
+        "secret": "samplesecretkey",
+        "expiresIn": "1d"
     }
 }
