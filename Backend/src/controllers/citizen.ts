@@ -23,18 +23,11 @@ export const create_user = async (req: Request, res: Response) => {
         res.status(201).json({
             message: 'Citizen created successfully',
         });
-    } catch (error) {
-        if (error instanceof Error) {
-            res.status(500).json({
-                message: 'Failed to create citizen',
-                error: error.message,
-            });
-        } else {
-            res.status(500).json({
-                message: 'Failed to create citizen',
-                error: String(error),
-            });
-        }
+    } catch (error: any) {
+        console.log(error.name);
+        res.status(500).json({
+            message: 'Failed to create user',
+        });
     }
 };
 
@@ -65,16 +58,9 @@ export const signin_user = async (req: Request, res: Response) => {
             token,
         });
     } catch (error) {
-        if (error instanceof Error) {
-            res.status(500).json({
-                message: 'Signin failed',
-                error: error.message,
-            });
-        } else {
-            res.status(500).json({
-                message: 'Signin failed',
-                error: String(error),
-            });
-        }
+        console.log(error);
+        res.status(500).json({
+            message: 'Failed to log in citizen',
+        });
     }
 };

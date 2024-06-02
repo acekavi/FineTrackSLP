@@ -24,17 +24,10 @@ export const create_user = async (req: Request, res: Response) => {
             message: 'Station created successfully',
         });
     } catch (error) {
-        if (error instanceof Error) {
-            res.status(500).json({
-                message: 'Failed to create station',
-                error: error.message,
-            });
-        } else {
-            res.status(500).json({
-                message: 'Failed to create station',
-                error: String(error),
-            });
-        }
+        console.log(error);
+        res.status(500).json({
+            message: 'Failed to create station',
+        });
     }
 };
 
@@ -65,16 +58,9 @@ export const signin_user = async (req: Request, res: Response) => {
             token,
         });
     } catch (error) {
-        if (error instanceof Error) {
-            res.status(500).json({
-                message: 'Signin failed',
-                error: error.message,
-            });
-        } else {
-            res.status(500).json({
-                message: 'Signin failed',
-                error: String(error),
-            });
-        }
+        console.log(error);
+        res.status(500).json({
+            message: 'Failed to log in station',
+        });
     }
 };

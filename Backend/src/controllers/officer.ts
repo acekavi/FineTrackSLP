@@ -16,25 +16,18 @@ export const create_user = async (req: Request, res: Response) => {
         const newOfficer = await Officer.create({
             officer_ID,
             username,
-            password: hashedPassword,
             station_ID,
+            password: hashedPassword,
         });
 
         res.status(201).json({
             message: 'Officer created successfully',
         });
-    } catch (error) {
-        if (error instanceof Error) {
-            res.status(500).json({
-                message: 'Failed to create officer',
-                error: error.message,
-            });
-        } else {
-            res.status(500).json({
-                message: 'Failed to create officer',
-                error: String(error),
-            });
-        }
+    } catch (error: any) {
+        console.log(error.name);
+        res.status(500).json({
+            message: 'Failed to create officer',
+        });
     }
 };
 
@@ -65,16 +58,9 @@ export const signin_user = async (req: Request, res: Response) => {
             token,
         });
     } catch (error) {
-        if (error instanceof Error) {
-            res.status(500).json({
-                message: 'Signin failed',
-                error: error.message,
-            });
-        } else {
-            res.status(500).json({
-                message: 'Signin failed',
-                error: String(error),
-            });
-        }
+        console.log(error);
+        res.status(500).json({
+            message: 'Failed to log in officer',
+        });
     }
 };
