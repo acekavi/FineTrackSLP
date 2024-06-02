@@ -10,13 +10,14 @@ const secretKey = process.env.JWT_SECRET || 'samplesecretkey';
 
 export const create_user = async (req: Request, res: Response) => {
     try {
-        const { station_ID, username, password } = req.body;
+        const { station_ID, username, password, location } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newStation = await Station.create({
             station_ID,
             username,
             password: hashedPassword,
+            location,
         });
 
         res.status(201).json({

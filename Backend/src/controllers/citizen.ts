@@ -13,7 +13,7 @@ export const create_user = async (req: Request, res: Response) => {
         const { NIC, username, password, mobile } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newCitizen = await Citizen.create({
+        await Citizen.create({
             NIC,
             username,
             password: hashedPassword,

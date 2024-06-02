@@ -3,15 +3,15 @@ import { Model, DataTypes, Sequelize } from 'sequelize';
 interface StationAttributes {
   station_ID: string;
   username: string;
-  station_name: string;
-  station_location: string;
+  password: string;
+  location: string;
 }
 
 class Station extends Model<StationAttributes> implements StationAttributes {
   public station_ID!: string;
   public username!: string;
-  public station_name!: string;
-  public station_location!: string;
+  public password!: string;
+  public location!: string;
 
   static associate(models: any) {
     Station.hasMany(models.Officer, {
@@ -33,11 +33,11 @@ export default (sequelize: Sequelize) => {
       unique: true,
       allowNull: false,
     },
-    station_name: {
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    station_location: {
+    location: {
       type: DataTypes.STRING,
       allowNull: false,
     },

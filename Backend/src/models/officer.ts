@@ -4,22 +4,14 @@ interface OfficerAttributes {
   officer_ID: number;
   username: string;
   station_ID: string;
-  officer_name: string;
-  officer_email: string;
-  officer_contact: string;
-  officer_password: string;
-  officer_user_type: string;
+  password: string;
 }
 
 class Officer extends Model<OfficerAttributes> implements OfficerAttributes {
   public officer_ID!: number;
   public username!: string;
   public station_ID!: string;
-  public officer_name!: string;
-  public officer_email!: string;
-  public officer_contact!: string;
-  public officer_password!: string;
-  public officer_user_type!: string;
+  public password!: string;
 
   static associate(models: any) {
     Officer.belongsTo(models.Station, {
@@ -56,23 +48,7 @@ export default (sequelize: Sequelize) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    officer_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    officer_email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    officer_contact: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    officer_password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    officer_user_type: {
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
