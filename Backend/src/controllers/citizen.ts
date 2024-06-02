@@ -1,36 +1,37 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import StationModel from '../models/station';
+import CitizenModel from '../models/citizen';
 import sequelize from '../config/sequelize';
 
-const Station = StationModel(sequelize);
+const Citizen = CitizenModel(sequelize);
 
 const secretKey = process.env.JWT_SECRET || 'samplesecretkey';
 
 export const create_user = async (req: Request, res: Response) => {
     try {
-        const { station_ID, username, password } = req.body;
+        const { NIC, username, password, mobile } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newStation = await Station.create({
-            station_ID,
+        const newCitizen = await Citizen.create({
+            NIC,
             username,
             password: hashedPassword,
+            mobile,
         });
 
         res.status(201).json({
-            message: 'Station created successfully',
+            message: 'Citizen created successfully',
         });
     } catch (error) {
         if (error instanceof Error) {
             res.status(500).json({
-                message: 'Failed to create station',
+                message: 'Failed to create citizen',
                 error: error.message,
             });
         } else {
             res.status(500).json({
-                message: 'Failed to create station',
+                message: 'Failed to create citizen',
                 error: String(error),
             });
         }
@@ -41,15 +42,15 @@ export const signin_user = async (req: Request, res: Response) => {
     try {
         const { username, password } = req.body;
 
-        const station = await Station.findOne({ where: { username } });
+        const citizen = await Citizen.findOne({ where: { username } });
 
-        if (!station) {
+        if (!citizen) {
             return res.status(404).json({
-                message: 'Station not found',
+                message: 'Citizen not found',
             });
         }
 
-        const isPasswordValid = await bcrypt.compare(password, station.password);
+        const isPasswordValid = await bcrypt.compare(password, citizen.password);
 
         if (!isPasswordValid) {
             return res.status(401).json({
@@ -57,7 +58,7 @@ export const signin_user = async (req: Request, res: Response) => {
             });
         }
 
-        const token = jwt.sign({ username: station.username }, secretKey, { expiresIn: '8h' });
+        const token = jwt.sign({ username: citizen.username }, secretKey, { expiresIn: '8h' });
 
         res.status(200).json({
             message: 'Signin successful',

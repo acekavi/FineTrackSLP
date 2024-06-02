@@ -23,12 +23,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // User Controller Routes
 import stationRoutes from './routes/station';
+import citizenRoutes from './routes/citizen';
 
 app.get("/api/v1", (req: Request, res: Response) => {
   res.status(200).json({ message: "Hello, World!" });
 });
 
 app.use('/api/v1/station', stationRoutes);
+app.use('/api/v1/citizen', citizenRoutes);
 
 // Error Handling Middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

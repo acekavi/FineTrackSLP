@@ -2,11 +2,13 @@ import { Model, DataTypes, Sequelize } from 'sequelize';
 
 interface StationAttributes {
   station_ID: string;
+  username: string;
   password: string;
 }
 
 class Station extends Model<StationAttributes> implements StationAttributes {
   public station_ID!: string;
+  public username!: string;
   public password!: string;
 
   static associate(models: any) {
@@ -20,6 +22,10 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true,
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     password: {
       type: DataTypes.STRING,
