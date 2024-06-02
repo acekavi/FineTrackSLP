@@ -1,4 +1,5 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
+import Officer from './officer';
 
 interface StationAttributes {
   station_ID: string;
@@ -12,7 +13,10 @@ class Station extends Model<StationAttributes> implements StationAttributes {
   public password!: string;
 
   static associate(models: any) {
-    // define association here
+    Station.hasMany(models.Officer, {
+      foreignKey: 'station_ID',
+      as: 'officers',
+    });
   }
 }
 

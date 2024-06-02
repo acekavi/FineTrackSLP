@@ -1,4 +1,6 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
+import Station from './station';
+import FineRecord from './finerecord';
 
 interface OfficerAttributes {
   officer_ID: number;
@@ -17,6 +19,11 @@ class Officer extends Model<OfficerAttributes> implements OfficerAttributes {
     Officer.hasMany(models.FineRecord, {
       foreignKey: 'officer_ID',
       as: 'fineRecords',
+    });
+
+    Officer.belongsTo(models.Station, {
+      foreignKey: 'station_ID',
+      as: 'station',
     });
   }
 }
@@ -39,6 +46,10 @@ export default (sequelize: Sequelize) => {
     station_ID: {
       type: DataTypes.STRING,
       allowNull: false,
+      references: {
+        model: 'Stations', // Ensure this is the correct table name
+        key: 'station_ID',
+      },
     },
   }, {
     sequelize,
