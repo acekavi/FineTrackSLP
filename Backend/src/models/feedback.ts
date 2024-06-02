@@ -1,22 +1,25 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
 interface FeedbackAttributes {
-  ID: string;
+  NIC: string;
   feedback: string;
 }
 
 class Feedback extends Model<FeedbackAttributes> implements FeedbackAttributes {
-  public ID!: string;
+  public NIC!: string;
   public feedback!: string;
 
   static associate(models: any) {
-    // define association here
+    Feedback.belongsTo(models.Citizen, {
+      foreignKey: 'NIC',
+      as: 'citizen',
+    });
   }
 }
 
 export default (sequelize: Sequelize) => {
   Feedback.init({
-    ID: {
+    NIC: {
       type: DataTypes.STRING,
       allowNull: false,
     },

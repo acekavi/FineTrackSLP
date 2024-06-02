@@ -10,7 +10,10 @@ class IfDriver extends Model<IfDriverAttributes> implements IfDriverAttributes {
   public vehicle!: string;
 
   static associate(models: any) {
-    // define association here
+    IfDriver.belongsTo(models.FineRecord, {
+      foreignKey: 'fine_ID',
+      as: 'fineRecord',
+    });
   }
 }
 
@@ -28,6 +31,7 @@ export default (sequelize: Sequelize) => {
   }, {
     sequelize,
     modelName: 'IfDriver',
+    timestamps: true,
   });
 
   return IfDriver;

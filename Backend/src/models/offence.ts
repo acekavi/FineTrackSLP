@@ -16,7 +16,10 @@ class Offence extends Model<OffenceAttributes> implements OffenceAttributes {
   public fee!: number;
 
   static associate(models: any) {
-    // define association here
+    Offence.hasMany(models.OffenceRecord, {
+      foreignKey: 'offence_ID',
+      as: 'offenceRecords',
+    });
   }
 }
 
@@ -46,6 +49,7 @@ export default (sequelize: Sequelize) => {
   }, {
     sequelize,
     modelName: 'Offence',
+    timestamps: true,
   });
 
   return Offence;

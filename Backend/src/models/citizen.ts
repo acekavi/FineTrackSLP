@@ -20,8 +20,12 @@ export class Citizen extends Model<CitizenAttributes> implements CitizenAttribut
 
   static associate(models: any) {
     Citizen.hasMany(models.FineRecord, {
-      foreignKey: 'citizen_NIC',
+      foreignKey: 'NIC',
       as: 'fineRecords',
+    });
+    Citizen.hasMany(models.Feedback, {
+      foreignKey: 'NIC',
+      as: 'feedbacks',
     });
   }
 }
@@ -39,6 +43,7 @@ export default (sequelize: Sequelize) => {
     },
     username: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
     },
     password: {

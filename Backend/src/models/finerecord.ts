@@ -1,10 +1,8 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
-import Citizen from './citizen';
-import Officer from './officer';
 
 interface FineRecordAttributes {
   fine_ID: number;
-  citizen_NIC: string;
+  NIC: string;
   total_fine: number;
   total_score: number;
   fine_date: Date;
@@ -19,7 +17,7 @@ interface FineRecordAttributes {
 
 class FineRecord extends Model<FineRecordAttributes> implements FineRecordAttributes {
   public fine_ID!: number;
-  public citizen_NIC!: string;
+  public NIC!: string;
   public total_fine!: number;
   public total_score!: number;
   public fine_date!: Date;
@@ -31,15 +29,26 @@ class FineRecord extends Model<FineRecordAttributes> implements FineRecordAttrib
   public is_payed!: boolean | null;
   public pay_reference_id!: string | null;
 
-  public static associate(models: any) {
+  static associate(models: any) {
     FineRecord.belongsTo(models.Citizen, {
-      foreignKey: 'citizen_NIC',
+      foreignKey: 'NIC',
       as: 'citizen',
     });
-
     FineRecord.belongsTo(models.Officer, {
       foreignKey: 'officer_ID',
       as: 'officer',
+    });
+    FineRecord.hasMany(models.Evidence, {
+      foreignKey: 'fine_ID',
+      as: 'evidences',
+    });
+    FineRecord.hasMany(models.IfDriver, {
+      foreignKey: 'fine_ID',
+      as: 'ifDrivers',
+    });
+    FineRecord.hasMany(models.OffenceRecord, {
+      foreignKey: 'fine_ID',
+      as: 'offenceRecords',
     });
   }
 }
@@ -50,12 +59,13 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
+      autoIncrement: true,
     },
-    citizen_NIC: {
+    NIC: {
       type: DataTypes.STRING,
       allowNull: false,
       references: {
-        model: 'Citizens', // Make sure the table name is correct
+        model: 'Citizens',
         key: 'NIC',
       },
     },
@@ -91,7 +101,7 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Officers', // Make sure the table name is correct
+        model: 'Officers',
         key: 'officer_ID',
       },
     },
@@ -106,6 +116,7 @@ export default (sequelize: Sequelize) => {
   }, {
     sequelize,
     modelName: 'FineRecord',
+    timestamps: true,
   });
 
   return FineRecord;
