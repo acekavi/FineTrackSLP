@@ -1,8 +1,10 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
+import Citizen from './citizen';
+import Officer from './officer';
 
 interface FineRecordAttributes {
   fine_ID: number;
-  ID: string;
+  citizen_NIC: string;
   total_fine: number;
   total_score: number;
   fine_date: Date;
@@ -17,7 +19,7 @@ interface FineRecordAttributes {
 
 class FineRecord extends Model<FineRecordAttributes> implements FineRecordAttributes {
   public fine_ID!: number;
-  public ID!: string;
+  public citizen_NIC!: string;
   public total_fine!: number;
   public total_score!: number;
   public fine_date!: Date;
@@ -29,8 +31,16 @@ class FineRecord extends Model<FineRecordAttributes> implements FineRecordAttrib
   public is_payed!: boolean | null;
   public pay_reference_id!: string | null;
 
-  static associate(models: any) {
-    // define association here
+  public static associate(models: any) {
+    FineRecord.belongsTo(models.Citizen, {
+      foreignKey: 'citizen_NIC',
+      as: 'citizen',
+    });
+
+    FineRecord.belongsTo(models.Officer, {
+      foreignKey: 'officer_ID',
+      as: 'officer',
+    });
   }
 }
 
@@ -41,9 +51,13 @@ export default (sequelize: Sequelize) => {
       allowNull: false,
       primaryKey: true,
     },
-    ID: {
+    citizen_NIC: {
       type: DataTypes.STRING,
       allowNull: false,
+      references: {
+        model: 'Citizens', // Make sure the table name is correct
+        key: 'NIC',
+      },
     },
     total_fine: {
       type: DataTypes.DECIMAL,
@@ -76,6 +90,10 @@ export default (sequelize: Sequelize) => {
     officer_ID: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'Officers', // Make sure the table name is correct
+        key: 'officer_ID',
+      },
     },
     is_payed: {
       type: DataTypes.BOOLEAN,

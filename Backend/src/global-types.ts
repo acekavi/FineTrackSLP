@@ -10,3 +10,12 @@ export interface DecodedToken extends JwtPayload {
 export interface RequestWithUser extends Request {
     user?: DecodedToken;
 }
+
+export class CustomError extends Error {
+    status: number;
+
+    constructor(message: string, status: number) {
+        super(message);
+        this.status = status;
+    }
+}

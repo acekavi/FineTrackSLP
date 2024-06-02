@@ -1,7 +1,7 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
 interface CitizenAttributes {
-  ID: string;
+  NIC: string;
   mobile: number;
   username: string;
   password: string;
@@ -9,7 +9,7 @@ interface CitizenAttributes {
 }
 
 export class Citizen extends Model<CitizenAttributes> implements CitizenAttributes {
-  public ID!: string;
+  public NIC!: string;
   public mobile!: number;
   public username!: string;
   public password!: string;
@@ -19,13 +19,16 @@ export class Citizen extends Model<CitizenAttributes> implements CitizenAttribut
   public readonly updatedAt!: Date;
 
   static associate(models: any) {
-    // define association here
+    Citizen.hasMany(models.FineRecord, {
+      foreignKey: 'citizen_NIC',
+      as: 'fineRecords',
+    });
   }
 }
 
 export default (sequelize: Sequelize) => {
   Citizen.init({
-    ID: {
+    NIC: {
       type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true,

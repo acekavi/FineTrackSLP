@@ -1,11 +1,16 @@
 import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 
 dotenv.config({ path: './config/.env' });
 
-const sequelize = new Sequelize(process.env.POSTGRES_URI!, {
-    dialect: 'postgres',
-    logging: false,
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
+
+dotenv.config({ path: './config/.env' });
+
+const sequelize = new Sequelize(config.database, config.username, config.password, {
+    dialect: config.dialect,
+    host: config.host
 });
 
 export default sequelize;

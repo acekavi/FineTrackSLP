@@ -1,19 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
 import sequelize from './config/sequelize';
-import db from './models/index';
-
-dotenv.config({ path: './config/.env' });
-
-class CustomError extends Error {
-  status: number;
-
-  constructor(message: string, status: number) {
-    super(message);
-    this.status = status;
-  }
-}
 
 const app = express();
 
@@ -35,16 +22,21 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 // User Controller Routes
-import userRoutes from './routes/user';
-app.use('/api/users/', userRoutes);
+import stationRoutes from './routes/station';
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  const error = new CustomError('Not found', 404);
-  next(error);
+app.get("/api/v1", (req: Request, res: Response) => {
+  res.status(200).json({ message: "Hello, World!" });
 });
 
-app.use((error: CustomError, req: Request, res: Response) => {
-  res.status(error.status || 500).json({ error: { message: error.message } });
+app.use('/api/v1/station', stationRoutes);
+
+// Error Handling Middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.stack);
+  res.status(500).json({
+    message: 'An unexpected error occurred',
+    error: err.message,
+  });
 });
 
 export default app;

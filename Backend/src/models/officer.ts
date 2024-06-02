@@ -14,7 +14,10 @@ class Officer extends Model<OfficerAttributes> implements OfficerAttributes {
   public station_ID!: string;
 
   static associate(models: any) {
-    // define association here
+    Officer.hasMany(models.FineRecord, {
+      foreignKey: 'officer_ID',
+      as: 'fineRecords',
+    });
   }
 }
 
