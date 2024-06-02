@@ -1,4 +1,5 @@
 @import "./variables";
+@import "./mixins";
 @import "./fonts";
 
 /* Reset default margin and padding */
@@ -55,7 +56,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #304675;
+  background-color: $primary-color;
   /* Set the color of the thumb (the draggable part) */
   border-radius: 6px;
   /* Set the border radius of the thumb */
@@ -73,11 +74,11 @@ body {
 }
 
 *::-ms-scrollbar-thumb {
-  background-color: #304675;
+  background-color: $primary-color;
   border-radius: 6px;
 }
 
 *::-ms-scrollbar-track {
-  background-color: #304675;
+  background-color: $primary-color;
   border-radius: 6px;
 }
