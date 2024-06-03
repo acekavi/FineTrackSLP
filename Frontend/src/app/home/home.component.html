@@ -1,61 +1,51 @@
-<!-- app.component.html -->
-<div class="relative w-full h-screen bg-gray-100">
+<div class="relative min-h-screen w-full">
   <div
-    class="absolute w-full h-full bg-cover"
-    style="background-image: url('assets/images/New Project.png')"
+    class="background-image"
+    style="background-image: url(assets/images/homebg.png)"
   ></div>
 
-  <div
-    class="absolute top-0 left-0 w-86 h-62 bg-no-repeat"
-    style="background-image: url('assets/images/police_logo.png')"
-  ></div>
+  <div class="container mx-auto text-white">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:py-56 lg:ps-40">
+      <div class="flex flex-col w-full lg:w-3/4 text-center lg:text-left">
+        <h1 class="text-4xl md:text-6xl lg:text-8xl font-bold mt-20 md:mt-0">
+          FineTrackSLP
+        </h1>
+        <p
+          class="text-md md:text-lg lg:text-xl font-light mt-4 md:mt-6 lg:mt-8"
+        >
+          For People, By People: A Better Policing Experience
+        </p>
 
-  <div
-    class="absolute top-64 left-1/2 transform -translate-x-1/2 text-center text-white"
-  >
-    <div class="text-7xl font-bold leading-none">FineTrackSLP</div>
-    <div class="text-2xl mt-4">
-      For People, By People: A Better Policing Experience
+        <p class="text-sm md:text-base lg:text-lg lg:mt-16 mt-4 md:mt-6">
+          Breaking free from the shackles of tradition, Sri Lanka Police boldly
+          steps into the future with a groundbreaking digital platform. This
+          dynamic system shatters the confines of outdated procedures, ushering
+          in an era of unprecedented efficiency and responsiveness.
+        </p>
+
+        <div class="lg:mt-14 mt-6 md:mt-8">
+          <button
+            mat-flat-button
+            color="accent"
+            extended
+            matTooltip="Login"
+            aria-label="Login Button"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            <mat-icon>login</mat-icon>
+            Login
+          </button>
+        </div>
+        <div class="lg:mt-4 mt-6 md:mt-8">
+          <a
+            matTooltip="Register"
+            aria-label="Register Button"
+            class="underline hover:text-blue-500 cursor-pointer"
+          >
+            Register from here!
+          </a>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div
-    class="absolute top-1/2 left-48 transform -translate-y-1/2 text-left text-white text-xl font-light w-5/12 leading-snug"
-  >
-    Breaking free from the shackles of tradition, Sri Lanka Police boldly steps
-    into the future with a groundbreaking digital platform. This dynamic system
-    shatters the confines of outdated procedures, ushering in an era of
-    unprecedented efficiency and responsiveness.
-  </div>
-
-  <div class="absolute left-48 bottom-40">
-    <div class="text-white text-lg underline cursor-pointer">
-      Register from here.....!
-    </div>
-  </div>
-
-  <div class="absolute left-48 bottom-56">
-    <button
-      class="w-56 h-20 bg-blue-900 text-white text-2xl rounded-full flex items-center justify-center"
-    >
-      Log In
-    </button>
-  </div>
-
-  <div
-    class="absolute left-96 bottom-52 w-12 h-12 bg-no-repeat"
-    style="background-image: url('assets/images/enter.png')"
-  ></div>
-
-  <div class="absolute right-10 bottom-16 flex items-center">
-    <button
-      class="w-36 h-12 bg-white text-blue-900 text-sm font-bold rounded-full flex items-center justify-center"
-    >
-      Feedback
-    </button>
-    <div
-      class="w-9 h-9 bg-no-repeat ml-3"
-      style="background-image: url('assets/images/feedback.png')"
-    ></div>
   </div>
 </div>

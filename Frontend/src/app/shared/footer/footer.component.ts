@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { IconsModule } from 'src/app/modules/material-ui/icons.module';
-import { MatUiModule } from 'src/app/modules/material-ui/matui.module';
+import { IconsModule } from 'src/app/modules/icons.module';
+import { MatUiModule } from 'src/app/modules/matui.module';
 
 @Component({
   selector: 'app-footer',
