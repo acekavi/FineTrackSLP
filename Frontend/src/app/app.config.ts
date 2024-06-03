@@ -3,12 +3,16 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { RequestHeadersInterceptor } from './interceptors/request-headers.interceptor';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { requestHeadersInterceptor } from './interceptors/request-headers.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideRouter(routes),
+    provideHttpClient(withInterceptors([
+      requestHeadersInterceptor,
+    ])),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes), provideAnimationsAsync(),
-    { provide: HTTP_INTERCEPTORS, useClass: RequestHeadersInterceptor, multi: true }]
+    provideAnimationsAsync(),
+  ],
 };

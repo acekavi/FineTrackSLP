@@ -1,30 +1,19 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor
-} from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
+import { HttpInterceptorFn } from '@angular/common/http';
+import { UtilityService } from '../services/utility.service';
+import { inject } from '@angular/core';
 
-@Injectable()
-export class RequestHeadersInterceptor implements HttpInterceptor {
-  constructor(private cookieService: CookieService) { }
+export const requestHeadersInterceptor: HttpInterceptorFn = (req, next
+) => {
+  // Get the auth token from the service.
+  const authToken = inject(UtilityService).getAuthorizationToken();
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const authToken = this.cookieService.get('userToken');
-    const apiKey = "sampleapikey";
-    console.log("User Token: " + authToken);
-    if (authToken) {
-      request = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${authToken}`,
-          'X-Api-Key': apiKey,
-        }
-      });
+  // Clone the request and add the authorization header
+  const authReq = req.clone({
+    setHeaders: {
+      Authorization: `Bearer ${authToken}`
     }
+  });
 
-    return next.handle(request);
-  }
-}
+  // Pass the cloned request with the updated header to the next handler
+  return next(authReq);
+};

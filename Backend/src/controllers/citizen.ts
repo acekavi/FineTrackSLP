@@ -3,10 +3,9 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import CitizenModel from '../models/citizen';
 import sequelize from '../config/sequelize';
+import { RequestWithUser } from '../global-types';
 
 const Citizen = CitizenModel(sequelize);
-
-const secretKey = process.env.JWT_SECRET || 'samplesecretkey';
 
 export const create_user = async (req: Request, res: Response) => {
     try {
@@ -51,7 +50,7 @@ export const signin_user = async (req: Request, res: Response) => {
             });
         }
 
-        const token = jwt.sign({ username: citizen.username, role: "citizen" }, secretKey, { expiresIn: '8h' });
+        const token = jwt.sign({ username: citizen.username, role: "citizen" }, "finetrack2024", { expiresIn: '8h' });
 
         res.status(200).json({
             message: 'Signin successful',
@@ -61,6 +60,36 @@ export const signin_user = async (req: Request, res: Response) => {
         console.log(error);
         res.status(500).json({
             message: 'Failed to log in citizen',
+        });
+    }
+};
+
+export const get_user = async (req: RequestWithUser, res: Response) => {
+    try {
+        const decodedToken = req.user;
+        if (!decodedToken) {
+            return res.status(401).json({
+                message: 'Unauthorized access',
+            });
+        }
+
+        const citizen = await Citizen.findOne({ where: { username: decodedToken.username } });
+
+        if (!citizen) {
+            return res.status(404).json({
+                message: 'Citizen not found',
+            });
+        }
+
+        res.status(200).json({
+            NIC: citizen.NIC,
+            username: citizen.username,
+            mobile: citizen.mobile,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Failed to get citizen',
         });
     }
 };

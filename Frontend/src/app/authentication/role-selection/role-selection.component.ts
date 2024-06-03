@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { IconsModule } from 'src/app/modules/icons.module';
 import { MatUiModule } from 'src/app/modules/matui.module';
+import { CitizenService } from 'src/app/services/citizen.service';
 import { PopupLoginComponent } from 'src/app/shared/popup-login/popup-login.component';
 
 @Component({
@@ -10,13 +11,13 @@ import { PopupLoginComponent } from 'src/app/shared/popup-login/popup-login.comp
   standalone: true,
   imports: [
     MatUiModule,
-    IconsModule
+    IconsModule,
   ],
   templateUrl: './role-selection.component.html',
   styleUrl: './role-selection.component.scss'
 })
 export class RoleSelectionComponent {
-  constructor(public dialog: MatDialog, private router: Router) { }
+  constructor(public dialog: MatDialog, private router: Router, private citizenService: CitizenService) { }
 
   openLoginDialog(loginRole: string): void {
     const dialogRef = this.dialog.open(PopupLoginComponent, {
@@ -39,4 +40,11 @@ export class RoleSelectionComponent {
     this.router.navigate(['/']);
   }
 
+  fetchUserDetails(): void {
+    this.citizenService.getUserDetails().subscribe(
+      (response) => {
+        console.log(response);
+      }
+    );
+  }
 }

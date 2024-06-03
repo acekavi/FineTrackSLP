@@ -1,8 +1,9 @@
 import { JwtPayload } from "jsonwebtoken";
+import { Request } from 'express';
 
 export interface DecodedToken extends JwtPayload {
-    email: string;
-    userId: string;
+    username: string;
+    role: string;
     iat: number;
     exp: number;
 }
