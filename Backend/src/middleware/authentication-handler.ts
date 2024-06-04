@@ -1,12 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-
-// Assuming the secretKey is defined in your environment variables correctly
-const secretKey: string = process.env.JWT_SECRET || '';
+import jwt from 'jsonwebtoken';
+import { DecodedToken } from '../global-types';
 
 // Extend the Express Request type to include the user property
 interface RequestWithUser extends Request {
-    user?: string | JwtPayload;
+    user?: string | DecodedToken;
 }
 
 function checkBearerToken(
@@ -14,18 +12,14 @@ function checkBearerToken(
     res: Response,
     next: NextFunction
 ): Response | void {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({
-            message: 'Unauthorized - Missing bearer token',
-            auth: false,
-        });
+    const authHeader = req.header('Authorization');
+    if (!authHeader) {
+        return res.status(401).json({ message: 'Unauthorized - Missing bearer authHeader' });
     }
 
-    const token = authHeader.split(' ')[1];
+    const tokenValue = authHeader.split(' ')[1];
 
-    jwt.verify(token, secretKey, (err, decoded) => {
+    jwt.verify(tokenValue, "finetrack2024", (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: 'Unauthorized - Invalid token',
@@ -33,7 +27,7 @@ function checkBearerToken(
             });
         }
 
-        req.user = decoded;
+        req.user = decoded as DecodedToken;
         next();
     });
 }

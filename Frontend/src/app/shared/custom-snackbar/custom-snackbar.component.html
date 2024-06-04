@@ -1,0 +1,13 @@
+<div class="flex flex-row justify-between align-middle">
+  <p [class]="data.panelClass" class="my-auto font-medium">
+    {{ data.message }}
+  </p>
+  <button mat-icon-button (click)="dismiss()" color="white">
+    <mat-icon
+      aria-hidden="false"
+      aria-label="Close snackbar"
+      fontIcon="close"
+      color="warn"
+    ></mat-icon>
+  </button>
+</div>

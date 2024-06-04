@@ -10,7 +10,9 @@ import {
     bootstrapLinkedin,
     bootstrapTwitterX,
     bootstrapChatRightQuote,
-    bootstrapPhone
+    bootstrapPhone,
+    bootstrapPersonCircle,
+    bootstrapBoxArrowInRight,
 } from '@ng-icons/bootstrap-icons';
 
 @NgModule({
@@ -25,7 +27,9 @@ import {
             bootstrapYoutube,
             bootstrapLinkedin,
             bootstrapChatRightQuote,
-            bootstrapPhone
+            bootstrapPhone,
+            bootstrapPersonCircle,
+            bootstrapBoxArrowInRight,
         }),
     ],
     providers: [

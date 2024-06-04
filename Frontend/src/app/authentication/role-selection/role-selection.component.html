@@ -1,0 +1,61 @@
+<div class="relative min-h-screen w-full">
+  <div
+    class="background-image"
+    style="background-image: url(assets/images/loginbg.png)"
+  ></div>
+
+  <div class="container mx-auto my-auto">
+    <div class="flex flex-row pt-16 ps-8">
+      <button mat-button (click)="onBackClick()">
+        <mat-icon matIconPrefix class="text-white font-bold"
+          >arrow_back</mat-icon
+        >
+        <span class="text-white font-bold">Back</span>
+      </button>
+    </div>
+    <div class="flex flex-col justify-center align-middle">
+      <div class="flex flex-row justify-center align-middle">
+        <img
+          src="assets/images/PoliceOutlineLogo.png"
+          alt="logo"
+          class="w-72 h-48"
+        />
+      </div>
+      <div class="flex flex-row justify-center align-middle">
+        <h1 class="text-white font-bold text-3xl">FineTrackSLP</h1>
+      </div>
+      <div class="flex flex-row justify-center align-middle">
+        <p class="text-white font-bold text-lg">
+          Please select the role you want to login with
+        </p>
+      </div>
+      <div
+        class="flex flex-col lg:flex-row w-full px-32 lg:px-0 justify-center align-middle gap-4 mt-16"
+      >
+        <button
+          mat-raised-button
+          class="roleButton"
+          (click)="openLoginDialog('Station')"
+        >
+          <span class="text-lg font-semibold">Station</span>
+        </button>
+
+        <button
+          mat-raised-button
+          class="roleButton"
+          (click)="openLoginDialog('Officer')"
+        >
+          <span class="text-lg font-semibold">Officer</span>
+        </button>
+
+        <button
+          mat-raised-button
+          class="roleButton"
+          (click)="openLoginDialog('Citizen')"
+        >
+          <span class="text-lg font-semibold">Citizen</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

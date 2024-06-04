@@ -51,11 +51,17 @@ export const signin_user = async (req: Request, res: Response) => {
             });
         }
 
-        const token = jwt.sign({ username: station.username }, secretKey, { expiresIn: '8h' });
+        const token = jwt.sign({ username: station.username, role: "station" }, secretKey, { expiresIn: '8h' });
 
         res.status(200).json({
             message: 'Signin successful',
             token,
+            user: {
+                username: station.username,
+                role: 'station',
+                station_ID: station.station_ID,
+                location: station.location,
+            },
         });
     } catch (error) {
         console.log(error);
