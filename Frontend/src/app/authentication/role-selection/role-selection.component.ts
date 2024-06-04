@@ -19,32 +19,20 @@ import { PopupLoginComponent } from 'src/app/shared/popup-login/popup-login.comp
 export class RoleSelectionComponent {
   constructor(public dialog: MatDialog, private router: Router, private citizenService: CitizenService) { }
 
-  openLoginDialog(loginRole: string): void {
+  openLoginDialog(loginRole: 'Citizen' | 'Officer' | 'Station'): void {
     const dialogRef = this.dialog.open(PopupLoginComponent, {
-      data: { LoginInformation: loginRole }
+      data: { role: loginRole },
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result === 'sinhala') {
-        console.log('Sinhala selected');
+      if (result === 'cancel') {
+        return;
       }
-      if (result === 'english') {
-        console.log('English selected');
-      }
-      if (result === 'tamil') {
-        console.log('Tamil selected');
-      }
+      console.log(result);
     });
   }
   onBackClick(): void {
     this.router.navigate(['/']);
-  }
-
-  fetchUserDetails(): void {
-    this.citizenService.getUserDetails().subscribe(
-      (response) => {
-        console.log(response);
-      }
-    );
   }
 }

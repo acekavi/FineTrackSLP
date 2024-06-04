@@ -27,6 +27,10 @@ export class UtilityService {
     return this.cookieService.get('userToken');
   }
 
+  public deleteAuthorizationToken(): void {
+    this.cookieService.delete('userToken', '/', '');
+  }
+
   public handleHttpError(error: HttpErrorResponse): void {
     let message = error.error;
     if (error.error instanceof ErrorEvent) {

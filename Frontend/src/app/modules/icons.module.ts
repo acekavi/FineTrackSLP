@@ -12,6 +12,7 @@ import {
     bootstrapChatRightQuote,
     bootstrapPhone,
     bootstrapPersonCircle,
+    bootstrapBoxArrowInRight,
 } from '@ng-icons/bootstrap-icons';
 
 @NgModule({
@@ -28,6 +29,7 @@ import {
             bootstrapChatRightQuote,
             bootstrapPhone,
             bootstrapPersonCircle,
+            bootstrapBoxArrowInRight,
         }),
     ],
     providers: [
