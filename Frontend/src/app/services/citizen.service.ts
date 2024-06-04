@@ -20,37 +20,4 @@ export class CitizenService {
     private cookieService: CookieService
   ) { }
 
-  // Public methods
-  public loginUser(credentials: { username: string; password: string }): Observable<LoginResponse> {
-    const loginUrl = `${this.apiUrl}/citizen/login`;
-    return this.http.post<LoginResponse>(loginUrl, credentials).pipe(
-      tap((response: LoginResponse) => {
-        this.utilityService.displaySnackbar('Login successful', 'success-snack');
-        this.utilityService.setAuthorizationToken(response.token);
-      }),
-      catchError((error: HttpErrorResponse) => {
-        this.utilityService.handleHttpError(error);
-        return throwError(() => error);
-      })
-    );
-  }
-
-  public getUserDetails(): Observable<any> {
-    const userUrl = `${this.apiUrl}/citizen/user`;
-    return this.http.get(userUrl).pipe(
-      tap((response: any) => {
-        this.utilityService.displaySnackbar('User details fetched', 'success-snack');
-      }),
-      catchError((error: HttpErrorResponse) => {
-        this.utilityService.handleHttpError(error);
-        return throwError(() => error);
-      })
-    );
-  }
-
-  public logoutUser(): void {
-    this.cookieService.delete('userToken', '/', '');
-    this.router.navigate(['/login']);
-    this.utilityService.displaySnackbar('Logout successful', 'success-snack');
-  }
 }

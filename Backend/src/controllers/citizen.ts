@@ -56,9 +56,9 @@ export const signin_user = async (req: Request, res: Response) => {
             message: 'Signin successful',
             token,
             user: {
-                NIC: citizen.NIC,
                 username: citizen.username,
                 role: 'citizen',
+                NIC: citizen.NIC,
                 mobile: citizen.mobile,
                 earned_score: citizen.earned_score,
             }

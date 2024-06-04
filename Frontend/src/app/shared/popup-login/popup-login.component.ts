@@ -63,7 +63,6 @@ export class PopupLoginComponent {
 
     this.authService.login(this.data.role, credentials).subscribe({
       error: (error) => {
-        console.error(error);
         this.loginForm.controls['password'].setErrors({ wrongCredentials: true });
         this.loginForm.controls['username'].updateValueAndValidity();
         this.loading = false;

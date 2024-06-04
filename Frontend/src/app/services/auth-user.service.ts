@@ -37,7 +37,7 @@ export class AuthUserService {
         return this.currentUserSubject.value;
     }
 
-    login(userType: 'Citizen' | 'Officer' | 'Station', credentials: { username: string; password: string }): Observable<User> {
+    public login(userType: 'Citizen' | 'Officer' | 'Station', credentials: { username: string; password: string }): Observable<User> {
         const loginUrl = `${this.apiUrl}/${userType.toLowerCase()}/login`;
         return this.http.post<CitizenloginResponse | OfficerloginResponse | StationloginResponse>(loginUrl, credentials).pipe(
             tap(response => {
@@ -49,7 +49,7 @@ export class AuthUserService {
         );
     }
 
-    logout() {
+    public logout() {
         this.utilityService.deleteAuthorizationToken();
         this.router.navigate(['/login']);
         this.utilityService.displaySnackbar('Logout successful', 'success-snack');
