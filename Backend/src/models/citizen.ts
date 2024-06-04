@@ -53,6 +53,7 @@ export default (sequelize: Sequelize) => {
     earned_score: {
       type: DataTypes.DECIMAL,
       allowNull: true,
+      defaultValue: 0,
     },
   }, {
     sequelize,

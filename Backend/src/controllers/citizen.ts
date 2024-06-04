@@ -19,12 +19,16 @@ export const create_user = async (req: Request, res: Response) => {
             mobile,
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             message: 'Citizen created successfully',
         });
     } catch (error: any) {
-        console.log(error.name);
-        res.status(500).json({
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(409).json({
+                message: 'Username already exists',
+            });
+        }
+        return res.status(500).json({
             message: 'Failed to create user',
         });
     }
@@ -52,7 +56,7 @@ export const signin_user = async (req: Request, res: Response) => {
 
         const token = jwt.sign({ username: citizen.username, role: "citizen" }, "finetrack2024", { expiresIn: '8h' });
 
-        res.status(200).json({
+        return res.status(200).json({
             message: 'Signin successful',
             token,
             user: {
@@ -65,7 +69,7 @@ export const signin_user = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Failed to log in citizen',
         });
     }
@@ -88,14 +92,14 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
             });
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             NIC: citizen.NIC,
             username: citizen.username,
             mobile: citizen.mobile,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Failed to get citizen',
         });
     }

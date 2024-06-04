@@ -20,12 +20,12 @@ export const create_user = async (req: Request, res: Response) => {
             password: hashedPassword,
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             message: 'Officer created successfully',
         });
     } catch (error: any) {
         console.log(error.name);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Failed to create officer',
         });
     }
@@ -53,7 +53,7 @@ export const signin_user = async (req: Request, res: Response) => {
 
         const token = jwt.sign({ username: officer.username, role: "officer" }, secretKey, { expiresIn: '8h' });
 
-        res.status(200).json({
+        return res.status(200).json({
             message: 'Signin successful',
             token,
             user: {
@@ -65,7 +65,7 @@ export const signin_user = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Failed to log in officer',
         });
     }

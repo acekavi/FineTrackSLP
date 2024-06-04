@@ -65,4 +65,21 @@ export class AuthUserService {
         this.router.navigate(['/login']);
         this.utilityService.displaySnackbar('Logout successful', 'success-snack');
     }
+
+    public register(credentials: {
+        NIC: string;
+        username: string;
+        password: string;
+        mobile: string;
+    }): Observable<Citizen> {
+        return this.http.post<Citizen>(`${this.apiUrl}/citizen/register`, credentials).pipe(
+            tap(() => {
+                this.utilityService.displaySnackbar('Registration successful', 'success-snack');
+            }),
+            catchError((error: HttpErrorResponse) => {
+                this.utilityService.displaySnackbar(error.error.message, 'error-snack');
+                return throwError(() => error);
+            })
+        );
+    }
 }

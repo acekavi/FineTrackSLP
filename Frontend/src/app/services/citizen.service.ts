@@ -24,6 +24,7 @@ export class CitizenService {
   }
 
   public setUserDetails(citizen: Citizen): void {
+    console.log(citizen);
     this.citizenUserSubject.next(citizen);
   }
 

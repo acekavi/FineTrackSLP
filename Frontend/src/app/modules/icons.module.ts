@@ -13,6 +13,7 @@ import {
     bootstrapPhone,
     bootstrapPersonCircle,
     bootstrapBoxArrowInRight,
+    bootstrapPersonPlus,
 } from '@ng-icons/bootstrap-icons';
 
 @NgModule({
@@ -30,6 +31,7 @@ import {
             bootstrapPhone,
             bootstrapPersonCircle,
             bootstrapBoxArrowInRight,
+            bootstrapPersonPlus,
         }),
     ],
     providers: [

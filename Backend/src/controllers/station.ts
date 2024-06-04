@@ -20,12 +20,12 @@ export const create_user = async (req: Request, res: Response) => {
             location,
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             message: 'Station created successfully',
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Failed to create station',
         });
     }
@@ -53,7 +53,7 @@ export const signin_user = async (req: Request, res: Response) => {
 
         const token = jwt.sign({ username: station.username, role: "station" }, secretKey, { expiresIn: '8h' });
 
-        res.status(200).json({
+        return res.status(200).json({
             message: 'Signin successful',
             token,
             user: {
@@ -65,7 +65,7 @@ export const signin_user = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Failed to log in station',
         });
     }
