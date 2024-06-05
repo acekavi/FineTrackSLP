@@ -23,7 +23,9 @@ export class HomeComponent {
     const dialogRef = this.dialog.open(PopupLanguageSelectionComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      this.router.navigate(['/login']);
+      if (result === 'english') {
+        this.router.navigate(['/login']);
+      }
     });
   }
 
