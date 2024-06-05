@@ -20,7 +20,7 @@ class Feedback extends Model<FeedbackAttributes> implements FeedbackAttributes {
 export default (sequelize: Sequelize) => {
   Feedback.init({
     NIC: {
-      type: DataTypes.STRING,
+      type: DataTypes.CHAR(12),
       allowNull: false,
     },
     feedback: {

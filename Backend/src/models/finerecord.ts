@@ -56,13 +56,15 @@ class FineRecord extends Model<FineRecordAttributes> implements FineRecordAttrib
 export default (sequelize: Sequelize) => {
   FineRecord.init({
     fine_ID: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER({
+        length: 11,
+      }),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
     },
     NIC: {
-      type: DataTypes.STRING,
+      type: DataTypes.CHAR(12),
       allowNull: false,
       references: {
         model: 'Citizens',
@@ -70,11 +72,11 @@ export default (sequelize: Sequelize) => {
       },
     },
     total_fine: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(12, 2),
       allowNull: false,
     },
     total_score: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(4, 2),
       allowNull: false,
     },
     fine_date: {
@@ -90,7 +92,7 @@ export default (sequelize: Sequelize) => {
       allowNull: true,
     },
     location_link: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(512),
       allowNull: false,
     },
     isDriver: {
@@ -98,7 +100,9 @@ export default (sequelize: Sequelize) => {
       allowNull: false,
     },
     officer_ID: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER({
+        length: 11,
+      }),
       allowNull: false,
       references: {
         model: 'Officers',

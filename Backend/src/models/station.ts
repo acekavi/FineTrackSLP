@@ -24,21 +24,21 @@ class Station extends Model<StationAttributes> implements StationAttributes {
 export default (sequelize: Sequelize) => {
   Station.init({
     station_ID: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(8),
       allowNull: false,
       primaryKey: true,
     },
     username: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(15),
       unique: true,
       allowNull: false,
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(60),
       allowNull: false,
     },
     location: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(512),
       allowNull: false,
     },
   }, {

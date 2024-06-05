@@ -3,8 +3,10 @@ import { HomeComponent } from './authentication/home/home.component';
 import { RoleSelectionComponent } from './authentication/role-selection/role-selection.component';
 import { PedestrianTypeComponent } from './violations/pedestrian-type/pedestrian-type.component';
 import { DriverTypeComponent } from './violations/driver-type/driver-type.component';
-import { checkAuth, checkCitizenAuth, checkOfficerAuth, checkStationAuth, checkUnauth } from './services/router-guard.service';
-import { DashboardComponent } from './station/dashboard/dashboard.component';
+import { checkCitizenAuth, checkOfficerAuth, checkStationAuth, checkUnauth } from './services/router-guard.service';
+import { StatationDashboardComponent } from './station/dashboard/dashboard.component';
+import { OfficerDashboardComponent } from './officer/dashboard/dashboard.component';
+
 
 export const routes: Routes = [
     { path: '', canActivate: [checkUnauth], component: HomeComponent },
@@ -24,7 +26,7 @@ export const routes: Routes = [
         path: 'station',
         canActivateChild: [checkStationAuth],
         children: [
-            { path: 'dashboard', component: DashboardComponent },
+            { path: 'dashboard', component: StatationDashboardComponent },
             { path: 'pedestrian', component: PedestrianTypeComponent },
             { path: 'driver', component: DriverTypeComponent },
         ]
@@ -34,7 +36,7 @@ export const routes: Routes = [
         path: 'officer',
         canActivateChild: [checkOfficerAuth],
         children: [
-            { path: 'dashboard', component: DashboardComponent },
+            { path: 'dashboard', component: OfficerDashboardComponent },
             { path: 'pedestrian', component: PedestrianTypeComponent },
             { path: 'driver', component: DriverTypeComponent },
         ]

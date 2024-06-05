@@ -28,18 +28,20 @@ class Officer extends Model<OfficerAttributes> implements OfficerAttributes {
 export default (sequelize: Sequelize) => {
   Officer.init({
     officer_ID: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER({
+        length: 11,
+      }),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
     },
     username: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(15),
       unique: true,
       allowNull: false,
     },
     station_ID: {
-      type: DataTypes.STRING,
+      type: DataTypes.CHAR(8),
       allowNull: false,
       references: {
         model: 'Stations',
@@ -49,7 +51,7 @@ export default (sequelize: Sequelize) => {
       onUpdate: 'CASCADE',
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(60),
       allowNull: false,
     },
   }, {

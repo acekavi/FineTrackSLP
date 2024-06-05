@@ -20,12 +20,14 @@ class IfDriver extends Model<IfDriverAttributes> implements IfDriverAttributes {
 export default (sequelize: Sequelize) => {
   IfDriver.init({
     fine_ID: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER({
+        length: 11,
+      }),
       allowNull: false,
       primaryKey: true,
     },
     vehicle: {
-      type: DataTypes.STRING,
+      type: DataTypes.CHAR(10),
       allowNull: false,
     },
   }, {

@@ -33,25 +33,27 @@ export class Citizen extends Model<CitizenAttributes> implements CitizenAttribut
 export default (sequelize: Sequelize) => {
   Citizen.init({
     NIC: {
-      type: DataTypes.STRING,
+      type: DataTypes.CHAR(12),
       allowNull: false,
       primaryKey: true,
     },
     mobile: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER({
+        length: 10,
+      }),
       allowNull: false,
     },
     username: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(15),
       unique: true,
       allowNull: false,
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(60),
       allowNull: false,
     },
     earned_score: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(4, 2),
       allowNull: true,
       defaultValue: 0,
     },
