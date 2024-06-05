@@ -1,42 +1,67 @@
 <div class="relative min-h-screen w-full">
   <div
     class="background-image"
-    style="background-image: url(assets/images/homebg.png)"
+    style="background-image: url(assets/images/loginbg.png)"
   ></div>
 
-  <div class="header">
-    <button mat-fab extended color="accent" class="transparent-button">
-      <mat-icon>arrow_back</mat-icon>
-      Back
-    </button>
-  </div>
-  <div class="center-div">
-    <div class="container mx-auto text-white text-center">
-      <h3 class="text-2xl md:text-3xl lg:text-4xl font-bold mt-20 md:mt-0">
-        FineTrackSLP
-      </h3>
-      <div class="input-container">
-        <div class="input-cell">
-          <h6>NIC No</h6>
-          <mat-form-field class="example-full-width">
-            <input matInput />
+  <img
+    src="assets/images/nationalemblem.png"
+    alt="National Emblem"
+    class="national-emblem"
+  />
+
+  <div class="container mx-auto my-auto">
+    <div class="flex flex-row pt-16 ps-8">
+      <button mat-button (click)="onBackClick()">
+        <mat-icon matIconPrefix class="text-white font-bold"
+          >arrow_back</mat-icon
+        >
+        <span class="text-white font-bold">Back</span>
+      </button>
+    </div>
+
+    <div class="flex flex-col justify-evenly align-middle gap-24">
+      <div class="flex flex-row justify-start">
+        <div
+          class="p-3 flex flex-row align-middle bg-white rounded-full gap-3 text-blue-600 ms-4 lg:ms-32"
+        >
+          <ng-icon class="text-lg" name="bootstrapPersonCircle"></ng-icon>
+          <div class="text-lg">Officer Name</div>
+        </div>
+      </div>
+
+      <div class="flex flex-row justify-center align-middle">
+        <h1 class="text-white font-bold text-6xl">FineTrackSLP</h1>
+      </div>
+
+      <div class="flex flex-row justify-center align-middle w-full gap-8">
+        <div>
+          <p class="text-lg text-white">Enter NIC Number</p>
+          <mat-form-field class="w-80">
+            <mat-label>NIC Number</mat-label>
+            <input matInput placeholder="123456789v" required="true" />
           </mat-form-field>
         </div>
-        <div class="input-cell">
-          <h6>Passport NO</h6>
-          <mat-form-field class="example-full-width">
-            <input matInput />
+
+        <div>
+          <p class="text-lg text-white">Enter Passport Number</p>
+
+          <mat-form-field class="w-80">
+            <mat-label>Passport Number</mat-label>
+            <input matInput placeholder="N123456789" required="true" />
           </mat-form-field>
         </div>
       </div>
-      <div class="lg:mt-14 mt-6 md:mt-8">
+
+      <div
+        class="flex flex-col lg:flex-row w-full px-32 lg:px-0 justify-center align-middle gap-4 mt-16"
+      >
         <button
           mat-flat-button
           color="accent"
           extended
           matTooltip="Proceed"
           aria-label="Login Button"
-          class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
         >
           Proceed
           <mat-icon>login</mat-icon>
@@ -44,6 +69,4 @@
       </div>
     </div>
   </div>
-  <!-- Add the emblem image -->
-<img src="../../assets/images/nationalemblem.png" alt="National Emblem" class="national-emblem">
 </div>

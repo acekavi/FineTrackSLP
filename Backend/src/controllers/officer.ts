@@ -14,9 +14,9 @@ export const create_user = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newOfficer = await Officer.create({
-            officer_ID,
-            username,
-            station_ID,
+            officer_ID: officer_ID.toLowerCase(),
+            username: username.toLowerCase(),
+            station_ID: station_ID.toLowerCase(),
             password: hashedPassword,
         });
 

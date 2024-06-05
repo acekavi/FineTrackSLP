@@ -17,10 +17,15 @@ export class UtilityService {
   ) { }
 
   public setAuthorizationToken(token: string): void {
-    const decodedToken = jwtDecode<CustomJWTpayload>(token);
+    const decodedToken = this.decodeToken(token);
     const expiresAt = new Date(decodedToken.exp! * 1000);
 
     this.cookieService.set('userToken', token, expiresAt, '/', '', true, 'Strict');
+  }
+
+  public decodeToken(token: string): CustomJWTpayload {
+    const decodedToken = jwtDecode<CustomJWTpayload>(token);
+    return decodedToken;
   }
 
   public getAuthorizationToken(): string {

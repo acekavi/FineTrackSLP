@@ -14,10 +14,10 @@ export const create_user = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newStation = await Station.create({
-            station_ID,
-            username,
+            station_ID: station_ID.toLowerCase(),
+            username: username.toLowerCase(),
             password: hashedPassword,
-            location,
+            location: location.toLowerCase(),
         });
 
         return res.status(201).json({
