@@ -1,0 +1,79 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="relative">
+  <mat-dialog-content
+    class="flex flex-col items-center justify-center space-y-4 gap-4"
+  >
+    <div class="w-full text-center">
+      <h2 class="text-2xl font-bold">{{ data.role }} Login</h2>
+      <ng-icon class="text-6xl mt-2" name="bootstrapPersonCircle"></ng-icon>
+    </div>
+    <div class="flex flex-col gap-2">
+      <mat-form-field appearance="fill">
+        <mat-label>Username</mat-label>
+        <input
+          matInput
+          formControlName="username"
+          placeholder="Username"
+          required
+        />
+        <mat-icon matSuffix>person</mat-icon>
+        <mat-hint>Enter username here</mat-hint>
+        <mat-error *ngIf="loginForm.get('username')?.hasError('required')"
+          >Username is required</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hide ? 'password' : 'text'"
+          placeholder="Password"
+          formControlName="password"
+          required
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="showPassword($event)"
+          type="button"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide"
+        >
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+        <mat-hint>Enter password here</mat-hint>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')"
+          >Password is required</mat-error
+        >
+        <mat-error
+          *ngIf="loginForm.get('password')?.hasError('wrongCredentials')"
+          >Username or password is incorrect!</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-row">
+      <mat-checkbox formControlName="rememberMe" color="primary"
+        >Remember me</mat-checkbox
+      >
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="flex flex-row justify-between w-full">
+    <button mat-button (click)="onCancelClick()" color="warn" type="reset">
+      Cancel
+    </button>
+    <button
+      mat-button
+      cdkFocusInitial
+      color="primary"
+      type="submit"
+      [disabled]="loading"
+    >
+      <div class="flex flex-row align-middle justify-center gap-2">
+        <ng-icon *ngIf="!loading" name="bootstrapBoxArrowInRight"></ng-icon>
+        <p *ngIf="!loading">Log In</p>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      </div>
+    </button>
+  </mat-dialog-actions>
+</form>

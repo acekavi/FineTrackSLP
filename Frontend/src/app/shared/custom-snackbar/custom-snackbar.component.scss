@@ -1,0 +1,11 @@
+.success-snack {
+  @apply text-accent-900;
+}
+
+.error-snack {
+  @apply text-warn-800;
+}
+
+.warning-snack {
+  @apply text-yellow-600;
+}
