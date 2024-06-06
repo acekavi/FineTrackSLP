@@ -16,6 +16,8 @@ import {
     bootstrapPersonPlus,
     bootstrapCarFrontFill,
     bootstrapPersonWalking,
+    bootstrapBank,
+    bootstrapClipboard2X,
 } from '@ng-icons/bootstrap-icons';
 
 @NgModule({
@@ -36,6 +38,8 @@ import {
             bootstrapPersonPlus,
             bootstrapCarFrontFill,
             bootstrapPersonWalking,
+            bootstrapBank,
+            bootstrapClipboard2X,
         }),
     ],
     providers: [

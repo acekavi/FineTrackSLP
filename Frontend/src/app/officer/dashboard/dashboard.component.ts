@@ -1,11 +1,13 @@
 import { DatePipe, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { catchError, map, merge, Observable, startWith, switchMap, of as observableOf } from 'rxjs';
 import { IconsModule } from 'src/app/modules/icons.module';
 import { MatUiModule } from 'src/app/modules/matui.module';
+import { PopupViolationSelectionComponent } from '../popup-violation-selection/popup-violation-selection.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,7 +33,7 @@ export class OfficerDashboardComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient, public dialog: MatDialog) { }
 
   ngAfterViewInit() {
     this.exampleDatabase = new ExampleHttpDatabase(this._httpClient);
@@ -68,7 +70,15 @@ export class OfficerDashboardComponent implements AfterViewInit {
       )
       .subscribe(data => (this.data = data));
   }
+
+  openAddCaseDialog(): void {
+    const dialogRef = this.dialog.open(PopupViolationSelectionComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
 }
+
 
 export interface GithubApi {
   items: GithubIssue[];

@@ -57,7 +57,11 @@
             <mat-icon matSuffix>search</mat-icon>
           </mat-form-field>
           <div class="my-2">
-            <button mat-flat-button color="primary">
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="openAddCaseDialog()"
+            >
               <mat-icon>add</mat-icon>Add
             </button>
           </div>
