@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { MatUiModule } from '../../modules/matui.module';
 import { Router } from '@angular/router';
 import { IconsModule } from 'src/app/modules/icons.module';
-import { NIC } from 'src/global-types';
 import { OfficerService } from 'src/app/services/officer.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatUiModule } from 'src/app/modules/matui.module';
 
 @Component({
   selector: 'app-driver-type',
@@ -21,14 +20,15 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   styleUrl: './driver-type.component.scss'
 })
 export class DriverTypeComponent {
-  loginForm!: FormGroup;
+  driverForm!: FormGroup;
   loading: boolean = false;
 
   constructor(
+    private router: Router,
     private officerService: OfficerService,
     private formBuilder: FormBuilder,
   ) {
-    this.loginForm = this.formBuilder.group({
+    this.driverForm = this.formBuilder.group({
       licence_number: ['', [Validators.required]],
     });
   }
@@ -36,15 +36,13 @@ export class DriverTypeComponent {
   onSubmit() {
     this.loading = true;
 
-    this.officerService.checkDriverLicence(this.loginForm.value.licence_number).subscribe({
-      next: (response) => {
-        console.log(response.NIC)
-      },
+    this.officerService.checkDriverLicence(this.driverForm.value.licence_number).subscribe({
       error: (error) => {
-        this.loginForm.controls['licence_number'].setErrors({ invalid: true });
+        this.driverForm.controls['licence_number'].setErrors({ invalid: true });
         this.loading = false;
       },
       complete: () => {
+        this.router.navigate(['officer/type-selection/driver/dashboard']);
         this.loading = false;
       }
     });

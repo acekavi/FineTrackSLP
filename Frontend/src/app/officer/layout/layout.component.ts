@@ -27,7 +27,6 @@ export class OfficerLayoutComponent implements OnInit {
 
   constructor(
     private location: Location,
-    private utilityService: UtilityService,
     private dialog: MatDialog,
     private router: Router,
     public officerService: OfficerService

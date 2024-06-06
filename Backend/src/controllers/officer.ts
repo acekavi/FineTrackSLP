@@ -6,6 +6,7 @@ import NicModel from '../models/nic';
 import DrLicenceModel from '../models/drlicence';
 import sequelize from '../config/sequelize';
 import { RequestWithUser } from '../global-types';
+import { Op } from 'sequelize';
 
 const Officer = OfficerModel(sequelize);
 const NIC = NicModel(sequelize);
@@ -114,7 +115,6 @@ export const check_drivers_licence = async (req: RequestWithUser, res: Response)
             where: { licence_number },
             attributes: { exclude: ['createdAt', 'updatedAt'] }
         });
-        console.log(violater)
 
         const userDetails = await NIC.findOne({
             where: { id_number: violater?.nic },
@@ -131,6 +131,45 @@ export const check_drivers_licence = async (req: RequestWithUser, res: Response)
             licence_number: violater.licence_number,
             expire_date: violater.expire_date,
             NIC: userDetails,
+        }
+
+        return res.status(200).json(responseJson);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to get officer',
+        });
+    }
+}
+
+export const check_nic_passport = async (req: RequestWithUser, res: Response) => {
+    try {
+        const nic_number = req.body.nic_number;
+        const passport_number = req.body.passport_number;
+
+        if (!nic_number && !passport_number) {
+            return res.status(400).json({
+                message: 'Both NIC and Passport cannot be empty!',
+            });
+        }
+
+        const violater = await NIC.findOne({
+            where: {
+                id_number: {
+                    [Op.or]: [nic_number, passport_number]
+                }
+            },
+            attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+        });
+
+        if (!violater) {
+            return res.status(404).json({
+                message: 'Invalid nic or passport number!',
+            });
+        }
+
+        const responseJson = {
+            NIC: violater,
         }
 
         return res.status(200).json(responseJson);

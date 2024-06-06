@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UtilityService } from './utility.service';
-import { Citizen, LicenceResponse, NIC, Officer } from 'src/global-types';
+import { Citizen, LicenceResponse, NIC, NICResponse, Officer } from 'src/global-types';
 import { environment } from '../enviorenment/dev.enviorenment';
 
 @Injectable({
@@ -67,5 +67,10 @@ export class OfficerService {
         this.violaterSubject.next(response.NIC);
       })
     );
+  }
+
+  public checkNicorPassport(body: { nic_number: string, passport_number: string }): Observable<NICResponse> {
+    const checkNicorPassportUrl = `${this.apiUrl}/officer/check-nic-passort`;
+    return this.http.post<NICResponse>(checkNicorPassportUrl, body);
   }
 }

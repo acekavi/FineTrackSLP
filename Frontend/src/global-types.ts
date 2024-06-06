@@ -51,8 +51,11 @@ export interface NIC {
     add_3: string;
 }
 
-export interface LicenceResponse {
+export interface NICResponse {
+    NIC: NIC;
+}
+
+export interface LicenceResponse extends NICResponse {
     licence_number: string;
     expire_date: Date;
-    NIC: NIC;
 }

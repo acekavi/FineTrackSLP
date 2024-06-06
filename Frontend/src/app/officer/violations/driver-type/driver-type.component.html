@@ -1,4 +1,4 @@
-<form form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<form form [formGroup]="driverForm" (ngSubmit)="onSubmit()">
   <div class="flex flex-row justify-center align-middle w-full">
     <div>
       <p class="text-lg text-white">Enter Driving License Number</p>
@@ -10,7 +10,7 @@
           required="true"
           formControlName="licence_number"
         />
-        <mat-error *ngIf="loginForm.get('licence_number')?.hasError('invalid')"
+        <mat-error *ngIf="driverForm.get('licence_number')?.hasError('invalid')"
           >Invalid Licence Number</mat-error
         >
       </mat-form-field>

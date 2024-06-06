@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './authentication/home/home.component';
 import { RoleSelectionComponent } from './authentication/role-selection/role-selection.component';
-import { PedestrianTypeComponent } from './violations/pedestrian-type/pedestrian-type.component';
-import { DriverTypeComponent } from './violations/driver-type/driver-type.component';
 import { checkCitizenAuth, checkOfficerAuth, checkStationAuth, checkUnauth } from './services/router-guard.service';
 import { StatationDashboardComponent } from './station/dashboard/dashboard.component';
 import { OfficerDashboardComponent } from './officer/dashboard/dashboard.component';
 import { TypeSelectionComponent } from './officer/type-selection/type-selection.component';
 import { OfficerLayoutComponent } from './officer/layout/layout.component';
+import { PedestrianTypeComponent } from './officer/violations/pedestrian-type/pedestrian-type.component';
+import { DriverTypeComponent } from './officer/violations/driver-type/driver-type.component';
 
 
 export const routes: Routes = [
@@ -47,8 +47,9 @@ export const routes: Routes = [
                     { path: 'pedestrian', component: PedestrianTypeComponent },
                 ]
             },
-            { path: 'dashboard', component: OfficerDashboardComponent },
         ]
     },
+    { path: 'officer/type-selection/pedestrian/dashboard', component: OfficerDashboardComponent },
+    { path: 'officer/type-selection/driver/dashboard', component: OfficerDashboardComponent },
     { path: '**', redirectTo: '' }
 ];
