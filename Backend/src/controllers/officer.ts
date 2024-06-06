@@ -10,11 +10,12 @@ const secretKey = process.env.JWT_SECRET || 'samplesecretkey';
 
 export const create_user = async (req: Request, res: Response) => {
     try {
-        const { officer_ID, username, password, station_ID } = req.body;
+        const { officer_ID, username, nic, password, station_ID } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newOfficer = await Officer.create({
-            officer_ID: officer_ID.toLowerCase(),
+            officer_ID: officer_ID,
+            NIC: nic,
             username: username.toLowerCase(),
             station_ID: station_ID.toLowerCase(),
             password: hashedPassword,
@@ -24,7 +25,7 @@ export const create_user = async (req: Request, res: Response) => {
             message: 'Officer created successfully',
         });
     } catch (error: any) {
-        console.log(error.name);
+        console.log(error);
         return res.status(500).json({
             message: 'Failed to create officer',
         });
@@ -76,6 +77,7 @@ export const get_user = async (req: Request, res: Response) => {
         const username = req.query.username as string;
 
         const officer = await Officer.findOne({ where: { username } });
+        console.log(officer);
 
         if (!officer) {
             return res.status(404).json({

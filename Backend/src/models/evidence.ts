@@ -23,9 +23,7 @@ class Evidence extends Model<EvidenceAttributes> implements EvidenceAttributes {
 export default (sequelize: Sequelize) => {
   Evidence.init({
     fine_ID: {
-      type: DataTypes.INTEGER({
-        length: 11,
-      }),
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       primaryKey: true,
     },

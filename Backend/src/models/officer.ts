@@ -3,6 +3,7 @@ import { Model, DataTypes, Sequelize } from 'sequelize';
 interface OfficerAttributes {
   officer_ID: number;
   username: string;
+  NIC: string;
   station_ID: string;
   password: string;
 }
@@ -10,6 +11,7 @@ interface OfficerAttributes {
 class Officer extends Model<OfficerAttributes> implements OfficerAttributes {
   public officer_ID!: number;
   public username!: string;
+  public NIC!: string;
   public station_ID!: string;
   public password!: string;
 
@@ -22,15 +24,17 @@ class Officer extends Model<OfficerAttributes> implements OfficerAttributes {
       foreignKey: 'officer_ID',
       as: 'fineRecords',
     });
+    Officer.belongsTo(models.Nic, {
+      foreignKey: 'NIC',
+      as: 'nic',
+    });
   }
 }
 
 export default (sequelize: Sequelize) => {
   Officer.init({
     officer_ID: {
-      type: DataTypes.INTEGER({
-        length: 11,
-      }),
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
@@ -39,6 +43,16 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.STRING(15),
       unique: true,
       allowNull: false,
+    },
+    NIC: {
+      type: DataTypes.CHAR(12),
+      allowNull: false,
+      references: {
+        model: 'Nics',
+        key: 'NIC',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     station_ID: {
       type: DataTypes.CHAR(8),
@@ -62,5 +76,3 @@ export default (sequelize: Sequelize) => {
 
   return Officer;
 };
-
-

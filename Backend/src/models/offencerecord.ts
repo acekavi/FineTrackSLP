@@ -26,15 +26,11 @@ class OffenceRecord extends Model<OffenceRecordAttributes> implements OffenceRec
 export default (sequelize: Sequelize) => {
   OffenceRecord.init({
     fine_ID: {
-      type: DataTypes.INTEGER({
-        length: 11,
-      }),
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
     offence_ID: {
-      type: DataTypes.INTEGER({
-        length: 11,
-      }),
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
         model: 'Offences',

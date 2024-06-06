@@ -32,6 +32,7 @@ export class OfficerLayoutComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.officerService.loadUserFromServer();
     this.officerService.officerUser$.subscribe((officer) => {
       if (!officer) {
         this.router.navigate(['']);
@@ -57,8 +58,7 @@ export class OfficerLayoutComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.utilityService.deleteAuthorizationToken();
-        this.router.navigate(['']);
+        this.officerService.logoutUser();
       } else {
         dialogRef.close();
       }

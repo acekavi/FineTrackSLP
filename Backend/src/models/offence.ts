@@ -26,9 +26,7 @@ class Offence extends Model<OffenceAttributes> implements OffenceAttributes {
 export default (sequelize: Sequelize) => {
   Offence.init({
     offence_ID: {
-      type: DataTypes.INTEGER({
-        length: 11,
-      }),
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       primaryKey: true,
     },

@@ -8,7 +8,7 @@ interface CitizenAttributes {
   earned_score?: number;
 }
 
-export class Citizen extends Model<CitizenAttributes> implements CitizenAttributes {
+class Citizen extends Model<CitizenAttributes> implements CitizenAttributes {
   public NIC!: string;
   public mobile!: number;
   public username!: string;
@@ -27,6 +27,14 @@ export class Citizen extends Model<CitizenAttributes> implements CitizenAttribut
       foreignKey: 'NIC',
       as: 'feedbacks',
     });
+    Citizen.hasOne(models.DrLicence, {
+      foreignKey: 'NIC',
+      as: 'drLicence',
+    });
+    Citizen.belongsTo(models.Nic, {
+      foreignKey: 'NIC',
+      as: 'nic',
+    });
   }
 }
 
@@ -36,11 +44,15 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.CHAR(12),
       allowNull: false,
       primaryKey: true,
+      references: {
+        model: 'Nics',
+        key: 'NIC',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     mobile: {
-      type: DataTypes.INTEGER({
-        length: 10,
-      }),
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
     username: {

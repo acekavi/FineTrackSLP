@@ -3,18 +3,23 @@ import { Model, DataTypes, Sequelize } from 'sequelize';
 interface DrLicenceAttributes {
   Licence_no: string;
   Expire_date: Date;
-  ID: string;
+  NIC: string;
 }
 
 export class DrLicence extends Model<DrLicenceAttributes> implements DrLicenceAttributes {
   public Licence_no!: string;
   public Expire_date!: Date;
-  public ID!: string;
+  public NIC!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
   static associate(models: any) {
+    DrLicence.belongsTo(models.Citizen, {
+      foreignKey: 'NIC',
+      as: 'citizen',
+    });
+
     DrLicence.hasOne(models.VehicleType, {
       foreignKey: 'Licence_no',
       as: 'vehicleType',
@@ -33,7 +38,7 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    ID: {
+    NIC: {
       type: DataTypes.STRING(12),
       allowNull: false,
       unique: true,

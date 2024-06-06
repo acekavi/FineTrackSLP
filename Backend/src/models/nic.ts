@@ -1,36 +1,40 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
 interface NicAttributes {
-    ID: string;
+    NIC: string;
     firstname: string;
-    middlename?: string;
+    middlename: string;
     surname: string;
-    gender: string;
     DOB: Date;
-    add1: string;
-    add2: string;
-    add3: string;
+    gender: string;
+    add_1: string;
+    add_2: string;
+    add_3: string;
 }
 
-export class Nic extends Model<NicAttributes> implements NicAttributes {
-    public ID!: string;
+class Nic extends Model<NicAttributes> implements NicAttributes {
+    public NIC!: string;
     public firstname!: string;
-    public middlename?: string;
+    public middlename!: string;
     public surname!: string;
-    public gender!: string;
     public DOB!: Date;
-    public add1!: string;
-    public add2!: string;
-    public add3!: string;
+    public gender!: string;
+    public add_1!: string;
+    public add_2!: string;
+    public add_3!: string;
 
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
+    static associate(models: any) {
+        Nic.hasOne(models.Citizen, {
+            foreignKey: 'NIC',
+            as: 'citizen',
+        });
+    }
 }
 
 export default (sequelize: Sequelize) => {
     Nic.init({
-        ID: {
-            type: DataTypes.STRING(12),
+        NIC: {
+            type: DataTypes.CHAR(12),
             allowNull: false,
             primaryKey: true,
         },
@@ -40,32 +44,33 @@ export default (sequelize: Sequelize) => {
         },
         middlename: {
             type: DataTypes.STRING(50),
-            allowNull: true,
+            allowNull: false,
         },
         surname: {
             type: DataTypes.STRING(50),
-            allowNull: false,
-        },
-        gender: {
-            type: DataTypes.STRING(6),
             allowNull: false,
         },
         DOB: {
             type: DataTypes.DATE,
             allowNull: false,
         },
-        add1: {
+        gender: {
+            type: DataTypes.STRING(6),
+            allowNull: false,
+        },
+        add_1: {
             type: DataTypes.STRING(20),
             allowNull: false,
         },
-        add2: {
+        add_2: {
             type: DataTypes.STRING(50),
             allowNull: false,
         },
-        add3: {
+        add_3: {
             type: DataTypes.STRING(50),
             allowNull: false,
         },
+
     }, {
         sequelize,
         modelName: 'Nic',

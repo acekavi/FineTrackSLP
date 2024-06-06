@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../enviorenment/dev.enviorenment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { Officer } from 'src/global-types';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { UtilityService } from './utility.service';
 
@@ -25,5 +25,31 @@ export class OfficerService {
 
   public setUserDetails(officer: Officer): void {
     this.officerUserSubject.next(officer);
+  }
+
+  private getUser(): Observable<Officer> {
+    const getUserUrl = `${this.apiUrl}/officer/details`;
+    return this.http.get<Officer>(getUserUrl);
+  }
+
+  public loadUserFromServer(): void {
+    if (!this.utilityService.getAuthorizationToken) {
+      return;
+    }
+
+    this.getUser().subscribe({
+      next: (user: Officer) => {
+        this.officerUserSubject.next(user);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.utilityService.handleHttpError(error);
+        this.logoutUser();
+      }
+    });
+  }
+
+  public logoutUser(): void {
+    this.utilityService.deleteAuthorizationToken();
+    this.router.navigate(['']);
   }
 }

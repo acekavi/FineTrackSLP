@@ -1,10 +1,3 @@
-export interface Citizen {
-    NIC: string;
-    mobile: number;
-    username: string;
-    earned_score?: number;
-}
-
 export interface CustomJWTpayload {
     username: string;
     role: string;
@@ -28,13 +21,14 @@ export interface User {
 
 export interface Citizen extends User {
     // Citizen-specific properties
-    NIC: string;
+    NIC: NIC;
     mobile: number;
     earned_score?: number;
 }
 
 export interface Officer extends User {
     // Officer-specific properties
+    NIC: NIC;
     officer_ID: number;
     station_ID: string;
 }
@@ -43,4 +37,16 @@ export interface Station extends User {
     // Station-specific properties
     station_ID: string;
     location: string;
+}
+
+export interface NIC {
+    NIC: string;
+    firstname: string;
+    middlename: string;
+    surname: string;
+    DOB: Date;
+    gender: string;
+    add_1: string;
+    add_2: string;
+    add_3: string;
 }

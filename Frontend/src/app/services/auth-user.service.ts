@@ -39,6 +39,7 @@ export class AuthUserService {
 
     public login(userType: 'Citizen' | 'Officer' | 'Station', credentials: { username: string; password: string }): Observable<User> {
         const loginUrl = `${this.apiUrl}/${userType.toLowerCase()}/login`;
+        credentials.username = credentials.username.toLowerCase();
         return this.http.post<CitizenloginResponse | OfficerloginResponse | StationloginResponse>(loginUrl, credentials).pipe(
             tap(response => {
                 this.utilityService.setAuthorizationToken(response.token);

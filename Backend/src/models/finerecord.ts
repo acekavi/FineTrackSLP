@@ -56,9 +56,7 @@ class FineRecord extends Model<FineRecordAttributes> implements FineRecordAttrib
 export default (sequelize: Sequelize) => {
   FineRecord.init({
     fine_ID: {
-      type: DataTypes.INTEGER({
-        length: 11,
-      }),
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
@@ -100,9 +98,7 @@ export default (sequelize: Sequelize) => {
       allowNull: false,
     },
     officer_ID: {
-      type: DataTypes.INTEGER({
-        length: 11,
-      }),
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
         model: 'Officers',
