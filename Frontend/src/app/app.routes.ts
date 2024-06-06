@@ -6,6 +6,7 @@ import { DriverTypeComponent } from './violations/driver-type/driver-type.compon
 import { checkCitizenAuth, checkOfficerAuth, checkStationAuth, checkUnauth } from './services/router-guard.service';
 import { StatationDashboardComponent } from './station/dashboard/dashboard.component';
 import { OfficerDashboardComponent } from './officer/dashboard/dashboard.component';
+import { TypeSelectionComponent } from './officer/type-selection/type-selection.component';
 
 
 export const routes: Routes = [
@@ -31,12 +32,11 @@ export const routes: Routes = [
             { path: 'driver', component: DriverTypeComponent },
         ]
     },
-    { path: 'officer', redirectTo: 'officer/dashboard', pathMatch: 'full' },
+    { path: 'officer', canActivate: [checkOfficerAuth], component: TypeSelectionComponent },
     {
         path: 'officer',
         canActivateChild: [checkOfficerAuth],
         children: [
-            { path: 'dashboard', component: OfficerDashboardComponent },
             { path: 'pedestrian', component: PedestrianTypeComponent },
             { path: 'driver', component: DriverTypeComponent },
         ]

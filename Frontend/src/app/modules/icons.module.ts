@@ -14,6 +14,8 @@ import {
     bootstrapPersonCircle,
     bootstrapBoxArrowInRight,
     bootstrapPersonPlus,
+    bootstrapCarFrontFill,
+    bootstrapPersonWalking,
 } from '@ng-icons/bootstrap-icons';
 
 @NgModule({
@@ -32,6 +34,8 @@ import {
             bootstrapPersonCircle,
             bootstrapBoxArrowInRight,
             bootstrapPersonPlus,
+            bootstrapCarFrontFill,
+            bootstrapPersonWalking,
         }),
     ],
     providers: [
