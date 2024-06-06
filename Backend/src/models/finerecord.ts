@@ -2,7 +2,7 @@ import { Model, DataTypes, Sequelize } from 'sequelize';
 
 interface FineRecordAttributes {
   fine_ID: number;
-  NIC: string;
+  nic: string;
   total_fine: number;
   total_score: number;
   fine_date: Date;
@@ -17,7 +17,7 @@ interface FineRecordAttributes {
 
 class FineRecord extends Model<FineRecordAttributes> implements FineRecordAttributes {
   public fine_ID!: number;
-  public NIC!: string;
+  public nic!: string;
   public total_fine!: number;
   public total_score!: number;
   public fine_date!: Date;
@@ -31,7 +31,7 @@ class FineRecord extends Model<FineRecordAttributes> implements FineRecordAttrib
 
   static associate(models: any) {
     FineRecord.belongsTo(models.Citizen, {
-      foreignKey: 'NIC',
+      foreignKey: 'nic',
       as: 'citizen',
     });
     FineRecord.belongsTo(models.Officer, {
@@ -61,12 +61,12 @@ export default (sequelize: Sequelize) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    NIC: {
+    nic: {
       type: DataTypes.CHAR(12),
       allowNull: false,
       references: {
         model: 'Citizens',
-        key: 'NIC',
+        key: 'nic',
       },
     },
     total_fine: {

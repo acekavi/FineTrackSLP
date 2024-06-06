@@ -1,7 +1,7 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
 interface NicAttributes {
-    NIC: string;
+    id_number: string;
     firstname: string;
     middlename: string;
     surname: string;
@@ -13,7 +13,7 @@ interface NicAttributes {
 }
 
 class Nic extends Model<NicAttributes> implements NicAttributes {
-    public NIC!: string;
+    public id_number!: string;
     public firstname!: string;
     public middlename!: string;
     public surname!: string;
@@ -24,16 +24,20 @@ class Nic extends Model<NicAttributes> implements NicAttributes {
     public add_3!: string;
 
     static associate(models: any) {
-        Nic.hasOne(models.Citizen, {
-            foreignKey: 'NIC',
+        Nic.belongsTo(models.Citizen, {
+            foreignKey: 'nic',
             as: 'citizen',
+        });
+        Nic.belongsTo(models.Officer, {
+            foreignKey: 'nic',
+            as: 'officer',
         });
     }
 }
 
 export default (sequelize: Sequelize) => {
     Nic.init({
-        NIC: {
+        id_number: {
             type: DataTypes.CHAR(12),
             allowNull: false,
             primaryKey: true,
@@ -70,7 +74,6 @@ export default (sequelize: Sequelize) => {
             type: DataTypes.STRING(50),
             allowNull: false,
         },
-
     }, {
         sequelize,
         modelName: 'Nic',

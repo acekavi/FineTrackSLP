@@ -43,18 +43,19 @@ export class AuthUserService {
         return this.http.post<CitizenloginResponse | OfficerloginResponse | StationloginResponse>(loginUrl, credentials).pipe(
             tap(response => {
                 this.utilityService.setAuthorizationToken(response.token);
-                if (response.user.role.toLowerCase() === 'citizen') {
+                const decodedToken = this.utilityService.decodeToken(response.token)
+                if (decodedToken.role.toLowerCase() === 'citizen') {
                     this.citizenService.setUserDetails(response.user as Citizen);
-                } else if (response.user.role.toLowerCase() === 'officer') {
+                } else if (decodedToken.role.toLowerCase() === 'officer') {
                     this.officerService.setUserDetails(response.user as Officer);
-                } else if (response.user.role.toLowerCase() === 'station') {
+                } else if (decodedToken.role.toLowerCase() === 'station') {
                     this.stationService.setUserDetails(response.user as Station);
                 } else {
                     this.utilityService.displaySnackbar('Invalid role', 'error-snack');
                     return;
                 }
 
-                this.router.navigate([`/${response.user.role.toLowerCase()}`]);
+                this.router.navigate([`/${decodedToken.role.toLowerCase()}`]);
                 this.utilityService.displaySnackbar('Login successful', 'success-snack');
             }),
             map(response => response.user)

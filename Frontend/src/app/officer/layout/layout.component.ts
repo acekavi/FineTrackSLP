@@ -8,6 +8,7 @@ import { MatUiModule } from 'src/app/modules/matui.module';
 import { OfficerService } from 'src/app/services/officer.service';
 import { UtilityService } from 'src/app/services/utility.service';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
+import { Officer } from 'src/global-types';
 
 @Component({
   selector: 'app-layout',
@@ -22,6 +23,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-di
   styleUrl: './layout.component.scss'
 })
 export class OfficerLayoutComponent implements OnInit {
+  officerDetails: Officer = {} as Officer;
 
   constructor(
     private location: Location,
@@ -33,11 +35,6 @@ export class OfficerLayoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.officerService.loadUserFromServer();
-    this.officerService.officerUser$.subscribe((officer) => {
-      if (!officer) {
-        this.router.navigate(['']);
-      }
-    });
   }
 
   goBack() {

@@ -1,7 +1,7 @@
 <div class="relative min-h-screen w-full">
   <div
     class="background-image"
-    style="background-image: url(assets/images/loginbg.png)"
+    style="background-image: url(assets/images/officer_bg.jpg)"
   ></div>
   <img
     src="assets/images/nationalemblem.png"
@@ -26,7 +26,8 @@
         >
           <ng-icon class="text-lg" name="bootstrapPersonCircle"></ng-icon>
           <div class="text-lg">
-            {{ (officerService.officerUser$ | async)?.username }}
+            {{ (officerService.officerUser$ | async)?.NIC?.firstname }}
+            {{ (officerService.officerUser$ | async)?.NIC?.surname }}
           </div>
         </div>
       </div>

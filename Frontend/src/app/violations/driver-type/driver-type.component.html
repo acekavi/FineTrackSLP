@@ -1,24 +1,39 @@
-<div class="flex flex-row justify-center align-middle w-full">
-  <div>
-    <p class="text-lg text-white">Enter Driving License Number</p>
-    <mat-form-field class="w-80">
-      <mat-label>License Number</mat-label>
-      <input matInput placeholder="12315468495" required="true" />
-    </mat-form-field>
+<form form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="flex flex-row justify-center align-middle w-full">
+    <div>
+      <p class="text-lg text-white">Enter Driving License Number</p>
+      <mat-form-field class="w-80">
+        <mat-label>License Number</mat-label>
+        <input
+          matInput
+          placeholder="12345678"
+          required="true"
+          formControlName="licence_number"
+        />
+        <mat-error *ngIf="loginForm.get('licence_number')?.hasError('invalid')"
+          >Invalid Licence Number</mat-error
+        >
+      </mat-form-field>
+    </div>
   </div>
-</div>
 
-<div
-  class="flex flex-col lg:flex-row w-full px-32 lg:px-0 justify-center align-middle gap-4 mt-16"
->
-  <button
-    mat-flat-button
-    color="accent"
-    extended
-    matTooltip="Proceed"
-    aria-label="Login Button"
+  <div
+    class="flex flex-col lg:flex-row w-full px-32 lg:px-0 justify-center align-middle gap-4 mt-16"
   >
-    Proceed
-    <mat-icon>login</mat-icon>
-  </button>
-</div>
+    <button
+      mat-flat-button
+      color="accent"
+      extended
+      matTooltip="Proceed"
+      aria-label="Login Button"
+      type="submit"
+      [disabled]="loading"
+    >
+      <div class="flex flex-row align-middle justify-center gap-2">
+        <ng-icon *ngIf="!loading" name="bootstrapBoxArrowInRight"></ng-icon>
+        <p *ngIf="!loading">Proceed</p>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      </div>
+    </button>
+  </div>
+</form>

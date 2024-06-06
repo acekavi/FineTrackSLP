@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../enviorenment/dev.enviorenment';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
-import { Officer } from 'src/global-types';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap, catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UtilityService } from './utility.service';
+import { Citizen, LicenceResponse, NIC, Officer } from 'src/global-types';
+import { environment } from '../enviorenment/dev.enviorenment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,9 @@ export class OfficerService {
   private officerUserSubject: BehaviorSubject<Officer | null>;
   public officerUser$: Observable<Officer | null>;
 
+  private violaterSubject: BehaviorSubject<NIC | null>;
+  public violater$: Observable<NIC | null>;
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -21,6 +25,9 @@ export class OfficerService {
   ) {
     this.officerUserSubject = new BehaviorSubject<Officer | null>(null);
     this.officerUser$ = this.officerUserSubject.asObservable();
+
+    this.violaterSubject = new BehaviorSubject<NIC | null>(null);
+    this.violater$ = this.violaterSubject.asObservable();
   }
 
   public setUserDetails(officer: Officer): void {
@@ -51,5 +58,14 @@ export class OfficerService {
   public logoutUser(): void {
     this.utilityService.deleteAuthorizationToken();
     this.router.navigate(['']);
+  }
+
+  public checkDriverLicence(licence_number: string): Observable<LicenceResponse> {
+    const checkDriverInfoUrl = `${this.apiUrl}/officer/check-driver`;
+    return this.http.post<LicenceResponse>(checkDriverInfoUrl, { licence_number }).pipe(
+      tap((response: LicenceResponse) => {
+        this.violaterSubject.next(response.NIC);
+      })
+    );
   }
 }

@@ -1,47 +1,48 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
 interface DrLicenceAttributes {
-  Licence_no: string;
-  Expire_date: Date;
-  NIC: string;
+  licence_number: string;
+  expire_date: Date;
+  nic: string;
 }
 
 export class DrLicence extends Model<DrLicenceAttributes> implements DrLicenceAttributes {
-  public Licence_no!: string;
-  public Expire_date!: Date;
-  public NIC!: string;
+  public licence_number!: string;
+  public expire_date!: Date;
+  public nic!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
   static associate(models: any) {
-    DrLicence.belongsTo(models.Citizen, {
-      foreignKey: 'NIC',
-      as: 'citizen',
-    });
-
-    DrLicence.hasOne(models.VehicleType, {
-      foreignKey: 'Licence_no',
-      as: 'vehicleType',
+    DrLicence.belongsTo(models.Nic, {
+      foreignKey: 'nic',
+      as: 'nic_card',
     });
   }
 }
 
 export default (sequelize: Sequelize) => {
   DrLicence.init({
-    Licence_no: {
+    licence_number: {
       type: DataTypes.STRING(8),
       allowNull: false,
       primaryKey: true,
     },
-    Expire_date: {
+    expire_date: {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    NIC: {
+    nic: {
       type: DataTypes.STRING(12),
       allowNull: false,
       unique: true,
+      references: {
+        model: 'Nics',
+        key: 'id_number',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
   }, {
     sequelize,

@@ -40,7 +40,7 @@ export interface Station extends User {
 }
 
 export interface NIC {
-    NIC: string;
+    id_number: string;
     firstname: string;
     middlename: string;
     surname: string;
@@ -49,4 +49,10 @@ export interface NIC {
     add_1: string;
     add_2: string;
     add_3: string;
+}
+
+export interface LicenceResponse {
+    licence_number: string;
+    expire_date: Date;
+    NIC: NIC;
 }

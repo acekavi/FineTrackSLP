@@ -37,7 +37,7 @@ export class UtilityService {
   }
 
   public handleHttpError(error: HttpErrorResponse): void {
-    let message = error.error;
+    let message = error.error.message;
     if (error.error instanceof ErrorEvent) {
       message = error.error.message;
     } else if (error.status === 401) {

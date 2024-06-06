@@ -2,11 +2,14 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import OfficerModel from '../models/officer';
+import NicModel from '../models/nic';
+import DrLicenceModel from '../models/drlicence';
 import sequelize from '../config/sequelize';
+import { RequestWithUser } from '../global-types';
 
 const Officer = OfficerModel(sequelize);
-
-const secretKey = process.env.JWT_SECRET || 'samplesecretkey';
+const NIC = NicModel(sequelize);
+const DrLicence = DrLicenceModel(sequelize);
 
 export const create_user = async (req: Request, res: Response) => {
     try {
@@ -15,7 +18,7 @@ export const create_user = async (req: Request, res: Response) => {
 
         const newOfficer = await Officer.create({
             officer_ID: officer_ID,
-            NIC: nic,
+            nic,
             username: username.toLowerCase(),
             station_ID: station_ID.toLowerCase(),
             password: hashedPassword,
@@ -25,7 +28,7 @@ export const create_user = async (req: Request, res: Response) => {
             message: 'Officer created successfully',
         });
     } catch (error: any) {
-        console.log(error);
+        console.log(error.name);
         return res.status(500).json({
             message: 'Failed to create officer',
         });
@@ -52,17 +55,11 @@ export const signin_user = async (req: Request, res: Response) => {
             });
         }
 
-        const token = jwt.sign({ username: officer.username, role: "officer" }, secretKey, { expiresIn: '8h' });
+        const token = jwt.sign({ username: officer.username, role: "officer" }, "finetrack2024", { expiresIn: '8h' });
 
         return res.status(200).json({
             message: 'Signin successful',
             token,
-            user: {
-                username: officer.username,
-                role: 'officer',
-                officer_ID: officer.officer_ID,
-                station_ID: officer.station_ID,
-            },
         });
     } catch (error) {
         console.log(error);
@@ -72,12 +69,19 @@ export const signin_user = async (req: Request, res: Response) => {
     }
 };
 
-export const get_user = async (req: Request, res: Response) => {
+export const get_user = async (req: RequestWithUser, res: Response) => {
     try {
-        const username = req.query.username as string;
+        const username = req.user?.username;
 
-        const officer = await Officer.findOne({ where: { username } });
-        console.log(officer);
+        const officer = await Officer.findOne({
+            where: { username },
+            attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+        });
+
+        const userDetails = await NIC.findOne({
+            where: { id_number: officer?.nic },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        })
 
         if (!officer) {
             return res.status(404).json({
@@ -85,10 +89,15 @@ export const get_user = async (req: Request, res: Response) => {
             });
         }
 
-        return res.status(200).json({
-            message: 'Officer details found!',
-            officer,
-        });
+        const responseJson = {
+            username: officer.username,
+            role: 'officer',
+            NIC: userDetails,
+            officer_ID: officer.officer_ID,
+            station_ID: officer.station_ID,
+        }
+
+        return res.status(200).json(responseJson);
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -96,3 +105,39 @@ export const get_user = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const check_drivers_licence = async (req: RequestWithUser, res: Response) => {
+    try {
+        const licence_number = req.body.licence_number;
+
+        const violater = await DrLicence.findOne({
+            where: { licence_number },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        });
+        console.log(violater)
+
+        const userDetails = await NIC.findOne({
+            where: { id_number: violater?.nic },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        })
+
+        if (!violater) {
+            return res.status(404).json({
+                message: 'Invalid licence number!',
+            });
+        }
+
+        const responseJson = {
+            licence_number: violater.licence_number,
+            expire_date: violater.expire_date,
+            NIC: userDetails,
+        }
+
+        return res.status(200).json(responseJson);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to get officer',
+        });
+    }
+}

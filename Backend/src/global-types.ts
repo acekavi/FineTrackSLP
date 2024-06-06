@@ -1,5 +1,6 @@
 import { JwtPayload } from "jsonwebtoken";
 import { Request } from 'express';
+import { Officer } from "./config/sync";
 
 export interface DecodedToken extends JwtPayload {
     username: string;
