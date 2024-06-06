@@ -1,65 +1,29 @@
-<div class="relative min-h-screen w-full">
-  <div
-    class="background-image"
-    style="background-image: url(assets/images/loginbg.png)"
-  ></div>
-  <img
-    src="assets/images/nationalemblem.png"
-    alt="National Emblem"
-    class="national-emblem"
-  />
+<div class="flex flex-row justify-center align-middle w-full gap-8">
+  <div>
+    <button
+      mat-flat-button
+      extended
+      matTooltip="Fine Driver"
+      aria-label="Login Button"
+      class="big-square-button"
+      routerLink="driver"
+    >
+      <ng-icon class="text-5xl" name="bootstrapCarFrontFill"></ng-icon>
+      <p class="text-2xl font-bold">Driver</p>
+    </button>
+  </div>
 
-  <div class="container mx-auto my-auto">
-    <div class="flex flex-row pt-16 ps-8">
-      <button mat-button>
-        <mat-icon matIconPrefix class="text-white font-bold"
-          >arrow_back</mat-icon
-        >
-        <span class="text-white font-bold">Back</span>
-      </button>
-    </div>
-
-    <div class="flex flex-col justify-evenly align-middle gap-24">
-      <div class="flex flex-row justify-start">
-        <div
-          class="p-3 flex flex-row align-middle bg-white rounded-full gap-3 text-blue-600 ms-4 lg:ms-32"
-        >
-          <ng-icon class="text-lg" name="bootstrapPersonCircle"></ng-icon>
-          <div class="text-lg">Officer Name</div>
-        </div>
-      </div>
-
-      <div class="flex flex-row justify-center align-middle">
-        <h1 class="text-white font-bold text-6xl">FineTrackSLP</h1>
-      </div>
-
-      <div class="flex flex-row justify-center align-middle w-full gap-8">
-        <div>
-          <button
-            mat-flat-button
-            extended
-            matTooltip="Fine Driver"
-            aria-label="Login Button"
-            class="big-square-button"
-          >
-            <ng-icon class="text-5xl" name="bootstrapCarFrontFill"></ng-icon>
-            <p class="text-2xl font-bold">Driver</p>
-          </button>
-        </div>
-
-        <div>
-          <button
-            mat-flat-button
-            extended
-            matTooltip="Fine Pedestrian"
-            aria-label="Login Button"
-            class="big-square-button"
-          >
-            <ng-icon class="text-5xl" name="bootstrapPersonWalking"></ng-icon>
-            <p class="text-2xl font-bold">Pedestrian</p>
-          </button>
-        </div>
-      </div>
-    </div>
+  <div>
+    <button
+      mat-flat-button
+      extended
+      matTooltip="Fine Pedestrian"
+      aria-label="Login Button"
+      class="big-square-button"
+      routerLink="pedestrian"
+    >
+      <ng-icon class="text-5xl" name="bootstrapPersonWalking"></ng-icon>
+      <p class="text-2xl font-bold">Pedestrian</p>
+    </button>
   </div>
 </div>

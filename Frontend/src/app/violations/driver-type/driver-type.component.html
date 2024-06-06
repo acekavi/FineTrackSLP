@@ -1,62 +1,24 @@
-<div class="relative min-h-screen w-full">
-  <div
-    class="background-image"
-    style="background-image: url(assets/images/loginbg.png)"
-  ></div>
-  <img
-    src="assets/images/nationalemblem.png"
-    alt="National Emblem"
-    class="national-emblem"
-  />
-
-  <div class="container mx-auto my-auto">
-    <div class="flex flex-row pt-16 ps-8">
-      <button mat-button (click)="onBackClick()">
-        <mat-icon matIconPrefix class="text-white font-bold"
-          >arrow_back</mat-icon
-        >
-        <span class="text-white font-bold">Back</span>
-      </button>
-    </div>
-
-    <div class="flex flex-col justify-evenly align-middle pt-8">
-      <div class="flex flex-row justify-start">
-        <div
-          class="p-3 flex flex-row align-middle bg-white rounded-full gap-3 text-blue-600 ms-4 lg:ms-32"
-        >
-          <ng-icon class="text-lg" name="bootstrapPersonCircle"></ng-icon>
-          <div class="text-lg">Officer Name</div>
-        </div>
-      </div>
-
-      <div class="flex flex-row justify-center align-middle pt-24">
-        <h1 class="text-white font-bold text-6xl">FineTrackSLP</h1>
-      </div>
-
-      <div class="flex flex-row justify-center align-middle w-full pt-24">
-        <div>
-          <p class="text-lg text-white">Enter Driving License Number</p>
-          <mat-form-field class="w-80">
-            <mat-label>License Number</mat-label>
-            <input matInput placeholder="12315468495" required="true" />
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div
-        class="flex flex-col lg:flex-row w-full px-32 lg:px-0 justify-center align-middle gap-4 mt-16"
-      >
-        <button
-          mat-flat-button
-          color="accent"
-          extended
-          matTooltip="Proceed"
-          aria-label="Login Button"
-        >
-          Proceed
-          <mat-icon>login</mat-icon>
-        </button>
-      </div>
-    </div>
+<div class="flex flex-row justify-center align-middle w-full">
+  <div>
+    <p class="text-lg text-white">Enter Driving License Number</p>
+    <mat-form-field class="w-80">
+      <mat-label>License Number</mat-label>
+      <input matInput placeholder="12315468495" required="true" />
+    </mat-form-field>
   </div>
+</div>
+
+<div
+  class="flex flex-col lg:flex-row w-full px-32 lg:px-0 justify-center align-middle gap-4 mt-16"
+>
+  <button
+    mat-flat-button
+    color="accent"
+    extended
+    matTooltip="Proceed"
+    aria-label="Login Button"
+  >
+    Proceed
+    <mat-icon>login</mat-icon>
+  </button>
 </div>

@@ -70,3 +70,27 @@ export const signin_user = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const get_user = async (req: Request, res: Response) => {
+    try {
+        const username = req.query.username as string;
+
+        const officer = await Officer.findOne({ where: { username } });
+
+        if (!officer) {
+            return res.status(404).json({
+                message: 'Officer not found',
+            });
+        }
+
+        return res.status(200).json({
+            message: 'Officer details found!',
+            officer,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to get officer',
+        });
+    }
+};

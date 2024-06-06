@@ -12,7 +12,7 @@ import { UtilityService } from './utility.service';
 export class OfficerService {
   private apiUrl = environment.apiUrl;
   private officerUserSubject: BehaviorSubject<Officer | null>;
-  public officerUser: Observable<Officer | null>;
+  public officerUser$: Observable<Officer | null>;
 
   constructor(
     private http: HttpClient,
@@ -20,7 +20,7 @@ export class OfficerService {
     private utilityService: UtilityService
   ) {
     this.officerUserSubject = new BehaviorSubject<Officer | null>(null);
-    this.officerUser = this.officerUserSubject.asObservable();
+    this.officerUser$ = this.officerUserSubject.asObservable();
   }
 
   public setUserDetails(officer: Officer): void {

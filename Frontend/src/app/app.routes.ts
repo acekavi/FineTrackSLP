@@ -7,6 +7,7 @@ import { checkCitizenAuth, checkOfficerAuth, checkStationAuth, checkUnauth } fro
 import { StatationDashboardComponent } from './station/dashboard/dashboard.component';
 import { OfficerDashboardComponent } from './officer/dashboard/dashboard.component';
 import { TypeSelectionComponent } from './officer/type-selection/type-selection.component';
+import { OfficerLayoutComponent } from './officer/layout/layout.component';
 
 
 export const routes: Routes = [
@@ -32,13 +33,21 @@ export const routes: Routes = [
             { path: 'driver', component: DriverTypeComponent },
         ]
     },
-    { path: 'officer', canActivate: [checkOfficerAuth], component: TypeSelectionComponent },
     {
         path: 'officer',
-        canActivateChild: [checkOfficerAuth],
+        component: OfficerLayoutComponent,
+        canActivate: [checkOfficerAuth],
         children: [
-            { path: 'pedestrian', component: PedestrianTypeComponent },
-            { path: 'driver', component: DriverTypeComponent },
+            { path: '', redirectTo: 'type-selection', pathMatch: 'full' },
+            {
+                path: 'type-selection',
+                children: [
+                    { path: '', component: TypeSelectionComponent },
+                    { path: 'driver', component: DriverTypeComponent },
+                    { path: 'pedestrian', component: PedestrianTypeComponent },
+                ]
+            },
+            { path: 'dashboard', component: OfficerDashboardComponent },
         ]
     },
     { path: '**', redirectTo: '' }

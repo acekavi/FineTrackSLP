@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { IconsModule } from 'src/app/modules/icons.module';
 import { MatUiModule } from 'src/app/modules/matui.module';
 
@@ -6,6 +7,7 @@ import { MatUiModule } from 'src/app/modules/matui.module';
   selector: 'app-type-selection',
   standalone: true,
   imports: [
+    RouterModule,
     IconsModule,
     MatUiModule,
   ],
