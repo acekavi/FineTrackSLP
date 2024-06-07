@@ -1,39 +1,52 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
-import { AssociatableModel } from '../global-types';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey, Sequelize } from 'sequelize';
+import { DrLicence } from '.';
+import sequelize from '../sequelize';
 
-class VehicleType extends Model implements AssociatableModel {
-    public vehicle_ID!: number;
-    public type_name!: string;
+class VehicleType extends Model<InferAttributes<VehicleType>, InferCreationAttributes<VehicleType>> {
+    declare licenceNumber: ForeignKey<DrLicence['licenceNumber']>;
+    declare types: string[];
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
 
-    public static associate?: (models: any) => void;
+    static initModel(sequelize: Sequelize) {
+        VehicleType.init(
+            {
+                licenceNumber: {
+                    type: DataTypes.STRING(8),
+                    primaryKey: true,
+                    allowNull: false,
+                    references: {
+                        model: DrLicence,
+                        key: 'licenceNumber',
+                    },
+                    onDelete: 'CASCADE',
+                    onUpdate: 'CASCADE',
+                },
+                types: {
+                    type: DataTypes.ARRAY(
+                        DataTypes.ENUM(
+                            'A1', 'A', 'B1', 'B', 'C1', 'C', 'CE', 'D1', 'D', 'DE', 'G1', 'G', 'J'
+                        )
+                    ),
+                    allowNull: false,
+                },
+                createdAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+                updatedAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'VehicleTypes',
+                timestamps: true,
+            }
+        );
+    }
 }
-
-export default (sequelize: Sequelize) => {
-    VehicleType.init({
-        vehicle_ID: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            allowNull: false,
-            autoIncrement: true,
-        },
-        type_name: {
-            type: DataTypes.STRING(50),
-            allowNull: false,
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        },
-    }, {
-        sequelize,
-        modelName: 'VehicleType',
-    });
-
-    return VehicleType;
-};
+export default VehicleType;

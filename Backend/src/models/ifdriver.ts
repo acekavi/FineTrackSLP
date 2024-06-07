@@ -1,38 +1,42 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
-import { AssociatableModel } from '../global-types';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import sequelize from '../sequelize';
 
-export class IfDriver extends Model implements AssociatableModel {
-  public fine_ID!: number;
-  public vehicle!: string;
+class IfDriver extends Model<InferAttributes<IfDriver>, InferCreationAttributes<IfDriver>> {
+    declare fineId: number;
+    declare vehicle: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
 
-  public static associate?: (models: any) => void;
+    static initModel(sequelize: any) {
+        IfDriver.init(
+            {
+                fineId: {
+                    type: DataTypes.INTEGER,
+                    primaryKey: true,
+                    allowNull: false,
+                },
+                vehicle: {
+                    type: DataTypes.CHAR(10),
+                    allowNull: false,
+                },
+                createdAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+                updatedAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'IfDrivers',
+                timestamps: true,
+            }
+        );
+    }
 }
 
-export default (sequelize: Sequelize) => {
-  IfDriver.init({
-    fine_ID: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      allowNull: false,
-    },
-    vehicle: {
-      type: DataTypes.CHAR(10),
-      allowNull: false,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-  }, {
-    sequelize,
-    modelName: 'IfDriver',
-  });
-
-  return IfDriver;
-};
+export default IfDriver;

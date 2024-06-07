@@ -1,10 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import StationModel from '../models/station';
-import sequelize from '../config/sequelize';
-
-const Station = StationModel(sequelize);
+import { Station } from '../models';
 
 const secretKey = process.env.JWT_SECRET || 'samplesecretkey';
 
@@ -14,7 +11,7 @@ export const create_user = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newStation = await Station.create({
-            station_ID: station_ID.toLowerCase(),
+            stationId: station_ID.toLowerCase(),
             username: username.toLowerCase(),
             password: hashedPassword,
             location: location.toLowerCase(),
@@ -59,7 +56,7 @@ export const signin_user = async (req: Request, res: Response) => {
             user: {
                 username: station.username,
                 role: 'station',
-                station_ID: station.station_ID,
+                station_ID: station.stationId,
                 location: station.location,
             },
         });

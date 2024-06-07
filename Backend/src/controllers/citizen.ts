@@ -1,11 +1,8 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import CitizenModel from '../models/citizen';
-import sequelize from '../config/sequelize';
 import { RequestWithUser } from '../global-types';
-
-const Citizen = CitizenModel(sequelize);
+import { Citizen } from '../models';
 
 export const create_user = async (req: Request, res: Response) => {
     try {
@@ -13,7 +10,7 @@ export const create_user = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         await Citizen.create({
-            NIC: NIC.toLowerCase(),
+            nic: NIC.toLowerCase(),
             username: username.toLowerCase(),
             password: hashedPassword,
             mobile,
@@ -64,7 +61,7 @@ export const signin_user = async (req: Request, res: Response) => {
                 role: 'citizen',
                 NIC: citizen.nic,
                 mobile: citizen.mobile,
-                earned_score: citizen.earned_score,
+                earned_score: citizen.earnedScore,
             }
         });
     } catch (error) {

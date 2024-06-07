@@ -9,11 +9,11 @@ module.exports = {
 				allowNull: false,
 				primaryKey: true,
 			},
-			firstname: {
+			firstName: {
 				type: Sequelize.STRING(50),
 				allowNull: false,
 			},
-			middlename: {
+			middleName: {
 				type: Sequelize.STRING(50),
 				allowNull: false,
 			},
@@ -21,23 +21,23 @@ module.exports = {
 				type: Sequelize.STRING(50),
 				allowNull: false,
 			},
-			DOB: {
+			dob: {
 				type: Sequelize.DATE,
 				allowNull: false,
 			},
 			gender: {
-				type: Sequelize.STRING(6),
+				type: Sequelize.ENUM('Male', 'Female', 'Other'),
 				allowNull: false,
 			},
-			add_1: {
+			address1: {
 				type: Sequelize.STRING(100),
 				allowNull: false,
 			},
-			add_2: {
+			address2: {
 				type: Sequelize.STRING(100),
 				allowNull: false,
 			},
-			add_3: {
+			address3: {
 				type: Sequelize.STRING(100),
 				allowNull: false,
 			},
@@ -54,12 +54,12 @@ module.exports = {
 		});
 
 		await queryInterface.createTable('DrLicences', {
-			licence_number: {
+			licenceNumber: {
 				type: Sequelize.STRING(8),
 				allowNull: false,
 				primaryKey: true,
 			},
-			expire_date: {
+			expiryDate: {
 				type: Sequelize.DATE,
 				allowNull: false,
 			},
@@ -74,7 +74,7 @@ module.exports = {
 				onDelete: 'CASCADE',
 				onUpdate: 'CASCADE',
 			},
-			spects_needed: {
+			spectaclesNeeded: {
 				type: Sequelize.BOOLEAN,
 				allowNull: false,
 				defaultValue: false,
@@ -116,7 +116,7 @@ module.exports = {
 				type: Sequelize.STRING(60),
 				allowNull: false,
 			},
-			earned_score: {
+			earnedScore: {
 				type: Sequelize.DECIMAL(4, 2),
 				allowNull: true,
 				defaultValue: 0,
@@ -134,12 +134,12 @@ module.exports = {
 		});
 
 		await queryInterface.createTable('Evidences', {
-			fine_id: {
+			fineId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				primaryKey: true,
 			},
-			evi_link: {
+			evidenceLink: {
 				type: Sequelize.STRING(512),
 				allowNull: false,
 			},
@@ -183,7 +183,7 @@ module.exports = {
 		});
 
 		await queryInterface.createTable('IfDrivers', {
-			fine_ID: {
+			fineId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				primaryKey: true,
@@ -205,13 +205,13 @@ module.exports = {
 		});
 
 		await queryInterface.createTable('Offences', {
-			offence_ID: {
+			offenceId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				primaryKey: true,
 				autoIncrement: true,
 			},
-			offence_description: {
+			description: {
 				type: Sequelize.TEXT,
 				allowNull: false,
 			},
@@ -219,7 +219,7 @@ module.exports = {
 				type: Sequelize.DECIMAL(4, 2),
 				allowNull: false,
 			},
-			enable_stat: {
+			enabled: {
 				type: Sequelize.BOOLEAN,
 				allowNull: false,
 				defaultValue: true,
@@ -241,7 +241,7 @@ module.exports = {
 		});
 
 		await queryInterface.createTable('Stations', {
-			station_ID: {
+			stationId: {
 				type: Sequelize.CHAR(8),
 				allowNull: false,
 				primaryKey: true,
@@ -271,7 +271,7 @@ module.exports = {
 		});
 
 		await queryInterface.createTable('Officers', {
-			officer_ID: {
+			officerId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				primaryKey: true,
@@ -292,12 +292,12 @@ module.exports = {
 				onDelete: 'CASCADE',
 				onUpdate: 'CASCADE',
 			},
-			station_ID: {
+			stationId: {
 				type: Sequelize.CHAR(8),
 				allowNull: false,
 				references: {
 					model: 'Stations',
-					key: 'station_ID',
+					key: 'stationId',
 				},
 				onDelete: 'CASCADE',
 				onUpdate: 'CASCADE',
@@ -319,7 +319,7 @@ module.exports = {
 		});
 
 		await queryInterface.createTable('FineRecords', {
-			fine_ID: {
+			fineId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				primaryKey: true,
@@ -333,27 +333,27 @@ module.exports = {
 					key: 'nic',
 				},
 			},
-			total_fine: {
+			totalFine: {
 				type: Sequelize.DECIMAL(12, 2),
 				allowNull: false,
 			},
-			total_score: {
+			totalScore: {
 				type: Sequelize.DECIMAL(4, 2),
 				allowNull: false,
 			},
-			fine_date: {
+			fineDate: {
 				type: Sequelize.DATE,
 				allowNull: false,
 			},
-			fine_time: {
+			fineTime: {
 				type: Sequelize.TIME,
 				allowNull: false,
 			},
-			location_name: {
+			locationName: {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			location_link: {
+			locationLink: {
 				type: Sequelize.STRING(512),
 				allowNull: false,
 			},
@@ -361,19 +361,19 @@ module.exports = {
 				type: Sequelize.BOOLEAN,
 				allowNull: false,
 			},
-			officer_ID: {
+			officerId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				references: {
 					model: 'Officers',
-					key: 'officer_ID',
+					key: 'officerId',
 				},
 			},
-			is_payed: {
+			isPaid: {
 				type: Sequelize.BOOLEAN,
 				allowNull: true,
 			},
-			pay_reference_id: {
+			payReferenceId: {
 				type: Sequelize.TEXT,
 				allowNull: true,
 			},
@@ -390,25 +390,69 @@ module.exports = {
 		});
 
 		await queryInterface.createTable('OffenceRecords', {
-			fine_ID: {
+			fineId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				primaryKey: true,
 				references: {
 					model: 'FineRecords',
-					key: 'fine_ID',
+					key: 'fineId',
 				},
 			},
-			offence_ID: {
+			offenceId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				references: {
 					model: 'Offences',
-					key: 'offence_ID',
+					key: 'offenceId',
 				},
 			},
-			offence_date: {
+			offenceDate: {
 				type: Sequelize.DATE,
+				allowNull: false,
+			},
+			createdAt: {
+				type: Sequelize.DATE,
+				allowNull: false,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+			},
+			updatedAt: {
+				type: Sequelize.DATE,
+				allowNull: false,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+			},
+		});
+
+		await queryInterface.createTable('VehicleTypes', {
+			licenceNumber: {
+				type: Sequelize.STRING(8),
+				allowNull: false,
+				primaryKey: true,
+				references: {
+					model: 'DrLicences',
+					key: 'licenceNumber',
+				},
+				onDelete: 'CASCADE',
+				onUpdate: 'CASCADE',
+			},
+			types: {
+				type: Sequelize.ARRAY(
+					Sequelize.ENUM(
+						'A1',
+						'A',
+						'B1',
+						'B',
+						'C1',
+						'C',
+						'CE',
+						'D1',
+						'D',
+						'DE',
+						'G1',
+						'G',
+						'J'
+					)
+				),
 				allowNull: false,
 			},
 			createdAt: {
@@ -436,5 +480,6 @@ module.exports = {
 		await queryInterface.dropTable('DrLicences');
 		await queryInterface.dropTable('Citizens');
 		await queryInterface.dropTable('NICs');
+		await queryInterface.dropTable('VehicleTypes');
 	},
 };

@@ -1,70 +1,65 @@
-import { Model, DataTypes, Sequelize, Association } from 'sequelize';
-import { NIC } from './nic';
-import { AssociatableModel } from '../global-types';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey, Sequelize } from 'sequelize';
+import { NIC } from '.';
+import sequelize from '../sequelize';
 
-export class Citizen extends Model implements AssociatableModel {
-  public nic!: string;
-  public mobile!: number;
-  public username!: string;
-  public password!: string;
-  public earned_score?: number;
+class Citizen extends Model<InferAttributes<Citizen>, InferCreationAttributes<Citizen>> {
+    declare nic: ForeignKey<NIC['id_number']>;
+    declare mobile: string;
+    declare username: string;
+    declare password: string;
+    declare earnedScore: CreationOptional<number>;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
 
-  public static associations: {
-    nicDetails: Association<Citizen, NIC>
-  };
-
-  public static associate = (models: any) => {
-    Citizen.belongsTo(models.NIC, {
-      foreignKey: 'nic',
-      as: 'citizenNicDetails',
-    });
-  };
+    static initModel(sequelize: Sequelize) {
+        Citizen.init(
+            {
+                nic: {
+                    type: DataTypes.CHAR(12),
+                    primaryKey: true,
+                    allowNull: false,
+                    references: {
+                        model: NIC,
+                        key: 'id_number',
+                    },
+                    onDelete: 'CASCADE',
+                    onUpdate: 'CASCADE',
+                },
+                mobile: {
+                    type: DataTypes.STRING(15),
+                    allowNull: false,
+                },
+                username: {
+                    type: DataTypes.STRING(15),
+                    unique: true,
+                    allowNull: false,
+                },
+                password: {
+                    type: DataTypes.STRING(60),
+                    allowNull: false,
+                },
+                earnedScore: {
+                    type: DataTypes.DECIMAL(4, 2),
+                    allowNull: true,
+                    defaultValue: 0,
+                },
+                createdAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+                updatedAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'Citizens',
+                timestamps: true,
+            }
+        );
+    }
 }
-
-export default (sequelize: Sequelize) => {
-  Citizen.init({
-    nic: {
-      type: DataTypes.CHAR(12),
-      primaryKey: true,
-      allowNull: false,
-      references: {
-        model: 'NIC',
-        key: 'id_number',
-      },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
-    mobile: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    username: {
-      type: DataTypes.STRING(15),
-      unique: true,
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING(60),
-      allowNull: false,
-    },
-    earned_score: {
-      type: DataTypes.DECIMAL(4, 2),
-      allowNull: true,
-      defaultValue: 0,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-  }, {
-    sequelize,
-    modelName: 'Citizen',
-  });
-  return Citizen;
-};
+export default Citizen;

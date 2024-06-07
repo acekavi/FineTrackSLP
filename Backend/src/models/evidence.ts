@@ -1,38 +1,42 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
-import { AssociatableModel } from '../global-types';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, Sequelize } from 'sequelize';
+import sequelize from '../sequelize';
 
-export class Evidence extends Model implements AssociatableModel {
-  public fine_id!: number;
-  public evi_link!: string;
+class Evidence extends Model<InferAttributes<Evidence>, InferCreationAttributes<Evidence>> {
+    declare fineId: number;
+    declare evidenceLink: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
 
-  public static associate?: (models: any) => void;
+    static initModel(sequelize: Sequelize) {
+        Evidence.init(
+            {
+                fineId: {
+                    type: DataTypes.INTEGER,
+                    primaryKey: true,
+                    allowNull: false,
+                },
+                evidenceLink: {
+                    type: DataTypes.STRING(512),
+                    allowNull: false,
+                },
+                createdAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+                updatedAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'Evidences',
+                timestamps: true,
+            }
+        );
+    }
 }
 
-export default (sequelize: Sequelize) => {
-  Evidence.init({
-    fine_id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      allowNull: false,
-    },
-    evi_link: {
-      type: DataTypes.STRING(512),
-      allowNull: false,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-  }, {
-    sequelize,
-    modelName: 'Evidence',
-  });
-
-  return Evidence;
-};
+export default Evidence;

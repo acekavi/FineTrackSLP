@@ -1,53 +1,47 @@
-import { Model, DataTypes, Sequelize, Association } from 'sequelize';
-import { Citizen } from './citizen';
-import { AssociatableModel } from '../global-types';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey, Sequelize } from 'sequelize';
+import { Citizen } from '.';
+import sequelize from '../sequelize';
 
-export class Feedback extends Model implements AssociatableModel {
-  public nic!: string;
-  public feedback!: string;
+class Feedback extends Model<InferAttributes<Feedback>, InferCreationAttributes<Feedback>> {
+    declare nic: ForeignKey<Citizen['nic']>;
+    declare feedback: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
 
-  public static associations: {
-    citizenFeedback: Association<Feedback, Citizen>
-  };
-
-  public static associate = (models: any) => {
-    Feedback.belongsTo(models.Citizen, {
-      foreignKey: 'nic',
-      as: 'citizenFeedback',
-    });
-  };
+    static initModel(sequelize: Sequelize) {
+        Feedback.init(
+            {
+                nic: {
+                    type: DataTypes.CHAR(12),
+                    allowNull: false,
+                    references: {
+                        model: Citizen,
+                        key: 'nic',
+                    },
+                    onDelete: 'CASCADE',
+                    onUpdate: 'CASCADE',
+                },
+                feedback: {
+                    type: DataTypes.TEXT,
+                    allowNull: false,
+                },
+                createdAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+                updatedAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'Feedbacks',
+                timestamps: true,
+            }
+        );
+    }
 }
-
-export default (sequelize: Sequelize) => {
-  Feedback.init({
-    nic: {
-      type: DataTypes.CHAR(12),
-      allowNull: false,
-      references: {
-        model: 'Citizen',
-        key: 'nic',
-      },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
-    feedback: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    },
-  }, {
-    sequelize,
-    modelName: 'Feedback',
-  });
-
-  return Feedback;
-};
+export default Feedback;

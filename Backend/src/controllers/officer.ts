@@ -1,22 +1,9 @@
 import { Request, Response } from 'express';
-import FineRecordModel from '../models/finerecord';
-import OffenceRecordModel from '../models/offencerecord';
-import OffenceModel from '../models/offence';
-import NICModel from '../models/nic';
-import OfficerModel from '../models/officer';
-import DrLicenceModel from '../models/drlicence';
-import sequelize from '../config/sequelize';
 import { RequestWithUser } from '../global-types';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
-
-const FineRecord = FineRecordModel(sequelize);
-const OffenceRecord = OffenceRecordModel(sequelize);
-const Offence = OffenceModel(sequelize);
-const NIC = NICModel(sequelize);
-const Officer = OfficerModel(sequelize);
-const DrLicence = DrLicenceModel(sequelize);
+import { DrLicence, FineRecord, NIC, Offence, OffenceRecord, Officer } from '../models';
 
 export const create_user = async (req: Request, res: Response) => {
     try {
@@ -24,10 +11,10 @@ export const create_user = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newOfficer = await Officer.create({
-            officer_ID: officer_ID,
+            officerId: officer_ID,
             nic,
             username: username.toLowerCase(),
-            station_ID: station_ID.toLowerCase(),
+            stationId: station_ID.toLowerCase(),
             password: hashedPassword,
         });
 
@@ -100,8 +87,8 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
             username: officer.username,
             role: 'officer',
             NIC: userDetails,
-            officer_ID: officer.officer_ID,
-            station_ID: officer.station_ID,
+            officer_ID: officer.officerId,
+            station_ID: officer.stationId,
         }
 
         return res.status(200).json(responseJson);
@@ -115,10 +102,10 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
 
 export const check_drivers_licence = async (req: RequestWithUser, res: Response) => {
     try {
-        const licence_number = req.body.licence_number;
+        const licenceNumber = req.body.licence_number;
 
         const violater = await DrLicence.findOne({
-            where: { licence_number },
+            where: { licenceNumber },
             attributes: { exclude: ['createdAt', 'updatedAt'] }
         });
 
@@ -134,8 +121,8 @@ export const check_drivers_licence = async (req: RequestWithUser, res: Response)
         }
 
         const responseJson = {
-            licence_number: violater.licence_number,
-            expire_date: violater.expire_date,
+            licence_number: violater.licenceNumber,
+            expire_date: violater.expiryDate,
             NIC: userDetails,
         }
 

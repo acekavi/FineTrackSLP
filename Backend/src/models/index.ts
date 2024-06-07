@@ -1,32 +1,73 @@
-import { Sequelize } from 'sequelize';
-import DrLicence from './drlicence';
-import Citizen from './citizen';
+import NIC from './nic';
 import Evidence from './evidence';
 import Feedback from './feedback';
-import FineRecord from './finerecord';
-import IfDriver from './ifdriver';
-import NIC from './nic';
 import Offence from './offence';
-import OffenceRecord from './offencerecord';
-import Officer from './officer';
 import Station from './station';
+import Officer from './officer';
+import FineRecord from './finerecord';
+import OffenceRecord from './offencerecord';
 import VehicleType from './vehicletype';
+import IfDriver from './ifdriver';
+import sequelize from '../sequelize';
+import DrLicence from './drlicence';
+import Citizen from './citizen';
 
-export const ModelRegistry = (sequelize: Sequelize) => {
-    const models = {
-        DrLicence: DrLicence(sequelize),
-        Citizen: Citizen(sequelize),
-        Evidence: Evidence(sequelize),
-        Feedback: Feedback(sequelize),
-        FineRecord: FineRecord(sequelize),
-        IfDriver: IfDriver(sequelize),
-        NIC: NIC(sequelize),
-        Offence: Offence(sequelize),
-        OffenceRecord: OffenceRecord(sequelize),
-        Officer: Officer(sequelize),
-        Station: Station(sequelize),
-        VehicleType: VehicleType(sequelize),
-    };
+// Initialize models
+NIC.initModel(sequelize);
+DrLicence.initModel(sequelize);
+Citizen.initModel(sequelize);
+Evidence.initModel(sequelize);
+Feedback.initModel(sequelize);
+IfDriver.initModel(sequelize);
+Offence.initModel(sequelize);
+Station.initModel(sequelize);
+Officer.initModel(sequelize);
+FineRecord.initModel(sequelize);
+OffenceRecord.initModel(sequelize);
+VehicleType.initModel(sequelize);
 
-    return models;
+// Define associations
+DrLicence.belongsTo(NIC, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+NIC.hasOne(DrLicence, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+Citizen.belongsTo(NIC, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+NIC.hasOne(Citizen, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+Feedback.belongsTo(Citizen, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Citizen.hasMany(Feedback, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+FineRecord.belongsTo(Citizen, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Citizen.hasMany(FineRecord, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+FineRecord.belongsTo(Officer, { foreignKey: 'officerId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Officer.hasMany(FineRecord, { foreignKey: 'officerId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+OffenceRecord.belongsTo(FineRecord, { foreignKey: 'fineId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+FineRecord.hasMany(OffenceRecord, { foreignKey: 'fineId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+OffenceRecord.belongsTo(Offence, { foreignKey: 'offenceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Offence.hasMany(OffenceRecord, { foreignKey: 'offenceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+Officer.belongsTo(NIC, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+NIC.hasMany(Officer, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+Officer.belongsTo(Station, { foreignKey: 'stationId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Station.hasMany(Officer, { foreignKey: 'stationId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+VehicleType.belongsTo(DrLicence, { foreignKey: 'licenceNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+DrLicence.hasOne(VehicleType, { foreignKey: 'licenceNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
+export {
+  NIC,
+  DrLicence,
+  Citizen,
+  Evidence,
+  Feedback,
+  IfDriver,
+  Offence,
+  Station,
+  Officer,
+  FineRecord,
+  OffenceRecord,
+  VehicleType,
 };
