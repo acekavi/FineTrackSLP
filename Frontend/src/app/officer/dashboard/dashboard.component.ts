@@ -1,13 +1,9 @@
 import { DatePipe, NgIf } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { IconsModule } from 'src/app/modules/icons.module';
 import { MatUiModule } from 'src/app/modules/matui.module';
 import { PopupViolationSelectionComponent } from '../popup-violation-selection/popup-violation-selection.component';
-import { ViolaterDetails } from 'src/global-types';
 import { OfficerService } from 'src/app/services/officer.service';
 import { ActivatedRoute } from '@angular/router';
 

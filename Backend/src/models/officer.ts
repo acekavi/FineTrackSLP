@@ -3,6 +3,7 @@ import { NIC, Station } from '.';
 import sequelize from '../sequelize';
 
 class Officer extends Model<InferAttributes<Officer>, InferCreationAttributes<Officer>> {
+    [x: string]: any;
     declare officerId: CreationOptional<number>;
     declare username: string;
     declare nic: ForeignKey<NIC['id_number']>;

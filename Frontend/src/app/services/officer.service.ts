@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UtilityService } from './utility.service';
-import { ViolaterDetails, LicenceResponse, NIC, NICResponse, Officer } from 'src/global-types';
+import { Citizen, NIC, Officer } from 'src/global-types';
 import { environment } from '../enviorenment/dev.enviorenment';
 
 @Injectable({
@@ -15,8 +15,8 @@ export class OfficerService {
   private officerUserSubject: BehaviorSubject<Officer | null>;
   public officerUser$: Observable<Officer | null>;
 
-  private violaterSubject: BehaviorSubject<NIC | null>;
-  public violater$: Observable<NIC | null>;
+  private violaterSubject: BehaviorSubject<Citizen | null>;
+  public violater$: Observable<Citizen | null>;
 
   constructor(
     private http: HttpClient,
@@ -26,7 +26,7 @@ export class OfficerService {
     this.officerUserSubject = new BehaviorSubject<Officer | null>(null);
     this.officerUser$ = this.officerUserSubject.asObservable();
 
-    this.violaterSubject = new BehaviorSubject<NIC | null>(null);
+    this.violaterSubject = new BehaviorSubject<Citizen | null>(null);
     this.violater$ = this.violaterSubject.asObservable();
   }
 
@@ -60,18 +60,22 @@ export class OfficerService {
     this.router.navigate(['']);
   }
 
-  public checkDriverLicence(licence_number: string): Observable<LicenceResponse> {
+  public checkDriverLicence(licence_number: string): Observable<Citizen> {
     const checkDriverInfoUrl = `${this.apiUrl}/officer/check-driver`;
-    return this.http.post<LicenceResponse>(checkDriverInfoUrl, { licence_number }).pipe(
-      tap((response: LicenceResponse) => {
-        this.violaterSubject.next(response.NIC);
+    return this.http.post<Citizen>(checkDriverInfoUrl, { licence_number }).pipe(
+      tap((response: Citizen) => {
+        this.violaterSubject.next(response);
       })
     );
   }
 
-  public checkNicorPassport(body: { nic_number: string, passport_number: string }): Observable<NICResponse> {
+  public checkNICorPassport(body: { nic_number: string, passport_number: string }): Observable<Citizen> {
     const checkNicorPassportUrl = `${this.apiUrl}/officer/check-nic-passort`;
-    return this.http.post<NICResponse>(checkNicorPassportUrl, body);
+    return this.http.post<Citizen>(checkNicorPassportUrl, body).pipe(
+      tap((response: Citizen) => {
+        this.violaterSubject.next(response);
+      })
+    );
   }
 
   getViolatorDetails(nic: string): Observable<any> {

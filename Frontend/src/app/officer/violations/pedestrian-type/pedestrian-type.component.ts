@@ -48,7 +48,7 @@ export class PedestrianTypeComponent {
       this.loading = false;
     }
 
-    this.officerService.checkNicorPassport(body).subscribe({
+    this.officerService.checkNICorPassport(body).subscribe({
       next: (response) => {
         this.router.navigate(['officer/pedestrian/dashboard']);
       },

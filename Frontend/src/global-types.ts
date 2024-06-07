@@ -13,57 +13,110 @@ export interface LoginResponse extends MessageResponse {
     token: string;
 }
 
-export interface User {
+export interface Citizen {
+    NIC: NIC;
+    mobile: string;
     username: string;
-    role: string;
-}
-
-
-export interface Citizen extends User {
-    // Citizen-specific properties
-    NIC: NIC;
-    mobile: number;
-    earned_score?: number;
-}
-
-export interface Officer extends User {
-    // Officer-specific properties
-    NIC: NIC;
-    officer_ID: number;
-    station_ID: string;
-}
-
-export interface Station extends User {
-    // Station-specific properties
-    station_ID: string;
-    location: string;
+    password: string;
+    earnedScore: number;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface NIC {
     id_number: string;
-    firstname: string;
-    middlename: string;
+    firstName: string;
+    middleName: string;
     surname: string;
-    DOB: Date;
-    gender: string;
-    add_1: string;
-    add_2: string;
-    add_3: string;
+    dob: Date;
+    gender: 'Male' | 'Female' | 'Other';
+    address1: string;
+    address2: string;
+    address3: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-export interface NICResponse {
+export interface DrLicence {
+    licenceNumber: string;
+    expiryDate: Date;
     NIC: NIC;
+    spectaclesNeeded: boolean;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-export interface LicenceResponse extends NICResponse {
-    licence_number: string;
-    expire_date: Date;
+export interface Evidence {
+    fineId: number;
+    evidenceLink: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
+export interface Feedback {
+    NIC: Citizen;
+    feedback: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+export interface FineRecord {
+    fineId: number;
+    NIC: Citizen;
+    totalFine: number;
+    totalScore: number;
+    fineDate: Date;
+    fineTime: string;
+    locationName: string | null;
+    locationLink: string;
+    isDriver: boolean;
+    officerId: Officer;
+    isPaid: boolean | null;
+    payReferenceId: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+}
+export interface IfDriver {
+    fineId: number;
+    vehicle: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+export interface Offence {
+    offenceId: number;
+    description: string;
+    score: number;
+    enabled: boolean;
+    fee: number;
+    createdAt: Date;
+    updatedAt: Date;
+}
+export interface OffenceRecord {
+    fineId: FineRecord;
+    offenceId: Offence;
+    offenceDate: Date;
+    createdAt: Date;
+    updatedAt: Date;
+}
+export interface Officer {
+    officerId: number;
+    username: string;
+    NIC: NIC;
+    stationId: Station;
+    password: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+export interface Station {
+    stationId: string;
+    username: string;
+    password: string;
+    location: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+export interface VehicleType {
+    licenceNumber: DrLicence;
+    types: string[];
+    createdAt: Date;
+    updatedAt: Date;
 
-export interface ViolaterDetails {
-    fine_id: number;
-    payment_status: string;
-    location_name: string;
-    offence_description: string;
-    // add other fields as needed
 }

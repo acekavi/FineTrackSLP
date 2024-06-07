@@ -3,7 +3,7 @@ import { RequestWithUser } from '../global-types';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
-import { DrLicence, FineRecord, NIC, Offence, OffenceRecord, Officer } from '../models';
+import { Citizen, DrLicence, FineRecord, NIC, Offence, OffenceRecord, Officer } from '../models';
 
 export const create_user = async (req: Request, res: Response) => {
     try {
@@ -69,13 +69,12 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
 
         const officer = await Officer.findOne({
             where: { username },
-            attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+            attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
+            include: [{
+                model: NIC,
+                attributes: { exclude: ['createdAt', 'updatedAt'] }
+            }]
         });
-
-        const userDetails = await NIC.findOne({
-            where: { id_number: officer?.nic },
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
-        })
 
         if (!officer) {
             return res.status(404).json({
@@ -86,7 +85,7 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
         const responseJson = {
             username: officer.username,
             role: 'officer',
-            NIC: userDetails,
+            NIC: officer.NIC,
             officer_ID: officer.officerId,
             station_ID: officer.stationId,
         }
@@ -104,29 +103,30 @@ export const check_drivers_licence = async (req: RequestWithUser, res: Response)
     try {
         const licenceNumber = req.body.licence_number;
 
-        const violater = await DrLicence.findOne({
+        const driversLicence = await DrLicence.findOne({
             where: { licenceNumber },
             attributes: { exclude: ['createdAt', 'updatedAt'] }
         });
 
-        const userDetails = await NIC.findOne({
-            where: { id_number: violater?.nic },
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
-        })
-
-        if (!violater) {
+        if (!driversLicence) {
             return res.status(404).json({
                 message: 'Invalid licence number!',
             });
         }
 
-        const responseJson = {
-            licence_number: violater.licenceNumber,
-            expire_date: violater.expiryDate,
-            NIC: userDetails,
-        }
+        const violater = await Citizen.findOne({
+            where: {
+                nic: driversLicence?.nic
+            },
+            include: [
+                {
+                    model: NIC
+                }
+            ],
+            attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+        })
 
-        return res.status(200).json(responseJson);
+        return res.status(200).json(violater);
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -146,12 +146,17 @@ export const check_nic_passport = async (req: RequestWithUser, res: Response) =>
             });
         }
 
-        const violater = await NIC.findOne({
+        const violater = await Citizen.findOne({
             where: {
-                id_number: {
+                nic: {
                     [Op.or]: [nic_number, passport_number]
                 }
             },
+            include: [
+                {
+                    model: NIC
+                }
+            ],
             attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
         });
 
@@ -161,11 +166,7 @@ export const check_nic_passport = async (req: RequestWithUser, res: Response) =>
             });
         }
 
-        const responseJson = {
-            NIC: violater,
-        }
-
-        return res.status(200).json(responseJson);
+        return res.status(200).json(violater);
     } catch (error) {
         console.log(error);
         return res.status(500).json({
