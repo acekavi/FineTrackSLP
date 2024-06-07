@@ -6,7 +6,7 @@ class Officer extends Model<InferAttributes<Officer>, InferCreationAttributes<Of
     [x: string]: any;
     declare officerId: CreationOptional<number>;
     declare username: string;
-    declare nic: ForeignKey<NIC['id_number']>;
+    declare nic: ForeignKey<NIC['idNumber']>;
     declare stationId: ForeignKey<Station['stationId']>;
     declare password: string;
     declare createdAt: CreationOptional<Date>;
@@ -31,7 +31,7 @@ class Officer extends Model<InferAttributes<Officer>, InferCreationAttributes<Of
                     allowNull: false,
                     references: {
                         model: NIC,
-                        key: 'id_number',
+                        key: 'idNumber',
                     },
                     onDelete: 'CASCADE',
                     onUpdate: 'CASCADE',

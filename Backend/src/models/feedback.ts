@@ -3,7 +3,7 @@ import { Citizen } from '.';
 import sequelize from '../sequelize';
 
 class Feedback extends Model<InferAttributes<Feedback>, InferCreationAttributes<Feedback>> {
-    declare nic: ForeignKey<Citizen['nic']>;
+    declare nicNumber: ForeignKey<Citizen['nicNumber']>;
     declare feedback: string;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
@@ -11,12 +11,12 @@ class Feedback extends Model<InferAttributes<Feedback>, InferCreationAttributes<
     static initModel(sequelize: Sequelize) {
         Feedback.init(
             {
-                nic: {
+                nicNumber: {
                     type: DataTypes.CHAR(12),
                     allowNull: false,
                     references: {
                         model: Citizen,
-                        key: 'nic',
+                        key: 'nicNumber',
                     },
                     onDelete: 'CASCADE',
                     onUpdate: 'CASCADE',

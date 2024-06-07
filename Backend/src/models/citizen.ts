@@ -3,7 +3,7 @@ import { NIC } from '.';
 import sequelize from '../sequelize';
 
 class Citizen extends Model<InferAttributes<Citizen>, InferCreationAttributes<Citizen>> {
-    declare nic: ForeignKey<NIC['id_number']>;
+    declare nicNumber: ForeignKey<NIC['idNumber']>;
     declare mobile: string;
     declare username: string;
     declare password: string;
@@ -14,13 +14,13 @@ class Citizen extends Model<InferAttributes<Citizen>, InferCreationAttributes<Ci
     static initModel(sequelize: Sequelize) {
         Citizen.init(
             {
-                nic: {
+                nicNumber: {
                     type: DataTypes.CHAR(12),
                     primaryKey: true,
                     allowNull: false,
                     references: {
                         model: NIC,
-                        key: 'id_number',
+                        key: 'idNumber',
                     },
                     onDelete: 'CASCADE',
                     onUpdate: 'CASCADE',

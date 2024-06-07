@@ -4,7 +4,7 @@
 module.exports = {
 	async up(queryInterface, Sequelize) {
 		await queryInterface.createTable('NICs', {
-			id_number: {
+			idNumber: {
 				type: Sequelize.CHAR(12),
 				allowNull: false,
 				primaryKey: true,
@@ -63,13 +63,13 @@ module.exports = {
 				type: Sequelize.DATE,
 				allowNull: false,
 			},
-			nic: {
+			nicNumber: {
 				type: Sequelize.CHAR(12),
 				allowNull: false,
 				unique: true,
 				references: {
 					model: 'NICs',
-					key: 'id_number',
+					key: 'idNumber',
 				},
 				onDelete: 'CASCADE',
 				onUpdate: 'CASCADE',
@@ -92,13 +92,13 @@ module.exports = {
 		});
 
 		await queryInterface.createTable('Citizens', {
-			nic: {
+			nicNumber: {
 				type: Sequelize.CHAR(12),
 				allowNull: false,
 				primaryKey: true,
 				references: {
 					model: 'NICs',
-					key: 'id_number',
+					key: 'idNumber',
 				},
 				onDelete: 'CASCADE',
 				onUpdate: 'CASCADE',
@@ -156,12 +156,12 @@ module.exports = {
 		});
 
 		await queryInterface.createTable('Feedbacks', {
-			nic: {
+			nicNumber: {
 				type: Sequelize.CHAR(12),
 				allowNull: false,
 				references: {
 					model: 'Citizens',
-					key: 'nic',
+					key: 'nicNumber',
 				},
 				onDelete: 'CASCADE',
 				onUpdate: 'CASCADE',
@@ -282,12 +282,12 @@ module.exports = {
 				unique: true,
 				allowNull: false,
 			},
-			nic: {
+			nicNumber: {
 				type: Sequelize.CHAR(12),
 				allowNull: false,
 				references: {
 					model: 'NICs',
-					key: 'id_number',
+					key: 'idNumber',
 				},
 				onDelete: 'CASCADE',
 				onUpdate: 'CASCADE',
@@ -325,12 +325,12 @@ module.exports = {
 				primaryKey: true,
 				autoIncrement: true,
 			},
-			nic: {
+			nicNumber: {
 				type: Sequelize.CHAR(12),
 				allowNull: false,
 				references: {
 					model: 'Citizens',
-					key: 'nic',
+					key: 'nicNumber',
 				},
 			},
 			totalFine: {

@@ -4,7 +4,7 @@ import sequelize from '../sequelize';
 
 class FineRecord extends Model<InferAttributes<FineRecord>, InferCreationAttributes<FineRecord>> {
     declare fineId: CreationOptional<number>;
-    declare nic: ForeignKey<Citizen['nic']>;
+    declare nicNumber: ForeignKey<Citizen['nicNumber']>;
     declare totalFine: number;
     declare totalScore: number;
     declare fineDate: Date;
@@ -27,12 +27,12 @@ class FineRecord extends Model<InferAttributes<FineRecord>, InferCreationAttribu
                     autoIncrement: true,
                     allowNull: false,
                 },
-                nic: {
+                nicNumber: {
                     type: DataTypes.CHAR(12),
                     allowNull: false,
                     references: {
                         model: Citizen,
-                        key: 'nic',
+                        key: 'nicNumber',
                     },
                 },
                 totalFine: {

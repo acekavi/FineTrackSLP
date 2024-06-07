@@ -5,7 +5,7 @@ import sequelize from '../sequelize';
 class DrLicence extends Model<InferAttributes<DrLicence>, InferCreationAttributes<DrLicence>> {
     declare licenceNumber: string;
     declare expiryDate: Date;
-    declare nic: ForeignKey<NIC['id_number']>;
+    declare nicNumber: ForeignKey<NIC['idNumber']>;
     declare spectaclesNeeded: boolean;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
@@ -22,12 +22,12 @@ class DrLicence extends Model<InferAttributes<DrLicence>, InferCreationAttribute
                     type: DataTypes.DATE,
                     allowNull: false,
                 },
-                nic: {
+                nicNumber: {
                     type: DataTypes.CHAR(12),
                     allowNull: false,
                     references: {
                         model: NIC,
-                        key: 'id_number',
+                        key: 'idNumber',
                     },
                     unique: true,
                     onDelete: 'CASCADE',

@@ -2,7 +2,7 @@ import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOpt
 import sequelize from '../sequelize';
 
 class NIC extends Model<InferAttributes<NIC>, InferCreationAttributes<NIC>> {
-    declare id_number: string;
+    declare idNumber: string;
     declare firstName: string;
     declare middleName: string;
     declare surname: string;
@@ -17,7 +17,7 @@ class NIC extends Model<InferAttributes<NIC>, InferCreationAttributes<NIC>> {
     static initModel(sequelize: Sequelize) {
         NIC.init(
             {
-                id_number: {
+                idNumber: {
                     type: DataTypes.CHAR(12),
                     primaryKey: true,
                     allowNull: false,
