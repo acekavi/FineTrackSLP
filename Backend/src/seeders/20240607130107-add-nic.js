@@ -8,7 +8,7 @@ module.exports = {
 
 		for (let i = 0; i < 50; i++) {
 			nics.push({
-				id_number: faker.string.sample(12),
+				idNumber: faker.number.int({ min: 100000000, max: 999999999 }) + 'v',
 				firstName: faker.person.firstName(),
 				middleName: faker.person.middleName(),
 				surname: faker.person.lastName(),
