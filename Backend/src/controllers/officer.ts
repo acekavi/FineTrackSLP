@@ -12,7 +12,7 @@ export const create_user = async (req: Request, res: Response) => {
 
         const newOfficer = await Officer.create({
             officerId: officer_ID,
-            nic,
+            nicNumber: nic,
             username: username.toLowerCase(),
             stationId: station_ID.toLowerCase(),
             password: hashedPassword,
@@ -22,7 +22,7 @@ export const create_user = async (req: Request, res: Response) => {
             message: 'Officer created successfully',
         });
     } catch (error: any) {
-        console.log(error.name);
+        console.log(error);
         return res.status(500).json({
             message: 'Failed to create officer',
         });
@@ -82,15 +82,7 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
             });
         }
 
-        const responseJson = {
-            username: officer.username,
-            role: 'officer',
-            NIC: officer.NIC,
-            officer_ID: officer.officerId,
-            station_ID: officer.stationId,
-        }
-
-        return res.status(200).json(responseJson);
+        return res.status(200).json(officer);
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -116,7 +108,7 @@ export const check_drivers_licence = async (req: RequestWithUser, res: Response)
 
         const violater = await Citizen.findOne({
             where: {
-                nic: driversLicence?.nic
+                nicNumber: driversLicence?.nicNumber
             },
             include: [
                 {
@@ -148,7 +140,7 @@ export const check_nic_passport = async (req: RequestWithUser, res: Response) =>
 
         const violater = await Citizen.findOne({
             where: {
-                nic: {
+                nicNumber: {
                     [Op.or]: [nic_number, passport_number]
                 }
             },
@@ -177,11 +169,11 @@ export const check_nic_passport = async (req: RequestWithUser, res: Response) =>
 
 export const getViolatorDetails = async (req: RequestWithUser, res: Response) => {
     try {
-        const nic = req.body.nic_number;
+        const nicNumber = req.body.nic_number;
 
         // Fetch the violator's NIC details
         const violator = await NIC.findOne({
-            where: { id_number: nic },
+            where: { idNumber: nicNumber },
             attributes: { exclude: ['createdAt', 'updatedAt'] }
         });
 
@@ -193,7 +185,7 @@ export const getViolatorDetails = async (req: RequestWithUser, res: Response) =>
 
         // Fetch the fine records
         const fineRecords = await FineRecord.findAll({
-            where: { nic },
+            where: { nicNumber },
             include: [
                 {
                     model: OffenceRecord,

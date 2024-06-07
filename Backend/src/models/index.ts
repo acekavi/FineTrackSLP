@@ -27,17 +27,17 @@ OffenceRecord.initModel(sequelize);
 VehicleType.initModel(sequelize);
 
 // Define associations
-DrLicence.belongsTo(NIC, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-NIC.hasOne(DrLicence, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+DrLicence.belongsTo(NIC, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+NIC.hasOne(DrLicence, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
-Citizen.belongsTo(NIC, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-NIC.hasOne(Citizen, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Citizen.belongsTo(NIC, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+NIC.hasOne(Citizen, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
-Feedback.belongsTo(Citizen, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-Citizen.hasMany(Feedback, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Feedback.belongsTo(Citizen, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Citizen.hasMany(Feedback, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
-FineRecord.belongsTo(Citizen, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-Citizen.hasMany(FineRecord, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+FineRecord.belongsTo(Citizen, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Citizen.hasMany(FineRecord, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
 FineRecord.belongsTo(Officer, { foreignKey: 'officerId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 Officer.hasMany(FineRecord, { foreignKey: 'officerId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
@@ -48,8 +48,8 @@ FineRecord.hasMany(OffenceRecord, { foreignKey: 'fineId', onDelete: 'CASCADE', o
 OffenceRecord.belongsTo(Offence, { foreignKey: 'offenceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 Offence.hasMany(OffenceRecord, { foreignKey: 'offenceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
-Officer.belongsTo(NIC, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
-NIC.hasMany(Officer, { foreignKey: 'nic', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Officer.belongsTo(NIC, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+NIC.hasMany(Officer, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
 Officer.belongsTo(Station, { foreignKey: 'stationId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 Station.hasMany(Officer, { foreignKey: 'stationId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
