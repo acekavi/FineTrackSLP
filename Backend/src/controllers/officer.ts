@@ -196,20 +196,18 @@ export const getViolatorDetails = async (req: RequestWithUser, res: Response) =>
             include: [
                 {
                     model: OffenceRecord,
-                    as: 'offenceRecords',
                     include: [
                         {
                             model: Offence,
-                            as: 'offence',
-                            attributes: ['offence_description', 'fee', 'score']
+                            attributes: ['description', 'fee', 'score']
                         }
                     ],
-                    attributes: ['offence_date']
+                    attributes: ['offenceDate']
                 }
             ],
             attributes: [
-                'fine_ID', 'total_fine', 'total_score', 'fine_date', 'fine_time',
-                'location_name', 'location_link', 'isDriver', 'is_payed', 'pay_reference_id'
+                'fineId', 'totalFine', 'totalScore', 'fineDate', 'fineTime',
+                'locationName', 'locationLink', 'isDriver', 'isPaid', 'payReferenceId'
             ]
         });
 
