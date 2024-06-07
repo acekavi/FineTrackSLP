@@ -4,12 +4,14 @@ interface DrLicenceAttributes {
   licence_number: string;
   expire_date: Date;
   nic: string;
+  spects_needed: string;
 }
 
 export class DrLicence extends Model<DrLicenceAttributes> implements DrLicenceAttributes {
   public licence_number!: string;
   public expire_date!: Date;
   public nic!: string;
+  public spects_needed!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -44,6 +46,11 @@ export default (sequelize: Sequelize) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
+    spects_needed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    }
   }, {
     sequelize,
     modelName: 'DrLicence',

@@ -50,7 +50,7 @@ export class PedestrianTypeComponent {
 
     this.officerService.checkNicorPassport(body).subscribe({
       next: (response) => {
-        this.router.navigate(['dashboard']);
+        this.router.navigate(['officer/pedestrian/dashboard']);
       },
       error: (error) => {
         this.pedForm.controls['nic_number'].setErrors({ invalid: true });

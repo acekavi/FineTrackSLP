@@ -49,7 +49,7 @@ export const routes: Routes = [
             },
         ]
     },
-    { path: 'officer/type-selection/pedestrian/dashboard', component: OfficerDashboardComponent },
-    { path: 'officer/type-selection/driver/dashboard', component: OfficerDashboardComponent },
+    { path: 'officer/pedestrian/dashboard', component: OfficerDashboardComponent, canActivate: [checkOfficerAuth] },
+    { path: 'officer/driver/dashboard', component: OfficerDashboardComponent, canActivate: [checkOfficerAuth] },
     { path: '**', redirectTo: '' }
 ];

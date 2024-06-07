@@ -42,7 +42,7 @@ export class DriverTypeComponent {
         this.loading = false;
       },
       complete: () => {
-        this.router.navigate(['officer/type-selection/driver/dashboard']);
+        this.router.navigate(['officer/driver/dashboard']);
         this.loading = false;
       }
     });
