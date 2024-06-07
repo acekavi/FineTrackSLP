@@ -1,13 +1,15 @@
 import { DatePipe, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { catchError, map, merge, Observable, startWith, switchMap, of as observableOf } from 'rxjs';
+import { MatSort } from '@angular/material/sort';
 import { IconsModule } from 'src/app/modules/icons.module';
 import { MatUiModule } from 'src/app/modules/matui.module';
 import { PopupViolationSelectionComponent } from '../popup-violation-selection/popup-violation-selection.component';
+import { ViolaterDetails } from 'src/global-types';
+import { OfficerService } from 'src/app/services/officer.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,54 +23,24 @@ import { PopupViolationSelectionComponent } from '../popup-violation-selection/p
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class OfficerDashboardComponent implements AfterViewInit {
-  displayedColumns: string[] = ['created', 'state', 'number', 'title'];
-  exampleDatabase!: ExampleHttpDatabase | null;
-  data: GithubIssue[] = [];
+export class OfficerDashboardComponent implements OnInit {
+  violator: any;
+  displayedColumns: string[] = [
+    'fine_ID', 'total_fine', 'total_score', 'fine_date', 'fine_time',
+    'location_name', 'location_link', 'isDriver', 'is_payed', 'pay_reference_id'
+  ];
 
-  resultsLength = 0;
-  isLoadingResults = true;
-  isRateLimitReached = false;
+  constructor(
+    private route: ActivatedRoute,
+    private officerService: OfficerService,
+    private dialog: MatDialog
+  ) { }
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
-  constructor(private _httpClient: HttpClient, public dialog: MatDialog) { }
-
-  ngAfterViewInit() {
-    this.exampleDatabase = new ExampleHttpDatabase(this._httpClient);
-
-    // If the user changes the sort order, reset back to the first page.
-    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
-
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.exampleDatabase!.getRepoIssues(
-            this.sort.active,
-            this.sort.direction,
-            this.paginator.pageIndex,
-          ).pipe(catchError(() => observableOf(null)));
-        }),
-        map(data => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingResults = false;
-          this.isRateLimitReached = data === null;
-
-          if (data === null) {
-            return [];
-          }
-
-          // Only refresh the result length if there is new data. In case of rate
-          // limit errors, we do not want to reset the paginator to zero, as that
-          // would prevent users from re-triggering requests.
-          this.resultsLength = data.total_count;
-          return data.items;
-        }),
-      )
-      .subscribe(data => (this.data = data));
+  ngOnInit(): void {
+    const nic = this.route.snapshot.paramMap.get('nic')!;
+    this.officerService.getViolatorDetails(nic).subscribe(data => {
+      this.violator = data;
+    });
   }
 
   openAddCaseDialog(): void {
@@ -76,31 +48,5 @@ export class OfficerDashboardComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
     });
-  }
-}
-
-
-export interface GithubApi {
-  items: GithubIssue[];
-  total_count: number;
-}
-
-export interface GithubIssue {
-  created_at: string;
-  number: string;
-  state: string;
-  title: string;
-}
-
-/** An example database that the data source uses to retrieve data for the table. */
-export class ExampleHttpDatabase {
-  constructor(private _httpClient: HttpClient) { }
-
-  getRepoIssues(sort: string, order: SortDirection, page: number): Observable<GithubApi> {
-    const href = 'https://api.github.com/search/issues';
-    const requestUrl = `${href}?q=repo:angular/components&sort=${sort}&order=${order}&page=${page + 1
-      }`;
-
-    return this._httpClient.get<GithubApi>(requestUrl);
   }
 }

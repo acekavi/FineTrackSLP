@@ -21,10 +21,10 @@ module.exports = {
 			});
 		}
 
-		await queryInterface.bulkInsert('Nics', nics, {});
+		await queryInterface.bulkInsert('NICs', nics, {});
 	},
 
 	async down(queryInterface, Sequelize) {
-		await queryInterface.bulkDelete('Nics', null, {});
+		await queryInterface.bulkDelete('NICs', null, {});
 	},
 };

@@ -1,24 +1,27 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, Sequelize, Association } from 'sequelize';
+import { Offence } from './offence';
+import { AssociatableModel } from '../global-types';
+import { FineRecord } from './finerecord';
 
-interface OffenceRecordAttributes {
-  fine_ID: number;
-  offence_ID: number;
-  offence_date: Date;
-}
-
-class OffenceRecord extends Model<OffenceRecordAttributes> implements OffenceRecordAttributes {
+export class OffenceRecord extends Model implements AssociatableModel {
   public fine_ID!: number;
   public offence_ID!: number;
   public offence_date!: Date;
 
-  static associate(models: any) {
+  public static associations: {
+    fineDetails: Association<OffenceRecord, FineRecord>;
+    offenceDetails: Association<OffenceRecord, Offence>;
+  };
+
+  public static associate(models: any) {
     OffenceRecord.belongsTo(models.FineRecord, {
       foreignKey: 'fine_ID',
-      as: 'fineRecord',
+      as: 'fineDetails',
     });
+
     OffenceRecord.belongsTo(models.Offence, {
       foreignKey: 'offence_ID',
-      as: 'offence',
+      as: 'offenceDetails',
     });
   }
 }
@@ -26,11 +29,15 @@ class OffenceRecord extends Model<OffenceRecordAttributes> implements OffenceRec
 export default (sequelize: Sequelize) => {
   OffenceRecord.init({
     fine_ID: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'FineRecord',
+        key: 'fine_ID',
+      }
     },
     offence_ID: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'Offences',
@@ -41,10 +48,19 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
   }, {
     sequelize,
     modelName: 'OffenceRecord',
-    timestamps: true,
   });
 
   return OffenceRecord;

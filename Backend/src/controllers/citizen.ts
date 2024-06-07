@@ -62,7 +62,7 @@ export const signin_user = async (req: Request, res: Response) => {
             user: {
                 username: citizen.username,
                 role: 'citizen',
-                NIC: citizen.NIC,
+                NIC: citizen.nic,
                 mobile: citizen.mobile,
                 earned_score: citizen.earned_score,
             }
@@ -93,7 +93,7 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
         }
 
         return res.status(200).json({
-            NIC: citizen.NIC,
+            NIC: citizen.nic,
             username: citizen.username,
             mobile: citizen.mobile,
         });

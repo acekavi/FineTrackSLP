@@ -24,30 +24,31 @@ const Offence = OffenceModel(sequelize);
 const OffenceRecord = OffenceRecordModel(sequelize);
 const FineRecord = FineRecordModel(sequelize);
 const Citizen = CitizenModel(sequelize);
-const VehicelType = VehicleTypeModel(sequelize);
-
-// Call associate method for each model with associations
-Nic.associate({ Citizen, Officer });
-DrLicence.associate({ Nic });
-Station.associate({ Officer });
-Officer.associate({ FineRecord, Station, Nic });
-IfDriver.associate({ FineRecord });
-Evidence.associate({ FineRecord });
-Feedback.associate({ Citizen });
-Offence.associate({ OffenceRecord });
-OffenceRecord.associate({ FineRecord, Offence });
-FineRecord.associate({ Citizen, Officer, Evidence, IfDriver, OffenceRecord });
-Citizen.associate({ FineRecord, Feedback, Nic });
+const VehicleType = VehicleTypeModel(sequelize); // Fixed typo here
 
 // Sync models in the order of dependencies
-sequelize.sync({ force: false })
+sequelize
+    .sync({ force: false })
     .then(() => {
         console.log('Successfully synced database tables with models.');
     })
     .catch((err) => {
-        console.error('Error creating database tables:', err);
-    }).finally(() => {
-        sequelize.close();
+        console.error('Error creating database tables:', err); // Log error details for debugging
     })
+    .finally(() => {
+        sequelize.close();
+    });
 
-export { sequelize, Officer, Station, FineRecord, Citizen, Evidence, Feedback, IfDriver, Offence, OffenceRecord };
+export {
+    sequelize,
+    Officer,
+    Station,
+    FineRecord,
+    Citizen,
+    Evidence,
+    Feedback,
+    IfDriver,
+    Offence,
+    OffenceRecord,
+    VehicleType, // Added here for consistency
+};

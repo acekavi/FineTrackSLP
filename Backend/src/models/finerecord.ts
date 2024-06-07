@@ -1,71 +1,52 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, Sequelize, Association } from 'sequelize';
+import { Citizen } from './citizen';
+import { Officer } from './officer';
+import { AssociatableModel } from '../global-types';
 
-interface FineRecordAttributes {
-  fine_ID: number;
-  nic: string;
-  total_fine: number;
-  total_score: number;
-  fine_date: Date;
-  fine_time: string;
-  location_name: string | null;
-  location_link: string;
-  isDriver: boolean;
-  officer_ID: number;
-  is_payed: boolean | null;
-  pay_reference_id: string | null;
-}
-
-class FineRecord extends Model<FineRecordAttributes> implements FineRecordAttributes {
+export class FineRecord extends Model implements AssociatableModel {
   public fine_ID!: number;
   public nic!: string;
   public total_fine!: number;
   public total_score!: number;
   public fine_date!: Date;
-  public fine_time!: string;
-  public location_name!: string | null;
+  public fine_time!: Date;
+  public location_name?: string;
   public location_link!: string;
   public isDriver!: boolean;
   public officer_ID!: number;
-  public is_payed!: boolean | null;
-  public pay_reference_id!: string | null;
+  public is_payed?: boolean;
+  public pay_reference_id?: string;
 
-  static associate(models: any) {
+  public static associations: {
+    citizenDetails: Association<FineRecord, Citizen>
+    officerDetails: Association<FineRecord, Officer>
+  };
+
+  public static associate = (models: any) => {
     FineRecord.belongsTo(models.Citizen, {
       foreignKey: 'nic',
-      as: 'citizen',
+      as: 'citizenDetails',
     });
     FineRecord.belongsTo(models.Officer, {
       foreignKey: 'officer_ID',
-      as: 'officer',
+      as: 'officerDetails',
     });
-    FineRecord.hasMany(models.Evidence, {
-      foreignKey: 'fine_ID',
-      as: 'evidences',
-    });
-    FineRecord.hasMany(models.IfDriver, {
-      foreignKey: 'fine_ID',
-      as: 'ifDrivers',
-    });
-    FineRecord.hasMany(models.OffenceRecord, {
-      foreignKey: 'fine_ID',
-      as: 'offenceRecords',
-    });
-  }
+  };
 }
 
 export default (sequelize: Sequelize) => {
   FineRecord.init({
     fine_ID: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      allowNull: false,
       autoIncrement: true,
     },
     nic: {
       type: DataTypes.CHAR(12),
       allowNull: false,
       references: {
-        model: 'Citizens',
+        model: 'Citizen',
         key: 'nic',
       },
     },
@@ -98,10 +79,10 @@ export default (sequelize: Sequelize) => {
       allowNull: false,
     },
     officer_ID: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Officers',
+        model: 'Officer',
         key: 'officer_ID',
       },
     },
@@ -113,11 +94,19 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
   }, {
     sequelize,
     modelName: 'FineRecord',
-    timestamps: true,
   });
-
   return FineRecord;
 };

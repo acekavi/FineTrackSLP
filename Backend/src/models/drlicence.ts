@@ -1,35 +1,31 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, Sequelize, Association } from 'sequelize';
+import { NIC } from './nic';
+import { AssociatableModel } from '../global-types';
 
-interface DrLicenceAttributes {
-  licence_number: string;
-  expire_date: Date;
-  nic: string;
-  spects_needed: string;
-}
-
-export class DrLicence extends Model<DrLicenceAttributes> implements DrLicenceAttributes {
+export class DrLicence extends Model implements AssociatableModel {
   public licence_number!: string;
   public expire_date!: Date;
   public nic!: string;
-  public spects_needed!: string;
+  public spects_needed!: boolean;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public static associations: {
+    nicDetails: Association<DrLicence, NIC>
+  };
 
-  static associate(models: any) {
-    DrLicence.belongsTo(models.Nic, {
+  public static associate = (models: any) => {
+    DrLicence.belongsTo(models.NIC, {
       foreignKey: 'nic',
-      as: 'nic_card',
+      as: 'violaterNicDetails',
     });
-  }
+  };
 }
 
 export default (sequelize: Sequelize) => {
   DrLicence.init({
     licence_number: {
       type: DataTypes.STRING(8),
-      allowNull: false,
       primaryKey: true,
+      allowNull: false,
     },
     expire_date: {
       type: DataTypes.DATE,
@@ -38,9 +34,8 @@ export default (sequelize: Sequelize) => {
     nic: {
       type: DataTypes.STRING(12),
       allowNull: false,
-      unique: true,
       references: {
-        model: 'Nics',
+        model: 'NIC',
         key: 'id_number',
       },
       onDelete: 'CASCADE',
@@ -50,11 +45,20 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
-    }
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
   }, {
     sequelize,
     modelName: 'DrLicence',
-    timestamps: true,
   });
 
   return DrLicence;

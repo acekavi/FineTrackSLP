@@ -1,34 +1,22 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
+import { AssociatableModel } from '../global-types';
 
-interface OffenceAttributes {
-  offence_ID: number;
-  offence_description: string;
-  score: number;
-  enable_stat: boolean;
-  fee: number;
-}
-
-class Offence extends Model<OffenceAttributes> implements OffenceAttributes {
+export class Offence extends Model implements AssociatableModel {
   public offence_ID!: number;
   public offence_description!: string;
   public score!: number;
   public enable_stat!: boolean;
   public fee!: number;
 
-  static associate(models: any) {
-    Offence.hasMany(models.OffenceRecord, {
-      foreignKey: 'offence_ID',
-      as: 'offenceRecords',
-    });
-  }
+  public static associate?: (models: any) => void;
 }
 
 export default (sequelize: Sequelize) => {
   Offence.init({
     offence_ID: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      allowNull: false,
     },
     offence_description: {
       type: DataTypes.TEXT,
@@ -46,10 +34,19 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
   }, {
     sequelize,
     modelName: 'Offence',
-    timestamps: true,
   });
 
   return Offence;

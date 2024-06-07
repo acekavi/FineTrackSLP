@@ -1,20 +1,21 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, Sequelize, Association } from 'sequelize';
+import { Citizen } from './citizen';
+import { AssociatableModel } from '../global-types';
 
-interface FeedbackAttributes {
-  nic: string;
-  feedback: string;
-}
-
-class Feedback extends Model<FeedbackAttributes> implements FeedbackAttributes {
+export class Feedback extends Model implements AssociatableModel {
   public nic!: string;
   public feedback!: string;
 
-  static associate(models: any) {
+  public static associations: {
+    citizenFeedback: Association<Feedback, Citizen>
+  };
+
+  public static associate = (models: any) => {
     Feedback.belongsTo(models.Citizen, {
       foreignKey: 'nic',
-      as: 'citizen',
+      as: 'citizenFeedback',
     });
-  }
+  };
 }
 
 export default (sequelize: Sequelize) => {
@@ -23,7 +24,7 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.CHAR(12),
       allowNull: false,
       references: {
-        model: 'Citizens',
+        model: 'Citizen',
         key: 'nic',
       },
       onDelete: 'CASCADE',
@@ -32,6 +33,16 @@ export default (sequelize: Sequelize) => {
     feedback: {
       type: DataTypes.TEXT,
       allowNull: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
   }, {
     sequelize,

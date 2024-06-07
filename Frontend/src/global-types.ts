@@ -59,3 +59,11 @@ export interface LicenceResponse extends NICResponse {
     licence_number: string;
     expire_date: Date;
 }
+
+export interface ViolaterDetails {
+    fine_id: number;
+    payment_status: string;
+    location_name: string;
+    offence_description: string;
+    // add other fields as needed
+}

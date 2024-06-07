@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UtilityService } from './utility.service';
-import { Citizen, LicenceResponse, NIC, NICResponse, Officer } from 'src/global-types';
+import { ViolaterDetails, LicenceResponse, NIC, NICResponse, Officer } from 'src/global-types';
 import { environment } from '../enviorenment/dev.enviorenment';
 
 @Injectable({
@@ -72,5 +72,9 @@ export class OfficerService {
   public checkNicorPassport(body: { nic_number: string, passport_number: string }): Observable<NICResponse> {
     const checkNicorPassportUrl = `${this.apiUrl}/officer/check-nic-passort`;
     return this.http.post<NICResponse>(checkNicorPassportUrl, body);
+  }
+
+  getViolatorDetails(nic: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/officer/violator/${nic}`);
   }
 }

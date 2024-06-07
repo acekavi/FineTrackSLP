@@ -1,53 +1,41 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, Sequelize, Association } from 'sequelize';
+import { NIC } from './nic';
+import { AssociatableModel } from '../global-types';
 
-interface CitizenAttributes {
-  nic: string;
-  mobile: number;
-  username: string;
-  password: string;
-  earned_score?: number;
-}
-
-class Citizen extends Model<CitizenAttributes> implements CitizenAttributes {
+export class Citizen extends Model implements AssociatableModel {
   public nic!: string;
   public mobile!: number;
   public username!: string;
   public password!: string;
   public earned_score?: number;
 
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public static associations: {
+    nicDetails: Association<Citizen, NIC>
+  };
 
-  static associate(models: any) {
-    Citizen.hasMany(models.FineRecord, {
+  public static associate = (models: any) => {
+    Citizen.belongsTo(models.NIC, {
       foreignKey: 'nic',
-      as: 'fineRecords',
+      as: 'citizenNicDetails',
     });
-    Citizen.hasMany(models.Feedback, {
-      foreignKey: 'nic',
-      as: 'feedbacks',
-    });
-    Citizen.hasOne(models.Nic, {
-      foreignKey: 'id_number',
-      as: 'NIC',
-    });
-  }
+  };
 }
 
 export default (sequelize: Sequelize) => {
   Citizen.init({
     nic: {
       type: DataTypes.CHAR(12),
-      allowNull: false,
       primaryKey: true,
+      allowNull: false,
       references: {
-        model: 'Nics',
+        model: 'NIC',
         key: 'id_number',
       },
+      onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
     mobile: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     username: {
@@ -64,11 +52,19 @@ export default (sequelize: Sequelize) => {
       allowNull: true,
       defaultValue: 0,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
   }, {
     sequelize,
     modelName: 'Citizen',
-    timestamps: true,
   });
-
   return Citizen;
 };

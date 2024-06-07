@@ -1,37 +1,37 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
+import { AssociatableModel } from '../global-types';
 
-interface IfDriverAttributes {
-  fine_ID: number;
-  vehicle: string;
-}
-
-class IfDriver extends Model<IfDriverAttributes> implements IfDriverAttributes {
+export class IfDriver extends Model implements AssociatableModel {
   public fine_ID!: number;
   public vehicle!: string;
 
-  static associate(models: any) {
-    IfDriver.belongsTo(models.FineRecord, {
-      foreignKey: 'fine_ID',
-      as: 'fineRecord',
-    });
-  }
+  public static associate?: (models: any) => void;
 }
 
 export default (sequelize: Sequelize) => {
   IfDriver.init({
     fine_ID: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      allowNull: false,
     },
     vehicle: {
       type: DataTypes.CHAR(10),
       allowNull: false,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
   }, {
     sequelize,
     modelName: 'IfDriver',
-    timestamps: true,
   });
 
   return IfDriver;

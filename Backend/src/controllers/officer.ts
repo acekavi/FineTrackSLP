@@ -1,15 +1,21 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import FineRecordModel from '../models/finerecord';
+import OffenceRecordModel from '../models/offencerecord';
+import OffenceModel from '../models/offence';
+import NICModel from '../models/nic';
 import OfficerModel from '../models/officer';
-import NicModel from '../models/nic';
 import DrLicenceModel from '../models/drlicence';
 import sequelize from '../config/sequelize';
 import { RequestWithUser } from '../global-types';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
 
+const FineRecord = FineRecordModel(sequelize);
+const OffenceRecord = OffenceRecordModel(sequelize);
+const Offence = OffenceModel(sequelize);
+const NIC = NICModel(sequelize);
 const Officer = OfficerModel(sequelize);
-const NIC = NicModel(sequelize);
 const DrLicence = DrLicenceModel(sequelize);
 
 export const create_user = async (req: Request, res: Response) => {
@@ -180,3 +186,56 @@ export const check_nic_passport = async (req: RequestWithUser, res: Response) =>
         });
     }
 }
+
+export const getViolatorDetails = async (req: RequestWithUser, res: Response) => {
+    try {
+        const nic = req.body.nic_number;
+
+        // Fetch the violator's NIC details
+        const violator = await NIC.findOne({
+            where: { id_number: nic },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        });
+
+        if (!violator) {
+            return res.status(404).json({
+                message: 'Violator not found',
+            });
+        }
+
+        // Fetch the fine records
+        const fineRecords = await FineRecord.findAll({
+            where: { nic },
+            include: [
+                {
+                    model: OffenceRecord,
+                    as: 'offenceRecords',
+                    include: [
+                        {
+                            model: Offence,
+                            as: 'offence',
+                            attributes: ['offence_description', 'fee', 'score']
+                        }
+                    ],
+                    attributes: ['offence_date']
+                }
+            ],
+            attributes: [
+                'fine_ID', 'total_fine', 'total_score', 'fine_date', 'fine_time',
+                'location_name', 'location_link', 'isDriver', 'is_payed', 'pay_reference_id'
+            ]
+        });
+
+        const responseJson = {
+            violator,
+            fineRecords
+        };
+
+        return res.status(200).json(responseJson);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to get violator details',
+        });
+    }
+};

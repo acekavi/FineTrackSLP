@@ -1,28 +1,32 @@
-import { Sequelize, DataTypes } from 'sequelize';
-import { readdirSync } from 'fs';
-import { join, basename as _basename } from 'path';
-import sequelize from '../config/sequelize';
+import { Sequelize } from 'sequelize';
+import DrLicence from './drlicence';
+import Citizen from './citizen';
+import Evidence from './evidence';
+import Feedback from './feedback';
+import FineRecord from './finerecord';
+import IfDriver from './ifdriver';
+import NIC from './nic';
+import Offence from './offence';
+import OffenceRecord from './offencerecord';
+import Officer from './officer';
+import Station from './station';
+import VehicleType from './vehicletype';
 
-const basename = _basename(__filename);
+export const ModelRegistry = (sequelize: Sequelize) => {
+    const models = {
+        DrLicence: DrLicence(sequelize),
+        Citizen: Citizen(sequelize),
+        Evidence: Evidence(sequelize),
+        Feedback: Feedback(sequelize),
+        FineRecord: FineRecord(sequelize),
+        IfDriver: IfDriver(sequelize),
+        NIC: NIC(sequelize),
+        Offence: Offence(sequelize),
+        OffenceRecord: OffenceRecord(sequelize),
+        Officer: Officer(sequelize),
+        Station: Station(sequelize),
+        VehicleType: VehicleType(sequelize),
+    };
 
-const db: any = {};
-
-readdirSync(__dirname)
-    .filter((file) => {
-        return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.ts');
-    })
-    .forEach((file) => {
-        const model = require(join(__dirname, file)).default(sequelize, DataTypes);
-        db[model.name] = model;
-    });
-
-Object.keys(db).forEach((modelName) => {
-    if (db[modelName].associate) {
-        db[modelName].associate(db);
-    }
-});
-
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-export default db;
+    return models;
+};

@@ -1,32 +1,28 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, Sequelize, Association } from 'sequelize';
+import { NIC } from './nic';
+import { Station } from './station';
+import { AssociatableModel } from '../global-types';
 
-interface OfficerAttributes {
-  officer_ID: number;
-  username: string;
-  nic: string;
-  station_ID: string;
-  password: string;
-}
-
-class Officer extends Model<OfficerAttributes> implements OfficerAttributes {
+export class Officer extends Model implements AssociatableModel {
   public officer_ID!: number;
   public username!: string;
   public nic!: string;
   public station_ID!: string;
   public password!: string;
 
-  static associate(models: any) {
+  public static associations: {
+    citizenDetails: Association<Officer, NIC>
+    officerDetails: Association<Officer, Station>
+  };
+
+  public static associate(models: any) {
+    Officer.belongsTo(models.NIC, {
+      foreignKey: 'nic',
+      as: 'officerNicDetails',
+    });
     Officer.belongsTo(models.Station, {
       foreignKey: 'station_ID',
-      as: 'station',
-    });
-    Officer.hasMany(models.FineRecord, {
-      foreignKey: 'officer_ID',
-      as: 'fineRecords',
-    });
-    Officer.hasOne(models.Nic, {
-      foreignKey: 'id_number',
-      as: 'NicNumber',
+      as: 'stationDetails',
     });
   }
 }
@@ -34,9 +30,9 @@ class Officer extends Model<OfficerAttributes> implements OfficerAttributes {
 export default (sequelize: Sequelize) => {
   Officer.init({
     officer_ID: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      allowNull: false,
       autoIncrement: true,
     },
     username: {
@@ -48,7 +44,7 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.CHAR(12),
       allowNull: false,
       references: {
-        model: 'Nics',
+        model: 'NIC',
         key: 'id_number',
       },
       onDelete: 'CASCADE',
@@ -58,7 +54,7 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.CHAR(8),
       allowNull: false,
       references: {
-        model: 'Stations',
+        model: 'Station',
         key: 'station_ID',
       },
       onDelete: 'CASCADE',
@@ -68,10 +64,20 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.STRING(60),
       allowNull: false,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
   }, {
     sequelize,
     modelName: 'Officer',
-    timestamps: true,
-  });
+  })
+
   return Officer;
-};
+}

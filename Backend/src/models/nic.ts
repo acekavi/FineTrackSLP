@@ -1,18 +1,7 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
+import { AssociatableModel } from '../global-types';
 
-interface NicAttributes {
-    id_number: string;
-    firstname: string;
-    middlename: string;
-    surname: string;
-    DOB: Date;
-    gender: string;
-    add_1: string;
-    add_2: string;
-    add_3: string;
-}
-
-class Nic extends Model<NicAttributes> implements NicAttributes {
+export class NIC extends Model implements AssociatableModel {
     public id_number!: string;
     public firstname!: string;
     public middlename!: string;
@@ -23,24 +12,15 @@ class Nic extends Model<NicAttributes> implements NicAttributes {
     public add_2!: string;
     public add_3!: string;
 
-    static associate(models: any) {
-        Nic.belongsTo(models.Citizen, {
-            foreignKey: 'nic',
-            as: 'citizen',
-        });
-        Nic.belongsTo(models.Officer, {
-            foreignKey: 'nic',
-            as: 'officer',
-        });
-    }
+    public static associate?: (models: any) => void;
 }
 
 export default (sequelize: Sequelize) => {
-    Nic.init({
+    NIC.init({
         id_number: {
             type: DataTypes.CHAR(12),
-            allowNull: false,
             primaryKey: true,
+            allowNull: false,
         },
         firstname: {
             type: DataTypes.STRING(50),
@@ -74,11 +54,20 @@ export default (sequelize: Sequelize) => {
             type: DataTypes.STRING(50),
             allowNull: false,
         },
+        createdAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        },
     }, {
         sequelize,
-        modelName: 'Nic',
-        timestamps: true,
+        modelName: 'NIC',
     });
 
-    return Nic;
+    return NIC;
 };

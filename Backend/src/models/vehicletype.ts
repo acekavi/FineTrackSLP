@@ -1,37 +1,38 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
+import { AssociatableModel } from '../global-types';
 
-interface VehicleTypeAttributes {
-    vehicle_number: string;
-    vehicle_type: string;
-}
+class VehicleType extends Model implements AssociatableModel {
+    public vehicle_ID!: number;
+    public type_name!: string;
 
-export class VehicleType extends Model<VehicleTypeAttributes> implements VehicleTypeAttributes {
-    public vehicle_number!: string;
-    public vehicle_type!: string;
-
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
-
-    static associate(models: any) {
-
-    }
+    public static associate?: (models: any) => void;
 }
 
 export default (sequelize: Sequelize) => {
     VehicleType.init({
-        vehicle_number: {
-            type: DataTypes.STRING(8),
-            allowNull: false,
+        vehicle_ID: {
+            type: DataTypes.INTEGER,
             primaryKey: true,
-        },
-        vehicle_type: {
-            type: DataTypes.CHAR(2),
             allowNull: false,
-        }
+            autoIncrement: true,
+        },
+        type_name: {
+            type: DataTypes.STRING(50),
+            allowNull: false,
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        },
     }, {
         sequelize,
         modelName: 'VehicleType',
-        timestamps: true,
     });
 
     return VehicleType;

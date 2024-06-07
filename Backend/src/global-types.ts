@@ -1,6 +1,7 @@
 import { JwtPayload } from "jsonwebtoken";
 import { Request } from 'express';
 import { Officer } from "./config/sync";
+import { Model } from "sequelize";
 
 export interface DecodedToken extends JwtPayload {
     username: string;
@@ -20,4 +21,8 @@ export class CustomError extends Error {
         super(message);
         this.status = status;
     }
+}
+
+export interface AssociatableModel extends Model {
+    associate?: (models: any) => void;
 }

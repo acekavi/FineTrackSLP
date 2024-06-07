@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable('Nics', {
+		await queryInterface.createTable('NICs', {
 			id_number: {
 				type: Sequelize.CHAR(12),
 				allowNull: false,
@@ -30,15 +30,15 @@ module.exports = {
 				allowNull: false,
 			},
 			add_1: {
-				type: Sequelize.STRING(20),
+				type: Sequelize.STRING(100),
 				allowNull: false,
 			},
 			add_2: {
-				type: Sequelize.STRING(50),
+				type: Sequelize.STRING(100),
 				allowNull: false,
 			},
 			add_3: {
-				type: Sequelize.STRING(50),
+				type: Sequelize.STRING(100),
 				allowNull: false,
 			},
 			createdAt: {
@@ -64,11 +64,11 @@ module.exports = {
 				allowNull: false,
 			},
 			nic: {
-				type: Sequelize.STRING(12),
+				type: Sequelize.CHAR(12),
 				allowNull: false,
 				unique: true,
 				references: {
-					model: 'Nics',
+					model: 'NICs',
 					key: 'id_number',
 				},
 				onDelete: 'CASCADE',
@@ -97,14 +97,14 @@ module.exports = {
 				allowNull: false,
 				primaryKey: true,
 				references: {
-					model: 'Nics',
+					model: 'NICs',
 					key: 'id_number',
 				},
 				onDelete: 'CASCADE',
 				onUpdate: 'CASCADE',
 			},
 			mobile: {
-				type: Sequelize.INTEGER,
+				type: Sequelize.STRING(15),
 				allowNull: false,
 			},
 			username: {
@@ -133,7 +133,7 @@ module.exports = {
 			},
 		});
 
-		await queryInterface.createTable('Evidence', {
+		await queryInterface.createTable('Evidences', {
 			fine_id: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
@@ -209,6 +209,7 @@ module.exports = {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				primaryKey: true,
+				autoIncrement: true,
 			},
 			offence_description: {
 				type: Sequelize.TEXT,
@@ -221,38 +222,10 @@ module.exports = {
 			enable_stat: {
 				type: Sequelize.BOOLEAN,
 				allowNull: false,
+				defaultValue: true,
 			},
 			fee: {
 				type: Sequelize.DECIMAL(10, 2),
-				allowNull: false,
-			},
-			createdAt: {
-				type: Sequelize.DATE,
-				allowNull: false,
-				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-			},
-			updatedAt: {
-				type: Sequelize.DATE,
-				allowNull: false,
-				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-			},
-		});
-
-		await queryInterface.createTable('OffenceRecords', {
-			fine_ID: {
-				type: Sequelize.INTEGER,
-				allowNull: false,
-			},
-			offence_ID: {
-				type: Sequelize.INTEGER,
-				allowNull: false,
-				references: {
-					model: 'Offences',
-					key: 'offence_ID',
-				},
-			},
-			offence_date: {
-				type: Sequelize.DATE,
 				allowNull: false,
 			},
 			createdAt: {
@@ -313,7 +286,7 @@ module.exports = {
 				type: Sequelize.CHAR(12),
 				allowNull: false,
 				references: {
-					model: 'Nics',
+					model: 'NICs',
 					key: 'id_number',
 				},
 				onDelete: 'CASCADE',
@@ -415,19 +388,53 @@ module.exports = {
 				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
 			},
 		});
+
+		await queryInterface.createTable('OffenceRecords', {
+			fine_ID: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
+				primaryKey: true,
+				references: {
+					model: 'FineRecords',
+					key: 'fine_ID',
+				},
+			},
+			offence_ID: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
+				references: {
+					model: 'Offences',
+					key: 'offence_ID',
+				},
+			},
+			offence_date: {
+				type: Sequelize.DATE,
+				allowNull: false,
+			},
+			createdAt: {
+				type: Sequelize.DATE,
+				allowNull: false,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+			},
+			updatedAt: {
+				type: Sequelize.DATE,
+				allowNull: false,
+				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+			},
+		});
 	},
 
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable('Stations');
-		await queryInterface.dropTable('Officers');
 		await queryInterface.dropTable('OffenceRecords');
+		await queryInterface.dropTable('FineRecords');
+		await queryInterface.dropTable('Officers');
+		await queryInterface.dropTable('Stations');
 		await queryInterface.dropTable('Offences');
 		await queryInterface.dropTable('IfDrivers');
-		await queryInterface.dropTable('FineRecords');
 		await queryInterface.dropTable('Feedbacks');
-		await queryInterface.dropTable('Evidence');
+		await queryInterface.dropTable('Evidences');
 		await queryInterface.dropTable('DrLicences');
 		await queryInterface.dropTable('Citizens');
-		await queryInterface.dropTable('Nics');
+		await queryInterface.dropTable('NICs');
 	},
 };

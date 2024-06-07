@@ -1,36 +1,24 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
+import { AssociatableModel } from '../global-types';
 
-interface StationAttributes {
-  station_ID: string;
-  username: string;
-  password: string;
-  location: string;
-}
-
-class Station extends Model<StationAttributes> implements StationAttributes {
+export class Station extends Model implements AssociatableModel {
   public station_ID!: string;
   public username!: string;
   public password!: string;
   public location!: string;
 
-  static associate(models: any) {
-    Station.hasMany(models.Officer, {
-      foreignKey: 'station_ID',
-      as: 'officers',
-    });
-  }
+  public static associate?: (models: any) => void;
 }
 
 export default (sequelize: Sequelize) => {
   Station.init({
     station_ID: {
-      type: DataTypes.STRING(8),
-      allowNull: false,
+      type: DataTypes.CHAR(8),
       primaryKey: true,
+      allowNull: false,
     },
     username: {
       type: DataTypes.STRING(15),
-      unique: true,
       allowNull: false,
     },
     password: {
@@ -41,10 +29,19 @@ export default (sequelize: Sequelize) => {
       type: DataTypes.STRING(512),
       allowNull: false,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
   }, {
     sequelize,
     modelName: 'Station',
-    timestamps: true,
   });
 
   return Station;
