@@ -7,6 +7,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-di
 import { MatDialog } from '@angular/material/dialog';
 import { UtilityService } from 'src/app/services/utility.service';
 import { PopupAddOffenceComponent } from '../popup-add-offence/popup-add-offence.component';
+import { StationService } from 'src/app/services/station.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -15,6 +16,7 @@ import { PopupAddOffenceComponent } from '../popup-add-offence/popup-add-offence
     RouterModule,
     IconsModule,
     MatUiModule,
+    AsyncPipe
   ],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
@@ -25,8 +27,11 @@ export class StationLayoutComponent {
     private location: Location,
     private router: Router,
     private dialog: MatDialog,
-    private utilityService: UtilityService
-  ) { }
+    private utilityService: UtilityService,
+    public stationService: StationService,
+  ) {
+    this.stationService.loadStationFromServer();
+  }
 
 
   addOffenceDialog() {
@@ -39,7 +44,6 @@ export class StationLayoutComponent {
       }
     });
   }
-
 
   goBack() {
     if (this.router.url === '/station/dashboard') {

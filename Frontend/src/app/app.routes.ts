@@ -5,8 +5,8 @@ import { checkCitizenAuth, checkOfficerAuth, checkStationAuth, checkUnauth } fro
 import { OfficerDashboardComponent } from './officer/dashboard/dashboard.component';
 import { OfficerTypeSelectionComponent } from './officer/type-selection/type-selection.component';
 import { OfficerLayoutComponent } from './officer/layout/layout.component';
-import { PedestrianTypeComponent } from './officer/violations/pedestrian-type/pedestrian-type.component';
-import { DriverTypeComponent } from './officer/violations/driver-type/driver-type.component';
+import { PedestrianTypeComponent } from './officer/pedestrian-type/pedestrian-type.component';
+import { DriverTypeComponent } from './officer/driver-type/driver-type.component';
 import { StationLayoutComponent } from './station/main-layout/main-layout.component';
 import { OfficersDashboardComponent } from './station/officers-dashboard/officers-dashboard.component';
 import { CasesDashboardComponent } from './station/cases-dashboard/cases-dashboard.component';

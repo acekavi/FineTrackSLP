@@ -5,32 +5,52 @@
     <div
       class="flex flex-row md:flex-col justify-center align-middle lg:h-screen md:h-screen gap-2"
     >
-      <button
-        mat-raised-button
-        color="primary"
-        routerLink="edit"
-        class="square-button"
+      <div
+        class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-4"
       >
-        <mat-icon>person</mat-icon>Profile
-      </button>
-
-      <button
-        mat-raised-button
-        color="primary"
-        routerLink="update-password"
-        class="square-button"
-      >
-        <mat-icon>directions_car</mat-icon>Driver
-      </button>
-
-      <button
-        mat-raised-button
-        color="primary"
-        routerLink="update-password"
-        class="square-button"
-      >
-        <mat-icon>directions_walk</mat-icon>Pedestrian
-      </button>
+        <div class="p-2 flex flex-col">
+          <ng-icon
+            class="text-5xl mt-2 text-blue-500 self-center"
+            name="bootstrapPersonCircle"
+          ></ng-icon>
+          <p
+            class="uppercase tracking-wide text-blue-500 font-semibold text-xl self-center"
+          >
+            Violator Profile
+          </p>
+          <p class="mt-2 text-black">
+            <strong>
+              NIC ID:
+              {{ (officerService.violater$ | async)?.idNumber }}</strong
+            >
+          </p>
+          <p class="mt-2 text-gray-500">
+            <strong>Full Name:</strong>
+            {{ (officerService.violater$ | async)?.firstName }}
+            {{ (officerService.violater$ | async)?.surname }}
+          </p>
+          <p class="mt-2 text-gray-500">
+            <strong>Date of Birth:</strong>
+            {{ (officerService.violater$ | async)?.dob | date }}
+          </p>
+          <p class="mt-2 text-gray-500">
+            <strong>Gender:</strong>
+            {{ (officerService.violater$ | async)?.gender }}
+          </p>
+          <p class="mt-2 text-gray-500">
+            <strong>Address:</strong>
+          </p>
+          <p class="mt-2 ms-2 text-gray-500">
+            {{ (officerService.violater$ | async)?.address1 }}
+          </p>
+          <p class="mt-2 ms-2 text-gray-500">
+            {{ (officerService.violater$ | async)?.address2 }}
+          </p>
+          <p class="mt-2 ms-2 text-gray-500">
+            {{ (officerService.violater$ | async)?.address3 }}
+          </p>
+        </div>
+      </div>
 
       <button
         mat-raised-button
@@ -39,6 +59,15 @@
         class="square-button"
       >
         <mat-icon>help</mat-icon>Help
+      </button>
+
+      <button
+        mat-flat-button
+        color="warn"
+        class="square-button"
+        (click)="goBack()"
+      >
+        <mat-icon>arrow_back</mat-icon>Go Back
       </button>
     </div>
   </div>

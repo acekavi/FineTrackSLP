@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { IconsModule } from 'src/app/modules/icons.module';
 import { MatUiModule } from 'src/app/modules/matui.module';
 import { StationService } from 'src/app/services/station.service';
@@ -26,14 +26,12 @@ export class OfficersDashboardComponent {
   ];
 
   constructor(
-    private router: Router,
     public stationService: StationService,
     public utilityService: UtilityService,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.stationService.loadStationFromServer();
     this.stationService.loadOfficersInStationFromServer();
   }
 

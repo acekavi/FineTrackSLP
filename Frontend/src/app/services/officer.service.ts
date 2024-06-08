@@ -73,9 +73,9 @@ export class OfficerService {
     });
   }
 
-  public checkDriverLicence(licence_number: string): Observable<NICwithCitizen> {
+  public checkDriverLicence(body: { nicNumber: string, licenceNumber: string }): Observable<NICwithCitizen> {
     const checkDriverInfoUrl = `${this.apiUrl}/officer/check-driver`;
-    return this.http.post<NICwithCitizen>(checkDriverInfoUrl, { licence_number });
+    return this.http.post<NICwithCitizen>(checkDriverInfoUrl, body);
   }
 
   public checkNICorPassport(body: { nicNumber: string, passport_number: string }): Observable<NICwithCitizen> {

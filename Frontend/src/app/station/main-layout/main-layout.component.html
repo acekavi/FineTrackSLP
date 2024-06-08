@@ -5,14 +5,37 @@
     <div
       class="flex flex-row md:flex-col justify-center align-middle lg:h-screen md:h-screen gap-2"
     >
-      <button
-        mat-raised-button
-        color="primary"
-        class="square-button"
-        routerLink="edit"
+      <div
+        class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-4"
       >
-        <mat-icon>person</mat-icon>Station Details
-      </button>
+        <div class="p-2 flex flex-col">
+          <ng-icon
+            class="text-5xl mt-2 text-blue-500 self-center"
+            name="bootstrapBank"
+          ></ng-icon>
+          <p
+            class="uppercase tracking-wide text-blue-500 font-semibold text-xl self-center"
+          >
+            Station Details
+          </p>
+          <p class="mt-2 text-black">
+            <strong
+              >Location:
+              {{
+                (stationService.stationUser$ | async)?.location?.toUpperCase()
+              }}</strong
+            >
+          </p>
+          <p class="mt-2 text-gray-500">
+            <strong> Station ID:</strong>
+            {{ (stationService.stationUser$ | async)?.stationId }}
+          </p>
+          <p class="mt-2 text-gray-500">
+            <strong>Username:</strong>
+            {{ (stationService.stationUser$ | async)?.username }}
+          </p>
+        </div>
+      </div>
 
       <button
         mat-raised-button

@@ -29,20 +29,32 @@ export class DriverTypeComponent {
     private formBuilder: FormBuilder,
   ) {
     this.driverForm = this.formBuilder.group({
-      licence_number: ['', [Validators.required]],
+      nicNumber: [''],
+      licenceNumber: [''],
     });
   }
 
   onSubmit() {
     this.loading = true;
 
-    this.officerService.checkDriverLicence(this.driverForm.value.licence_number).subscribe({
+    const body = {
+      nicNumber: this.driverForm.value.nicNumber,
+      licenceNumber: this.driverForm.value.licenceNumber
+    }
+
+    if (!this.driverForm.value.nicNumber && !this.driverForm.value.licenceNumber) {
+      this.driverForm.controls['nicNumber'].setErrors({ required: true });
+      this.driverForm.controls['licenceNumber'].setErrors({ required: true });
+      this.loading = false;
+    }
+
+    this.officerService.checkDriverLicence(body).subscribe({
       next: (response) => {
         this.router.navigate([`officer/driver/${response.idNumber.trim()}/dashboard`]);
 
       },
       error: (error) => {
-        this.driverForm.controls['licence_number'].setErrors({ invalid: true });
+        this.driverForm.controls['licenceNumber'].setErrors({ invalid: true });
         this.loading = false;
       },
       complete: () => {

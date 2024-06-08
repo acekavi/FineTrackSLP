@@ -1,18 +1,22 @@
-import { DatePipe, NgClass, NgIf, NgStyle } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IconsModule } from 'src/app/modules/icons.module';
 import { MatUiModule } from 'src/app/modules/matui.module';
 import { PopupViolationSelectionComponent } from '../popup-violation-selection/popup-violation-selection.component';
 import { OfficerService } from 'src/app/services/officer.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
+    MatCardModule,
     IconsModule,
     MatUiModule,
+    AsyncPipe,
     DatePipe,
     NgIf,
     NgClass
@@ -28,7 +32,8 @@ export class OfficerDashboardComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public officerService: OfficerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -39,6 +44,24 @@ export class OfficerDashboardComponent implements OnInit {
     const dialogRef = this.dialog.open(PopupViolationSelectionComponent);
 
     dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  goBack() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Back',
+        message: 'Are you sure you want to go back?'
+      }
+    });
+
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.router.navigate(['/officer/type-selection']);
+      } else {
+        dialogRef.close();
+      }
     });
   }
 }

@@ -43,8 +43,8 @@ export class PedestrianTypeComponent {
     }
 
     if (!this.pedForm.value.nicNumber && !this.pedForm.value.passport_number) {
-      this.pedForm.controls['nicNumber'].setErrors({ invalid: true });
-      this.pedForm.controls['passport_number'].setErrors({ invalid: true });
+      this.pedForm.controls['nicNumber'].setErrors({ required: true });
+      this.pedForm.controls['passport_number'].setErrors({ required: true });
       this.loading = false;
     }
 

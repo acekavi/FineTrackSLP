@@ -93,33 +93,48 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
 
 export const check_drivers_licence = async (req: RequestWithUser, res: Response) => {
     try {
-        const licenceNumber = req.body.licence_number;
+        const { nicNumber, licenceNumber } = req.body;
 
-        const driversLicence = await DrLicence.findOne({
-            where: { licenceNumber },
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
-        });
+        if (!nicNumber && !licenceNumber) {
+            return res.status(400).json({ message: 'Both NIC and Licence number cannot be empty!' });
+        }
 
-        if (!driversLicence) {
-            return res.status(404).json({
-                message: 'Invalid licence number!',
+        let violater = null;
+
+        if (licenceNumber) {
+            const driversLicence = await DrLicence.findOne({
+                where: { licenceNumber },
+                attributes: ['nicNumber']
+            });
+
+            if (!driversLicence) {
+                return res.status(404).json({ message: 'Invalid licence number!' });
+            }
+
+            violater = await NIC.findOne({
+                where: { idNumber: driversLicence.nicNumber },
+                attributes: { exclude: ['createdAt', 'updatedAt'] }
             });
         }
 
-        const violater = await NIC.findOne({
-            where: {
-                idNumber: driversLicence?.nicNumber
-            },
-        })
+        if (!violater && nicNumber) {
+            violater = await NIC.findOne({
+                where: { idNumber: nicNumber },
+                attributes: { exclude: ['createdAt', 'updatedAt'] }
+            });
+
+            if (!violater) {
+                return res.status(404).json({ message: 'Invalid NIC number!' });
+            }
+        }
 
         return res.status(200).json(violater);
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: 'Failed to get officer',
-        });
+        return res.status(500).json({ message: 'Failed to get violator' });
     }
-}
+};
+
 
 export const check_nic_passport = async (req: RequestWithUser, res: Response) => {
     try {

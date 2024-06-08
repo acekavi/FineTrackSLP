@@ -1,5 +1,7 @@
 <form form [formGroup]="pedForm" (ngSubmit)="onSubmit()">
-  <div class="flex flex-row justify-center align-middle w-full gap-8">
+  <div
+    class="flex md:flex-row md:gap-8 flex-col gap-4 justify-center align-middle w-full"
+  >
     <div>
       <p class="text-lg text-white">Enter NIC Number</p>
       <mat-form-field class="w-80">
@@ -7,6 +9,9 @@
         <input matInput placeholder="123456789v" formControlName="nicNumber" />
         <mat-error *ngIf="pedForm.get('nicNumber')?.hasError('invalid')"
           >Invalid NIC Number</mat-error
+        >
+        <mat-error *ngIf="pedForm.get('nicNumber')?.hasError('required')"
+          >Either NIC or Passport is required to proceed</mat-error
         >
       </mat-form-field>
     </div>
@@ -23,6 +28,9 @@
         />
         <mat-error *ngIf="pedForm.get('passport_number')?.hasError('invalid')"
           >Invalid Passport Number</mat-error
+        >
+        <mat-error *ngIf="pedForm.get('passport_number')?.hasError('required')"
+          >Either NIC or Passport is required to proceed</mat-error
         >
       </mat-form-field>
     </div>
