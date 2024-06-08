@@ -7,6 +7,10 @@ import { UtilityService } from './utility.service';
 import { Citizen, FineRecord, NIC, OffenceRecord, Officer } from 'src/global-types';
 import { environment } from '../enviorenment/dev.enviorenment';
 
+interface NICwithCitizen extends NIC {
+  Citizen: Citizen;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -59,20 +63,20 @@ export class OfficerService {
     });
   }
 
-  public checkDriverLicence(licence_number: string): Observable<Citizen> {
+  public checkDriverLicence(licence_number: string): Observable<NICwithCitizen> {
     const checkDriverInfoUrl = `${this.apiUrl}/officer/check-driver`;
-    return this.http.post<Citizen>(checkDriverInfoUrl, { licence_number }).pipe(
-      tap((response: Citizen) => {
-        this.violaterSubject.next(response);
+    return this.http.post<NICwithCitizen>(checkDriverInfoUrl, { licence_number }).pipe(
+      tap((response: NICwithCitizen) => {
+        this.violaterSubject.next(response.Citizen);
       })
     );
   }
 
-  public checkNICorPassport(body: { nic_number: string, passport_number: string }): Observable<Citizen> {
+  public checkNICorPassport(body: { nic_number: string, passport_number: string }): Observable<NICwithCitizen> {
     const checkNicorPassportUrl = `${this.apiUrl}/officer/check-nic-passort`;
-    return this.http.post<Citizen>(checkNicorPassportUrl, body).pipe(
-      tap((response: Citizen) => {
-        this.violaterSubject.next(response);
+    return this.http.post<NICwithCitizen>(checkNicorPassportUrl, body).pipe(
+      tap((response: NICwithCitizen) => {
+        this.violaterSubject.next(response.Citizen);
       })
     );
   }

@@ -106,13 +106,13 @@ export const check_drivers_licence = async (req: RequestWithUser, res: Response)
             });
         }
 
-        const violater = await Citizen.findOne({
+        const violater = await NIC.findOne({
             where: {
-                nicNumber: driversLicence?.nicNumber
+                idNumber: driversLicence?.nicNumber
             },
             include: [
                 {
-                    model: NIC
+                    model: Citizen
                 }
             ],
             attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
@@ -138,15 +138,16 @@ export const check_nic_passport = async (req: RequestWithUser, res: Response) =>
             });
         }
 
-        const violater = await Citizen.findOne({
+        const violater = await NIC.findOne({
             where: {
-                nicNumber: {
-                    [Op.or]: [nic_number, passport_number]
-                }
+                [Op.or]: [
+                    { idNumber: nic_number },
+                    { idNumber: passport_number }
+                ]
             },
             include: [
                 {
-                    model: NIC
+                    model: Citizen
                 }
             ],
             attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
@@ -182,8 +183,7 @@ export const get_violator_fine_records = async (req: RequestWithUser, res: Respo
                             model: Offence,
                             attributes: ['description', 'fee', 'score']
                         }
-                    ],
-                    attributes: ['offenceDate']
+                    ]
                 }
             ]
         });
