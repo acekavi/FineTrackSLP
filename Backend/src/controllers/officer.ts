@@ -135,7 +135,6 @@ export const check_drivers_licence = async (req: RequestWithUser, res: Response)
     }
 };
 
-
 export const check_nic_passport = async (req: RequestWithUser, res: Response) => {
     try {
         const nicNumber = req.body.nicNumber;

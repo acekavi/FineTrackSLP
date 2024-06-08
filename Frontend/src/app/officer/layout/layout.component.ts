@@ -11,7 +11,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-di
 import { Officer } from 'src/global-types';
 
 @Component({
-  selector: 'app-layout',
+  selector: 'app-officer-layout',
   standalone: true,
   imports: [
     AsyncPipe,

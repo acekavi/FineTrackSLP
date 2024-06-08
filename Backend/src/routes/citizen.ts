@@ -12,6 +12,6 @@ const router = express.Router();
 
 router.post('/register', CitizenController.create_user);
 router.post('/login', CitizenController.signin_user);
-router.get('/user', checkBearerToken, CitizenController.get_user);
+router.get('/details', checkBearerToken, CitizenController.get_user);
 
 export default router;

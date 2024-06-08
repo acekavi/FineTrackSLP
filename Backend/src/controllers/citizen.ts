@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { RequestWithUser } from '../global-types';
-import { Citizen } from '../models';
+import { Citizen, NIC } from '../models';
 
 export const create_user = async (req: Request, res: Response) => {
     try {
@@ -94,14 +94,16 @@ export const signin_user = async (req: Request, res: Response) => {
 
 export const get_user = async (req: RequestWithUser, res: Response) => {
     try {
-        const decodedToken = req.user;
-        if (!decodedToken) {
-            return res.status(401).json({
-                message: 'Unauthorized access',
-            });
-        }
+        const username = req.user?.username;
 
-        const citizen = await Citizen.findOne({ where: { username: decodedToken.username } });
+        const citizen = await Citizen.findOne({
+            where: { username },
+            attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
+            include: [{
+                model: NIC,
+                attributes: { exclude: ['createdAt', 'updatedAt'] }
+            }]
+        });
 
         if (!citizen) {
             return res.status(404).json({
@@ -109,11 +111,7 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
             });
         }
 
-        return res.status(200).json({
-            NIC: citizen.nicNumber,
-            username: citizen.username,
-            mobile: citizen.mobile,
-        });
+        return res.status(200).json(citizen);
     } catch (error) {
         console.log(error);
         return res.status(500).json({

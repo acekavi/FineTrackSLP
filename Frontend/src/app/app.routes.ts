@@ -13,6 +13,8 @@ import { CasesDashboardComponent } from './station/cases-dashboard/cases-dashboa
 import { CitizenDashboardComponent } from './citizen/dashboard/dashboard.component';
 import { PaymentDetailsComponent } from './citizen/payment-details/payment-details.component';
 import { CardDetailsComponent } from './citizen/card-details/card-details.component';
+import { CitizenLayoutComponent } from './citizen/layout/layout.component';
+import { CitizenTypeSelectionComponent } from './citizen/type-selection/type-selection.component';
 
 
 export const routes: Routes = [
@@ -20,15 +22,16 @@ export const routes: Routes = [
     { path: 'login', canActivate: [checkUnauth], component: RoleSelectionComponent },
     {
         path: 'citizen',
+        component: CitizenLayoutComponent,
         canActivateChild: [checkCitizenAuth],
         children: [
             { path: '', redirectTo: 'type-selection', pathMatch: 'full' },
-            { path: 'type-selection', component: OfficerTypeSelectionComponent },
+            { path: 'type-selection', component: CitizenTypeSelectionComponent },
             { path: 'payment', component: PaymentDetailsComponent },
             { path: 'payment/card', component: CardDetailsComponent },
         ]
     },
-    { path: 'citizen/dashboard', component: CitizenDashboardComponent, canActivate: [checkOfficerAuth] },
+    { path: 'citizen/dashboard', component: CitizenDashboardComponent, canActivate: [checkCitizenAuth] },
     {
         path: 'station',
         component: StationLayoutComponent,

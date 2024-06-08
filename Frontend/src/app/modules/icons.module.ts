@@ -18,6 +18,9 @@ import {
     bootstrapPersonWalking,
     bootstrapBank,
     bootstrapClipboard2X,
+    bootstrapBarChartLineFill,
+    bootstrapCreditCardFill,
+    bootstrapCreditCard2FrontFill,
 } from '@ng-icons/bootstrap-icons';
 
 @NgModule({
@@ -40,6 +43,8 @@ import {
             bootstrapPersonWalking,
             bootstrapBank,
             bootstrapClipboard2X,
+            bootstrapBarChartLineFill,
+            bootstrapCreditCard2FrontFill,
         }),
     ],
     providers: [
