@@ -8,7 +8,6 @@
       <button
         mat-raised-button
         color="primary"
-        routerLink="edit"
         class="square-button"
         routerLink="edit"
       >
@@ -18,7 +17,6 @@
       <button
         mat-raised-button
         color="primary"
-        routerLink="update-password"
         class="square-button"
         routerLink="officers"
       >
@@ -28,7 +26,6 @@
       <button
         mat-raised-button
         color="primary"
-        routerLink="update-password"
         class="square-button"
         routerLink="cases"
       >
@@ -38,8 +35,8 @@
       <button
         mat-raised-button
         color="primary"
-        routerLink="update-password"
         class="square-button"
+        (click)="addOffenceDialog()"
       >
         <mat-icon>help</mat-icon>Help
       </button>

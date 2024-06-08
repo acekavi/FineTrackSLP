@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { NIC, Officer, Station } from '../models';
+import { NIC, Offence, Officer, Station } from '../models';
 import { RequestWithUser } from '../global-types';
 
 
@@ -143,3 +143,27 @@ export const add_officer = async (req: RequestWithUser, res: Response) => {
         });
     }
 }
+
+export const add_offence = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { offence_type, description, score, fee, enabled } = req.body;
+
+        const newOffence = await Offence.create({
+            offenceType: offence_type,
+            description: description,
+            enabled: enabled,
+            score: score,
+            fee: fee,
+        });
+
+        return res.status(201).json({
+            message: 'Offence created successfully',
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to create offence',
+        });
+    }
+}
+

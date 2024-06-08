@@ -20,25 +20,19 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './dashboard.component.scss'
 })
 export class OfficerDashboardComponent implements OnInit {
-  violator: any;
   displayedColumns: string[] = [
-    'fine_ID', 'total_fine', 'total_score', 'fine_date', 'fine_time',
-    'location_name', 'location_link', 'isDriver', 'is_payed', 'pay_reference_id'
+    'fine_id', 'offence_description', 'case_or_fine', 'fine_date', 'fine_amount', 'payment_status'
   ];
 
   constructor(
     private route: ActivatedRoute,
-    private officerService: OfficerService,
+    public officerService: OfficerService,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    const nic = this.route.snapshot.paramMap.get('nic')!;
-    this.officerService.getViolatorDetails(nic).subscribe(data => {
-      this.violator = data;
-    });
+    this.officerService.getViolatorFineRecords()
   }
-
   openAddCaseDialog(): void {
     const dialogRef = this.dialog.open(PopupViolationSelectionComponent);
 

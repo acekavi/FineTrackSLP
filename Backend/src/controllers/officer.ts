@@ -167,24 +167,12 @@ export const check_nic_passport = async (req: RequestWithUser, res: Response) =>
     }
 }
 
-export const getViolatorDetails = async (req: RequestWithUser, res: Response) => {
+export const get_violator_fine_records = async (req: RequestWithUser, res: Response) => {
     try {
         const nicNumber = req.body.nic_number;
 
         // Fetch the violator's NIC details
-        const violator = await NIC.findOne({
-            where: { idNumber: nicNumber },
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
-        });
-
-        if (!violator) {
-            return res.status(404).json({
-                message: 'Violator not found',
-            });
-        }
-
-        // Fetch the fine records
-        const fineRecords = await FineRecord.findAll({
+        const violations = await FineRecord.findAll({
             where: { nicNumber },
             include: [
                 {
@@ -197,19 +185,16 @@ export const getViolatorDetails = async (req: RequestWithUser, res: Response) =>
                     ],
                     attributes: ['offenceDate']
                 }
-            ],
-            attributes: [
-                'fineId', 'totalFine', 'totalScore', 'fineDate', 'fineTime',
-                'locationName', 'locationLink', 'isDriver', 'isPaid', 'payReferenceId'
             ]
         });
 
-        const responseJson = {
-            violator,
-            fineRecords
-        };
+        if (!violations) {
+            return res.status(404).json({
+                message: 'Violator not found',
+            });
+        }
 
-        return res.status(200).json(responseJson);
+        return res.status(200).json(violations);
     } catch (error) {
         console.log(error);
         return res.status(500).json({

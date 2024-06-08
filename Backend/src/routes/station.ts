@@ -10,5 +10,7 @@ router.post('/login', StationController.signin_user);
 router.get('/details', checkBearerToken, StationController.get_user);
 router.get('/officers', checkBearerToken, StationController.get_officers);
 router.post('/add-officer', checkBearerToken, StationController.add_officer);
+router.post('/add-offence', checkBearerToken, StationController.add_offence);
+
 
 export default router;

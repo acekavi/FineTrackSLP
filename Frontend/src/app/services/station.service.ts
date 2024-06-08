@@ -79,4 +79,19 @@ export class StationService {
       })
     );
   }
+
+  public addOffence(body: {
+    offence_type: string,
+    description: string,
+    score: number,
+    fee: number,
+    enabled: boolean,
+  }): Observable<MessageResponse> {
+    const addOffenceUrl = `${this.apiUrl}/station/add-offence`;
+    return this.http.post<MessageResponse>(addOffenceUrl, body).pipe(
+      tap((response) => {
+        this.utilityService.displaySnackbar(response.message, 'success-snack');
+      })
+    );
+  }
 }

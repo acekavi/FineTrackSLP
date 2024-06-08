@@ -5,7 +5,6 @@ import sequelize from '../sequelize';
 class OffenceRecord extends Model<InferAttributes<OffenceRecord>, InferCreationAttributes<OffenceRecord>> {
     declare fineId: ForeignKey<FineRecord['fineId']>;
     declare offenceId: ForeignKey<Offence['offenceId']>;
-    declare offenceDate: Date;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
 
@@ -28,10 +27,6 @@ class OffenceRecord extends Model<InferAttributes<OffenceRecord>, InferCreationA
                         model: Offence,
                         key: 'offenceId',
                     },
-                },
-                offenceDate: {
-                    type: DataTypes.DATE,
-                    allowNull: false,
                 },
                 createdAt: {
                     type: DataTypes.DATE,

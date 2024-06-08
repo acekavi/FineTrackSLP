@@ -28,7 +28,6 @@ export class PopupAddOfficerComponent {
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<PopupAddOfficerComponent>,
     private stationService: StationService,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
   ) {
     this.registrationForm = this.formBuilder.group({
       officer_ID: ['', [Validators.required]],

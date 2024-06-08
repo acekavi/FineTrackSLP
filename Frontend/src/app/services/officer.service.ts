@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap, catchError, switchMap } from 'rxjs/operators';
+import { tap, catchError, switchMap, filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UtilityService } from './utility.service';
-import { Citizen, NIC, Officer } from 'src/global-types';
+import { Citizen, FineRecord, NIC, OffenceRecord, Officer } from 'src/global-types';
 import { environment } from '../enviorenment/dev.enviorenment';
 
 @Injectable({
@@ -12,22 +12,29 @@ import { environment } from '../enviorenment/dev.enviorenment';
 })
 export class OfficerService {
   private apiUrl = environment.apiUrl;
-  private officerUserSubject: BehaviorSubject<Officer | null>;
-  public officerUser$: Observable<Officer | null>;
+  private officerUserSubject: BehaviorSubject<Officer>;
+  public officerUser$: Observable<Officer>;
 
-  private violaterSubject: BehaviorSubject<Citizen | null>;
-  public violater$: Observable<Citizen | null>;
+  private violaterSubject: BehaviorSubject<Citizen>;
+  public violater$: Observable<Citizen>;
+
+  private violaterFineRecordsSubject: BehaviorSubject<FineRecord[]>;
+  public violaterFineRecords$: Observable<FineRecord[]>;
+
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private utilityService: UtilityService
   ) {
-    this.officerUserSubject = new BehaviorSubject<Officer | null>(null);
+    this.officerUserSubject = new BehaviorSubject<Officer>({} as Officer);
     this.officerUser$ = this.officerUserSubject.asObservable();
 
-    this.violaterSubject = new BehaviorSubject<Citizen | null>(null);
+    this.violaterSubject = new BehaviorSubject<Citizen>({} as Citizen);
     this.violater$ = this.violaterSubject.asObservable();
+
+    this.violaterFineRecordsSubject = new BehaviorSubject<FineRecord[]>([]);
+    this.violaterFineRecords$ = this.violaterFineRecordsSubject.asObservable();
   }
 
   private fetchOfficerUser(): Observable<Officer> {
@@ -70,7 +77,19 @@ export class OfficerService {
     );
   }
 
-  getViolatorDetails(nic: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/officer/violator/${nic}`);
+  public getViolatorFineRecords(): void {
+    this.violater$.pipe(
+      filter((violater: Citizen) => violater !== null),
+      switchMap((violater: Citizen) =>
+        this.http.post<FineRecord[]>(`${this.apiUrl}/officer/violator/`, { nic_number: violater.NIC.id_number })
+      )
+    ).subscribe({
+      next: ((response: FineRecord[]) => {
+        this.violaterFineRecordsSubject.next(response);
+      }),
+      error: ((error: HttpErrorResponse) => {
+        // handle error
+      })
+    });
   }
 }
