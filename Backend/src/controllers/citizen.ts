@@ -6,24 +6,39 @@ import { Citizen } from '../models';
 
 export const create_user = async (req: Request, res: Response) => {
     try {
-        const { NIC, username, password, mobile } = req.body;
+        const { nicNumber, username, password, mobile } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        if (!NIC || !username || !password || !mobile) {
+        if (!nicNumber || !username || !password || !mobile) {
             return res.status(400).json({
                 message: 'Missing required fields',
             });
         }
 
-        await Citizen.create({
-            nicNumber: NIC.toLowerCase(),
-            username: username.toLowerCase(),
-            password: hashedPassword,
-            mobile,
-        });
+        const citizen = await Citizen.findOne({ where: { nicNumber: nicNumber.toLowerCase() } });
+
+        if (citizen) {
+            if (citizen.username !== null) {
+                return res.status(409).json({
+                    message: 'User already exists for this NIC number',
+                });
+            }
+            await citizen.update({
+                username: username.toLowerCase(),
+                password: hashedPassword,
+                mobile,
+            });
+        } else {
+            await Citizen.create({
+                nicNumber: nicNumber.toLowerCase(),
+                username: username.toLowerCase(),
+                password: hashedPassword,
+                mobile,
+            });
+        }
 
         return res.status(201).json({
-            message: 'Citizen created successfully',
+            message: 'Citizen create successfully',
         });
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {
@@ -31,6 +46,12 @@ export const create_user = async (req: Request, res: Response) => {
                 message: 'Username already exists',
             });
         }
+        if (error.name === 'SequelizeForeignKeyConstraintError') {
+            return res.status(422).json({
+                message: 'Invalid NIC number',
+            });
+        }
+        console.log(error.name);
         return res.status(500).json({
             message: 'Failed to create user',
         });
@@ -61,14 +82,7 @@ export const signin_user = async (req: Request, res: Response) => {
 
         return res.status(200).json({
             message: 'Signin successful',
-            token,
-            user: {
-                username: citizen.username,
-                role: 'citizen',
-                NIC: citizen.nicNumber,
-                mobile: citizen.mobile,
-                earned_score: citizen.earnedScore,
-            }
+            token
         });
     } catch (error) {
         console.log(error);

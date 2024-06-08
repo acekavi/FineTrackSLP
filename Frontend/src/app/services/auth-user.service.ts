@@ -50,7 +50,7 @@ export class AuthUserService {
     }
 
     public register(credentials: {
-        NIC: string;
+        nicNumber: string;
         username: string;
         password: string;
         mobile: string;

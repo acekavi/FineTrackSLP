@@ -38,7 +38,7 @@ export class PopupRegistrationComponent {
       username: ['', [Validators.required]],
       password: ['', [Validators.required]],
       conPassword: ['', [Validators.required]],
-      nic: ['', [Validators.required, Validators.pattern('^[0-9]{9}[vVxX]$'), Validators.minLength(10)]],
+      nicNumber: ['', [Validators.required, Validators.pattern('^[0-9]{9}[vVxX]$'), Validators.minLength(10)]],
       mobile: ['', [Validators.required, Validators.pattern('^[0-9]{10}$'), Validators.minLength(10)]],
     });
   }
@@ -63,7 +63,7 @@ export class PopupRegistrationComponent {
     this.loading = true;
 
     const credentials = {
-      NIC: this.registrationForm.value.nic,
+      nicNumber: this.registrationForm.value.nicNumber,
       username: this.registrationForm.value.username,
       password: this.registrationForm.value.password,
       mobile: this.registrationForm.value.mobile,
@@ -83,7 +83,12 @@ export class PopupRegistrationComponent {
     this.authService.register(credentials).subscribe({
       error: (error) => {
         if (error.status === 409) {
-          this.registrationForm.controls['username'].setErrors({ alreadyExists: true });
+          if (error.error.message === 'Username already exists') {
+            this.registrationForm.controls['username'].setErrors({ alreadyExists: true });
+          }
+          this.registrationForm.controls['nicNumber'].setErrors({ alreadyExists: true });
+        } else if (error.status === 422) {
+          this.registrationForm.controls['nicNumber'].setErrors({ invalid: true });
         }
         this.loading = false;
       },

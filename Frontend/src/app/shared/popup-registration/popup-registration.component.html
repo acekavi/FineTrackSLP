@@ -3,24 +3,40 @@
     class="flex flex-col items-center justify-center space-y-4 gap-4"
   >
     <div class="w-full text-center">
-      <h2 class="text-2xl font-bold">Citizen Registration</h2>
       <ng-icon class="text-6xl mt-2" name="bootstrapPersonCircle"></ng-icon>
+      <h2 class="text-2xl font-bold">Citizen Registration</h2>
     </div>
     <div class="flex flex-col gap-2">
       <div class="flex flex-row gap-2 justify-between">
         <mat-form-field appearance="fill">
           <mat-label>NIC</mat-label>
-          <input matInput formControlName="nic" placeholder="NIC" required />
+          <input
+            matInput
+            formControlName="nicNumber"
+            placeholder="NIC"
+            required
+          />
           <mat-icon matSuffix>id_card</mat-icon>
           <mat-hint>Enter NIC here</mat-hint>
-          <mat-error *ngIf="registrationForm.get('nic')?.hasError('required')"
+          <mat-error
+            *ngIf="registrationForm.get('nicNumber')?.hasError('required')"
             >NIC is required</mat-error
           >
-          <mat-error *ngIf="registrationForm.get('nic')?.hasError('pattern')"
+          <mat-error
+            *ngIf="registrationForm.get('nicNumber')?.hasError('pattern')"
             >Enter a valid NIC</mat-error
           >
-          <mat-error *ngIf="registrationForm.get('nic')?.hasError('minlength')"
+          <mat-error
+            *ngIf="registrationForm.get('nicNumber')?.hasError('minlength')"
             >Enter a valid NIC</mat-error
+          >
+          <mat-error
+            *ngIf="registrationForm.get('nicNumber')?.hasError('invalid')"
+            >Invalid NIC number</mat-error
+          >
+          <mat-error
+            *ngIf="registrationForm.get('nicNumber')?.hasError('alreadyExists')"
+            >NIC already exists</mat-error
           >
         </mat-form-field>
 

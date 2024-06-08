@@ -14,7 +14,7 @@ export interface LoginResponse extends MessageResponse {
 }
 
 export interface Citizen {
-    NIC: NIC;
+    nicNumber: string;
     mobile: string;
     username: string;
     password: string;
@@ -40,7 +40,7 @@ export interface NIC {
 export interface DrLicence {
     licenceNumber: string;
     expiryDate: Date;
-    NIC: NIC;
+    nicNumber: string;
     spectaclesNeeded: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -100,7 +100,7 @@ export interface OffenceRecord {
 export interface Officer {
     officerId: number;
     username: string;
-    NIC: NIC;
+    nicNumber: string;
     stationId: Station;
     password: string;
     createdAt: Date;

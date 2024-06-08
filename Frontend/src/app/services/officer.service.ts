@@ -11,6 +11,10 @@ interface NICwithCitizen extends NIC {
   Citizen?: Citizen;
 }
 
+interface OfficerwithNIC extends Officer {
+  NIC?: NIC;
+}
+
 interface OffenceResult {
   description: string;
   score: number;
@@ -26,8 +30,8 @@ interface FineRecordWithOffences extends FineRecord {
 })
 export class OfficerService {
   private apiUrl = environment.apiUrl;
-  private officerUserSubject: BehaviorSubject<Officer>;
-  public officerUser$: Observable<Officer>;
+  private officerUserSubject: BehaviorSubject<OfficerwithNIC>;
+  public officerUser$: Observable<OfficerwithNIC>;
 
   private violaterSubject: BehaviorSubject<NICwithCitizen>;
   public violater$: Observable<NICwithCitizen>;
@@ -41,7 +45,7 @@ export class OfficerService {
     private router: Router,
     private utilityService: UtilityService
   ) {
-    this.officerUserSubject = new BehaviorSubject<Officer>({} as Officer);
+    this.officerUserSubject = new BehaviorSubject<OfficerwithNIC>({} as OfficerwithNIC);
     this.officerUser$ = this.officerUserSubject.asObservable();
 
     this.violaterSubject = new BehaviorSubject<NICwithCitizen>({} as NICwithCitizen);
@@ -51,9 +55,9 @@ export class OfficerService {
     this.violaterFineRecords$ = this.violaterFineRecordsSubject.asObservable();
   }
 
-  private fetchOfficerUser(): Observable<Officer> {
+  private fetchOfficerUser(): Observable<OfficerwithNIC> {
     const getUserUrl = `${this.apiUrl}/officer/details`;
-    return this.http.get<Officer>(getUserUrl);
+    return this.http.get<OfficerwithNIC>(getUserUrl);
   }
 
   public loadOfficerFromServer(): void {
@@ -62,7 +66,7 @@ export class OfficerService {
     }
 
     this.fetchOfficerUser().subscribe({
-      next: (user: Officer) => {
+      next: (user: OfficerwithNIC) => {
         this.officerUserSubject.next(user);
       },
       error: (error: HttpErrorResponse) => {
