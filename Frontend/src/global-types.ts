@@ -120,3 +120,11 @@ export interface VehicleType {
     updatedAt: Date;
 
 }
+
+export interface Violations {
+    violator: NIC,
+    violations: [
+        'fineId', 'totalFine', 'totalScore', 'fineDate', 'fineTime',
+        'locationName', 'locationLink', 'isDriver', 'isPaid', 'payReferenceId'
+    ]
+}

@@ -211,6 +211,11 @@ module.exports = {
 				primaryKey: true,
 				autoIncrement: true,
 			},
+			offenceType: {
+				type: Sequelize.ENUM('Driver', 'Pedestrian'),
+				allowNull: false,
+				defaultValue: 'Driver',
+			},
 			description: {
 				type: Sequelize.TEXT,
 				allowNull: false,

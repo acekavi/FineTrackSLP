@@ -3,6 +3,7 @@ import sequelize from '../sequelize';
 
 class Offence extends Model<InferAttributes<Offence>, InferCreationAttributes<Offence>> {
     declare offenceId: CreationOptional<number>;
+    declare offenceType: 'Driver' | 'Pedestrian';
     declare description: string;
     declare score: number;
     declare enabled: boolean;
@@ -18,6 +19,11 @@ class Offence extends Model<InferAttributes<Offence>, InferCreationAttributes<Of
                     primaryKey: true,
                     autoIncrement: true,
                     allowNull: false,
+                },
+                offenceType: {
+                    type: DataTypes.ENUM('Driver', 'Pedestrian'),
+                    allowNull: false,
+                    defaultValue: 'Driver',
                 },
                 description: {
                     type: DataTypes.TEXT,
