@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import { CustomSnackbarComponent } from '../shared/custom-snackbar/custom-snackbar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class UtilityService {
   constructor(
     private cookieService: CookieService,
     private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   public setAuthorizationToken(token: string): void {
@@ -55,5 +57,10 @@ export class UtilityService {
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });
+  }
+
+  public logoutUser(): void {
+    this.deleteAuthorizationToken();
+    this.router.navigate(['']);
   }
 }

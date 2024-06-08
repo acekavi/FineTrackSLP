@@ -2,17 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { IconsModule } from 'src/app/modules/icons.module';
 import { MatUiModule } from 'src/app/modules/matui.module';
-import { AuthUserService } from 'src/app/services/auth-user.service';
-
-export interface DialogData {
-  role: 'Citizen' | 'Officer' | 'Station';
-}
+import { StationService } from 'src/app/services/station.service';
+import { DialogData } from 'src/app/shared/popup-registration/popup-registration.component';
 
 @Component({
-  selector: 'app-popup-registration',
+  selector: 'app-popup-add-officer',
   standalone: true,
   imports: [
     CommonModule,
@@ -21,25 +17,25 @@ export interface DialogData {
     MatUiModule,
     IconsModule
   ],
-  templateUrl: './popup-registration.component.html',
-  styleUrls: ['./popup-registration.component.scss']
+  templateUrl: './popup-add-officer.component.html',
+  styleUrl: './popup-add-officer.component.scss'
 })
-export class PopupRegistrationComponent {
+export class PopupAddOfficerComponent {
   registrationForm!: FormGroup;
   loading: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<PopupRegistrationComponent>,
-    private authService: AuthUserService,
+    public dialogRef: MatDialogRef<PopupAddOfficerComponent>,
+    private stationService: StationService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
   ) {
     this.registrationForm = this.formBuilder.group({
+      officer_ID: ['', [Validators.required]],
       username: ['', [Validators.required]],
-      password: ['', [Validators.required]],
-      conPassword: ['', [Validators.required]],
       nic: ['', [Validators.required, Validators.pattern('^[0-9]{9}[vVxX]$'), Validators.minLength(10)]],
-      mobile: ['', [Validators.required, Validators.pattern('^[0-9]{10}$'), Validators.minLength(10)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      conPassword: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
@@ -63,10 +59,10 @@ export class PopupRegistrationComponent {
     this.loading = true;
 
     const credentials = {
-      NIC: this.registrationForm.value.nic,
+      officer_ID: this.registrationForm.value.officer_ID,
       username: this.registrationForm.value.username,
+      nic: this.registrationForm.value.nic,
       password: this.registrationForm.value.password,
-      mobile: this.registrationForm.value.mobile,
     };
 
     if (this.registrationForm.invalid) {
@@ -80,7 +76,7 @@ export class PopupRegistrationComponent {
       return;
     }
 
-    this.authService.register(credentials).subscribe({
+    this.stationService.addOfficer(credentials).subscribe({
       error: (error) => {
         if (error.status === 409) {
           this.registrationForm.controls['username'].setErrors({ alreadyExists: true });
@@ -89,6 +85,7 @@ export class PopupRegistrationComponent {
       },
       complete: () => {
         this.loading = false;
+        this.stationService.loadOfficersInStationFromServer();
         this.dialogRef.close('success');
       }
     });

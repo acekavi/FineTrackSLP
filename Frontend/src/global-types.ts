@@ -82,6 +82,7 @@ export interface IfDriver {
 }
 export interface Offence {
     offenceId: number;
+    offenceType: 'Driver' | 'Pedestrian';
     description: string;
     score: number;
     enabled: boolean;

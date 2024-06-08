@@ -77,6 +77,7 @@ export const checkStationAuth: CanActivateFn = (
   const token = utilityService.getAuthorizationToken();
   if (token) {
     const decodedToken = utilityService.decodeToken(token);
+    console.log(decodedToken);
     if (decodedToken.exp! * 1000 > Date.now() && decodedToken.role === 'station') {
       return true;
     } else {

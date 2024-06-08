@@ -30,34 +30,26 @@ export class OfficerService {
     this.violater$ = this.violaterSubject.asObservable();
   }
 
-  public setUserDetails(officer: Officer): void {
-    this.officerUserSubject.next(officer);
-  }
-
-  private getUser(): Observable<Officer> {
+  private fetchOfficerUser(): Observable<Officer> {
     const getUserUrl = `${this.apiUrl}/officer/details`;
     return this.http.get<Officer>(getUserUrl);
   }
 
-  public loadUserFromServer(): void {
+  public loadOfficerFromServer(): void {
     if (!this.utilityService.getAuthorizationToken) {
       return;
     }
 
-    this.getUser().subscribe({
+    this.fetchOfficerUser().subscribe({
       next: (user: Officer) => {
         this.officerUserSubject.next(user);
       },
       error: (error: HttpErrorResponse) => {
+        console.log(error);
         this.utilityService.handleHttpError(error);
-        this.logoutUser();
+        this.utilityService.logoutUser();
       }
     });
-  }
-
-  public logoutUser(): void {
-    this.utilityService.deleteAuthorizationToken();
-    this.router.navigate(['']);
   }
 
   public checkDriverLicence(licence_number: string): Observable<Citizen> {

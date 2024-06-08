@@ -5,21 +5,6 @@ import { Citizen, LoginResponse, Officer, Station } from "src/global-types";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { UtilityService } from "./utility.service";
-import { CitizenService } from "./citizen.service";
-import { OfficerService } from "./officer.service";
-import { StationService } from "./station.service";
-
-interface CitizenloginResponse extends LoginResponse {
-    user: Citizen;
-}
-
-interface OfficerloginResponse extends LoginResponse {
-    user: Officer;
-}
-
-interface StationloginResponse extends LoginResponse {
-    user: Station;
-}
 
 @Injectable({
     providedIn: 'root'
@@ -30,26 +15,23 @@ export class AuthUserService {
     constructor(
         private http: HttpClient,
         private router: Router,
-        private utilityService: UtilityService,
-        private citizenService: CitizenService,
-        private officerService: OfficerService,
-        private stationService: StationService
+        private utilityService: UtilityService
     ) {
     }
 
-    public login(userType: 'Citizen' | 'Officer' | 'Station', credentials: { username: string; password: string }): Observable<Citizen | Officer | Station> {
+    public login(userType: 'Citizen' | 'Officer' | 'Station', credentials: { username: string; password: string }): Observable<LoginResponse> {
         const loginUrl = `${this.apiUrl}/${userType.toLowerCase()}/login`;
         credentials.username = credentials.username.toLowerCase();
-        return this.http.post<CitizenloginResponse | OfficerloginResponse | StationloginResponse>(loginUrl, credentials).pipe(
+        return this.http.post<LoginResponse>(loginUrl, credentials).pipe(
             tap(response => {
                 this.utilityService.setAuthorizationToken(response.token);
                 const decodedToken = this.utilityService.decodeToken(response.token)
                 if (decodedToken.role.toLowerCase() === 'citizen') {
-                    this.citizenService.setUserDetails(response.user as Citizen);
+                    this.router.navigate(['/citizen']);
                 } else if (decodedToken.role.toLowerCase() === 'officer') {
-                    this.officerService.setUserDetails(response.user as Officer);
+                    this.router.navigate(['/officer']);
                 } else if (decodedToken.role.toLowerCase() === 'station') {
-                    this.stationService.setUserDetails(response.user as Station);
+                    this.router.navigate(['/station']);
                 } else {
                     this.utilityService.displaySnackbar('Invalid role', 'error-snack');
                     return;
@@ -57,8 +39,7 @@ export class AuthUserService {
 
                 this.router.navigate([`/${decodedToken.role.toLowerCase()}`]);
                 this.utilityService.displaySnackbar('Login successful', 'success-snack');
-            }),
-            map(response => response.user)
+            })
         );
     }
 

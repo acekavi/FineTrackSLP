@@ -10,7 +10,7 @@ export const create_user = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         await Citizen.create({
-            nic: NIC.toLowerCase(),
+            nicNumber: NIC.toLowerCase(),
             username: username.toLowerCase(),
             password: hashedPassword,
             mobile,
@@ -59,7 +59,7 @@ export const signin_user = async (req: Request, res: Response) => {
             user: {
                 username: citizen.username,
                 role: 'citizen',
-                NIC: citizen.nic,
+                NIC: citizen.nicNumber,
                 mobile: citizen.mobile,
                 earned_score: citizen.earnedScore,
             }
@@ -90,7 +90,7 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
         }
 
         return res.status(200).json({
-            NIC: citizen.nic,
+            NIC: citizen.nicNumber,
             username: citizen.username,
             mobile: citizen.mobile,
         });

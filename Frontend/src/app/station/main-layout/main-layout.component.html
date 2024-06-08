@@ -1,0 +1,61 @@
+<div class="flex flex-col md:flex-row">
+  <div
+    class="min-w-[20rem] bg-blue-300 bg-opacity-60 border-r border-gray-500/50"
+  >
+    <div
+      class="flex flex-row md:flex-col justify-center align-middle lg:h-screen md:h-screen gap-2"
+    >
+      <button
+        mat-raised-button
+        color="primary"
+        routerLink="edit"
+        class="square-button"
+        routerLink="edit"
+      >
+        <mat-icon>person</mat-icon>Station Details
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        routerLink="update-password"
+        class="square-button"
+        routerLink="officers"
+      >
+        <mat-icon>local_police</mat-icon>Officers
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        routerLink="update-password"
+        class="square-button"
+        routerLink="cases"
+      >
+        <mat-icon>gavel</mat-icon>Cases
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        routerLink="update-password"
+        class="square-button"
+      >
+        <mat-icon>help</mat-icon>Help
+      </button>
+
+      <button
+        mat-flat-button
+        color="warn"
+        class="square-button"
+        (click)="logOut()"
+      >
+        <mat-icon>logout</mat-icon>Logout
+      </button>
+    </div>
+  </div>
+
+  <div class="w-[100vw] h-full border-l px-4 md:px-12">
+    <router-outlet></router-outlet>
+  </div>
+</div>

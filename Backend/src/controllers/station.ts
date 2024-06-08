@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { Station } from '../models';
+import { NIC, Officer, Station } from '../models';
+import { RequestWithUser } from '../global-types';
 
-const secretKey = process.env.JWT_SECRET || 'samplesecretkey';
 
 export const create_user = async (req: Request, res: Response) => {
     try {
@@ -48,17 +48,11 @@ export const signin_user = async (req: Request, res: Response) => {
             });
         }
 
-        const token = jwt.sign({ username: station.username, role: "station" }, secretKey, { expiresIn: '8h' });
+        const token = jwt.sign({ username: station.username, role: "station" }, "finetrack2024", { expiresIn: '8h' });
 
         return res.status(200).json({
             message: 'Signin successful',
-            token,
-            user: {
-                username: station.username,
-                role: 'station',
-                station_ID: station.stationId,
-                location: station.location,
-            },
+            token
         });
     } catch (error) {
         console.log(error);
@@ -67,3 +61,85 @@ export const signin_user = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const get_user = async (req: RequestWithUser, res: Response) => {
+    try {
+        const username = req.user?.username;
+        const station = await Station.findOne({ where: { username } });
+
+        if (!station) {
+            return res.status(404).json({
+                message: 'Station not found',
+            });
+        }
+
+        return res.status(200).json(station);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to get station',
+        });
+    }
+}
+
+export const get_officers = async (req: RequestWithUser, res: Response) => {
+    try {
+        const username = req.user?.username;
+        const station = await Station.findOne({ where: { username } });
+
+        if (!station) {
+            return res.status(404).json({
+                message: 'Station not found',
+            });
+        }
+
+        const officers = await Officer.findAll({
+            where: { stationId: station.stationId },
+            include: {
+                model: NIC,
+                attributes: ['firstName', 'surname'],
+            },
+        });
+
+        return res.status(200).json(officers);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to get officers',
+        });
+    }
+}
+
+export const add_officer = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { officer_ID, username, nic, password } = req.body;
+        const station_ID = await Station.findOne({
+            where: { username: req.user?.username },
+            attributes: ['stationId'],
+        });
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newOfficer = await Officer.create({
+            officerId: officer_ID,
+            nicNumber: nic.toLowerCase(),
+            username: username.toLowerCase(),
+            stationId: station_ID?.stationId.toLowerCase(),
+            password: hashedPassword,
+        }).catch((error) => {
+            if (error.name === 'SequelizeUniqueConstraintError') {
+                return res.status(409).json({
+                    message: 'Username already exists',
+                });
+            }
+        });
+
+        return res.status(201).json({
+            message: 'Officer created successfully',
+        });
+    } catch (error: any) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to create officer',
+        });
+    }
+}
