@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { RequestWithUser } from '../global-types';
-import { Citizen, NIC } from '../models';
+import { Citizen, FineRecord, NIC, Offence } from '../models';
 
 export const create_user = async (req: Request, res: Response) => {
     try {
@@ -116,6 +116,46 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
         console.log(error);
         return res.status(500).json({
             message: 'Failed to get citizen',
+        });
+    }
+};
+
+export const get_fine_records = async (req: RequestWithUser, res: Response) => {
+    try {
+        const username = req.user?.username;
+
+        const citizen = await Citizen.findOne({
+            where: { username },
+            attributes: ['nicNumber']
+        });
+
+        // Fetch the violator's NIC details
+        const violations = await FineRecord.findAll({
+            where: { nicNumber: citizen?.nicNumber },
+            include: [
+                {
+                    model: Offence,
+                    through: {
+                        attributes: []
+                    },
+                    attributes: ['description', 'fee', 'score']
+                }
+            ]
+        });
+
+        if (!violations || violations.length === 0) {
+            return res.status(404).json({
+                message: 'Violations not found',
+            });
+        }
+
+        return res.status(200).json(violations);
+
+        return res.status(200).json(violations);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to get fine records',
         });
     }
 };

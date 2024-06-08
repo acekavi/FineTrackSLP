@@ -1,0 +1,12 @@
+.square-button {
+  border-radius: 0px;
+  justify-content: space-between;
+}
+
+.paid {
+  @apply bg-green-500 py-1 px-2 rounded-lg text-white;
+}
+
+.unpaid {
+  @apply bg-red-500 py-1 px-2 rounded-lg text-white;
+}

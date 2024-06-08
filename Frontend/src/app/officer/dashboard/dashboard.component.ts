@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, NgClass, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IconsModule } from 'src/app/modules/icons.module';
@@ -6,20 +6,15 @@ import { MatUiModule } from 'src/app/modules/matui.module';
 import { PopupViolationSelectionComponent } from '../popup-violation-selection/popup-violation-selection.component';
 import { OfficerService } from 'src/app/services/officer.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-officer-dashboard',
   standalone: true,
   imports: [
-    MatCardModule,
+    CommonModule,
     IconsModule,
     MatUiModule,
-    AsyncPipe,
-    DatePipe,
-    NgIf,
-    NgClass
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -54,7 +49,6 @@ export class OfficerDashboardComponent implements OnInit {
         message: 'Are you sure you want to go back?'
       }
     });
-
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

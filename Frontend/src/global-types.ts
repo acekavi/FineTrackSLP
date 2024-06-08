@@ -129,3 +129,13 @@ export interface Violations {
         'locationName', 'locationLink', 'isDriver', 'isPaid', 'payReferenceId'
     ]
 }
+
+export interface OffenceResult {
+    description: string;
+    score: number;
+    fee: number;
+}
+
+export interface FineRecordWithOffences extends FineRecord {
+    Offences: OffenceResult[];
+}

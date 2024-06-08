@@ -222,7 +222,7 @@ export const get_violator_fine_records = async (req: RequestWithUser, res: Respo
 
         if (!violations || violations.length === 0) {
             return res.status(404).json({
-                message: 'Violator not found',
+                message: 'Violations not found',
             });
         }
 

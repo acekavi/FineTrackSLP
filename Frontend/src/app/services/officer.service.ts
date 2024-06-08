@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError, switchMap, filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UtilityService } from './utility.service';
-import { Citizen, FineRecord, NIC, Offence, OffenceRecord, Officer } from 'src/global-types';
+import { Citizen, FineRecord, FineRecordWithOffences, NIC, Offence, OffenceRecord, Officer } from 'src/global-types';
 import { environment } from '../enviorenment/dev.enviorenment';
 
 interface NICwithCitizen extends NIC {
@@ -13,16 +13,6 @@ interface NICwithCitizen extends NIC {
 
 interface OfficerwithNIC extends Officer {
   NIC?: NIC;
-}
-
-interface OffenceResult {
-  description: string;
-  score: number;
-  fee: number;
-}
-
-interface FineRecordWithOffences extends FineRecord {
-  Offences: OffenceResult[];
 }
 
 @Injectable({
@@ -38,7 +28,6 @@ export class OfficerService {
 
   private violaterFineRecordsSubject: BehaviorSubject<FineRecord[]>;
   public violaterFineRecords$: Observable<FineRecord[]>;
-
 
   constructor(
     private http: HttpClient,
@@ -106,7 +95,6 @@ export class OfficerService {
     this.http.post<FineRecordWithOffences[]>(`${this.apiUrl}/officer/violater/fine-records`, { nicNumber })
       .subscribe({
         next: ((response: FineRecordWithOffences[]) => {
-          console.log(response);
           this.violaterFineRecordsSubject.next(response);
         }),
         error: ((error: HttpErrorResponse) => {

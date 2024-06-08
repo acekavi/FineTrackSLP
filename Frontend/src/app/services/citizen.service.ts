@@ -4,20 +4,23 @@ import { UtilityService } from './utility.service';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError, tap, BehaviorSubject } from 'rxjs';
-import { Citizen, NIC } from 'src/global-types';
+import { Citizen, FineRecord, FineRecordWithOffences, NIC } from 'src/global-types';
 
 interface CitizenwithNIC extends Citizen {
   NIC?: NIC;
 }
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class CitizenService {
   private apiUrl = environment.apiUrl;
+
   private citizenUserSubject: BehaviorSubject<CitizenwithNIC>;
   public citizenUser$: Observable<CitizenwithNIC>;
+
+  private citizenFineRecordsSubject: BehaviorSubject<FineRecord[]>;
+  public citizenFineRecords$: Observable<FineRecord[]>;
 
   constructor(
     private http: HttpClient,
@@ -26,6 +29,9 @@ export class CitizenService {
   ) {
     this.citizenUserSubject = new BehaviorSubject<CitizenwithNIC>({} as CitizenwithNIC);
     this.citizenUser$ = this.citizenUserSubject.asObservable();
+
+    this.citizenFineRecordsSubject = new BehaviorSubject<FineRecord[]>([]);
+    this.citizenFineRecords$ = this.citizenFineRecordsSubject.asObservable();
   }
 
   private fetchCitizenUser(): Observable<CitizenwithNIC> {
@@ -49,4 +55,19 @@ export class CitizenService {
     });
   }
 
-}
+  public fetchCitizenFineRecords(): void {
+    this.http.get<FineRecordWithOffences[]>(`${this.apiUrl}/citizen/fine-records`)
+      .subscribe({
+        next: ((response: FineRecordWithOffences[]) => {
+          this.citizenFineRecordsSubject.next(response);
+        }),
+        error: ((error: HttpErrorResponse) => {
+          if (error.status === 404) {
+            this.citizenFineRecordsSubject.next([]);
+            return;
+          }
+          this.utilityService.handleHttpError(error);
+        })
+      });
+  }
+} 
