@@ -3,13 +3,16 @@ import { HomeComponent } from './authentication/home/home.component';
 import { RoleSelectionComponent } from './authentication/role-selection/role-selection.component';
 import { checkCitizenAuth, checkOfficerAuth, checkStationAuth, checkUnauth } from './services/router-guard.service';
 import { OfficerDashboardComponent } from './officer/dashboard/dashboard.component';
-import { TypeSelectionComponent } from './officer/type-selection/type-selection.component';
+import { OfficerTypeSelectionComponent } from './officer/type-selection/type-selection.component';
 import { OfficerLayoutComponent } from './officer/layout/layout.component';
 import { PedestrianTypeComponent } from './officer/violations/pedestrian-type/pedestrian-type.component';
 import { DriverTypeComponent } from './officer/violations/driver-type/driver-type.component';
 import { StationLayoutComponent } from './station/main-layout/main-layout.component';
 import { OfficersDashboardComponent } from './station/officers-dashboard/officers-dashboard.component';
 import { CasesDashboardComponent } from './station/cases-dashboard/cases-dashboard.component';
+import { CitizenDashboardComponent } from './citizen/dashboard/dashboard.component';
+import { PaymentDetailsComponent } from './citizen/payment-details/payment-details.component';
+import { CardDetailsComponent } from './citizen/card-details/card-details.component';
 
 
 export const routes: Routes = [
@@ -20,11 +23,12 @@ export const routes: Routes = [
         canActivateChild: [checkCitizenAuth],
         children: [
             { path: '', redirectTo: 'type-selection', pathMatch: 'full' },
-            { path: 'type-selection', component: TypeSelectionComponent },
-            { path: 'pedestrian', component: PedestrianTypeComponent },
-            { path: 'driver', component: DriverTypeComponent },
+            { path: 'type-selection', component: OfficerTypeSelectionComponent },
+            { path: 'payment', component: PaymentDetailsComponent },
+            { path: 'payment/card', component: CardDetailsComponent },
         ]
     },
+    { path: 'citizen/dashboard', component: CitizenDashboardComponent, canActivate: [checkOfficerAuth] },
     {
         path: 'station',
         component: StationLayoutComponent,
@@ -44,7 +48,7 @@ export const routes: Routes = [
             {
                 path: 'type-selection',
                 children: [
-                    { path: '', component: TypeSelectionComponent },
+                    { path: '', component: OfficerTypeSelectionComponent },
                     { path: 'driver', component: DriverTypeComponent },
                     { path: 'pedestrian', component: PedestrianTypeComponent },
                 ]

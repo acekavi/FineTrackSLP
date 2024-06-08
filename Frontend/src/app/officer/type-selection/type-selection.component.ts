@@ -14,6 +14,6 @@ import { MatUiModule } from 'src/app/modules/matui.module';
   templateUrl: './type-selection.component.html',
   styleUrl: './type-selection.component.scss'
 })
-export class TypeSelectionComponent {
+export class OfficerTypeSelectionComponent {
 
 }
