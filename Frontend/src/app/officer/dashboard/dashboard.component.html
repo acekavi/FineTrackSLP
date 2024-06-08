@@ -86,7 +86,7 @@
         <ng-container matColumnDef="offence_description">
           <th mat-header-cell *matHeaderCellDef>Offence</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.OffenceRecord.Offence.description }}
+            {{ element.Offences[0].description }}
           </td>
         </ng-container>
 
@@ -100,7 +100,7 @@
         <ng-container matColumnDef="fine_date">
           <th mat-header-cell *matHeaderCellDef>Fined Date</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.fineDate }}
+            {{ element.fineDate | date : "dd/MM/yyyy" }}
           </td>
         </ng-container>
 
@@ -116,7 +116,9 @@
         <ng-container matColumnDef="payment_status">
           <th mat-header-cell *matHeaderCellDef>Payment</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.isPaid }}
+            <span [ngClass]="element.isPaid ? 'paid' : 'unpaid'">
+              {{ element.isPaid ? "Paid" : "Unpaid" }}
+            </span>
           </td>
         </ng-container>
 

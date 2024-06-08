@@ -110,12 +110,6 @@ export const check_drivers_licence = async (req: RequestWithUser, res: Response)
             where: {
                 idNumber: driversLicence?.nicNumber
             },
-            include: [
-                {
-                    model: Citizen
-                }
-            ],
-            attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
         })
 
         return res.status(200).json(violater);
@@ -129,10 +123,10 @@ export const check_drivers_licence = async (req: RequestWithUser, res: Response)
 
 export const check_nic_passport = async (req: RequestWithUser, res: Response) => {
     try {
-        const nic_number = req.body.nic_number;
+        const nicNumber = req.body.nicNumber;
         const passport_number = req.body.passport_number;
 
-        if (!nic_number && !passport_number) {
+        if (!nicNumber && !passport_number) {
             return res.status(400).json({
                 message: 'Both NIC and Passport cannot be empty!',
             });
@@ -141,16 +135,14 @@ export const check_nic_passport = async (req: RequestWithUser, res: Response) =>
         const violater = await NIC.findOne({
             where: {
                 [Op.or]: [
-                    { idNumber: nic_number },
+                    { idNumber: nicNumber },
                     { idNumber: passport_number }
                 ]
             },
-            include: [
-                {
-                    model: Citizen
-                }
-            ],
-            attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+            include: {
+                model: Citizen,
+                attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+            },
         });
 
         if (!violater) {
@@ -168,27 +160,53 @@ export const check_nic_passport = async (req: RequestWithUser, res: Response) =>
     }
 }
 
+export const get_violater_details = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { idNumber } = req.body;
+
+        const violater = await NIC.findOne({
+            where: { idNumber },
+            include: {
+                model: Citizen,
+                attributes: { exclude: ['createdAt', 'updatedAt'] }
+            },
+            attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }
+        });
+
+        if (!violater) {
+            return res.status(404).json({
+                message: 'Violator not found',
+            });
+        }
+
+        return res.status(200).json(violater);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to get violator details',
+        });
+    }
+}
+
 export const get_violator_fine_records = async (req: RequestWithUser, res: Response) => {
     try {
-        const nicNumber = req.body.nic_number;
+        const { nicNumber } = req.body;
 
         // Fetch the violator's NIC details
         const violations = await FineRecord.findAll({
             where: { nicNumber },
             include: [
                 {
-                    model: OffenceRecord,
-                    include: [
-                        {
-                            model: Offence,
-                            attributes: ['description', 'fee', 'score']
-                        }
-                    ]
+                    model: Offence,
+                    through: {
+                        attributes: []
+                    },
+                    attributes: ['description', 'fee', 'score']
                 }
             ]
         });
 
-        if (!violations) {
+        if (!violations || violations.length === 0) {
             return res.status(404).json({
                 message: 'Violator not found',
             });
@@ -196,9 +214,83 @@ export const get_violator_fine_records = async (req: RequestWithUser, res: Respo
 
         return res.status(200).json(violations);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).json({
             message: 'Failed to get violator details',
         });
+    }
+};
+
+export const add_fine_record = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { nicNumber, offenceIds, locationName, locationLink, isDriver } = req.body;
+
+        // Ensure the NIC number exists in the Citizens table, or create a new citizen
+        let citizen = await Citizen.findOne({ where: { nicNumber } });
+
+        if (!citizen) {
+            citizen = await Citizen.create({ nicNumber });
+        }
+
+        // Find the offences with the given IDs
+        const offences = await Offence.findAll({
+            where: { offenceId: { [Op.in]: offenceIds } }
+        });
+
+        // Calculate the total fine and score
+        let totalFine = 0;
+        let totalScore = 0;
+        const fineDate = new Date();
+        const fineTime = fineDate.toTimeString().split(' ')[0]; // Use HH:MM:SS format
+
+        offences.forEach(offence => {
+            totalFine += parseFloat(offence.fee.toString()); // Ensure fee is parsed as a float
+            totalScore += parseFloat(offence.score.toString()); // Ensure score is parsed as a float
+        });
+
+        const officer = await Officer.findOne({
+            where: { username: req.user?.username },
+            attributes: ['officerId']
+        });
+
+        // Create a new fine record for the citizen with the given NIC number
+        const fineRecord = await FineRecord.create({
+            nicNumber,
+            totalFine: parseFloat(totalFine.toFixed(2)), // Ensure totalFine is stored as a float with 2 decimal places
+            totalScore: parseFloat(totalScore.toFixed(2)), // Ensure totalScore is stored as a float with 2 decimal places
+            fineDate,
+            fineTime,
+            locationName,
+            locationLink,
+            isDriver,
+            officerId: officer?.officerId,
+            isPaid: false,
+        });
+
+        await fineRecord.addOffences(offences);
+
+        // Return the fine record with its offences
+        const fineRecordResult = await FineRecord.findByPk(fineRecord.fineId, {
+            include: [Offence]
+        });
+
+        // Fetch the violator's NIC details
+        const violations = await FineRecord.findAll({
+            where: { nicNumber },
+            include: [
+                {
+                    model: Offence,
+                    through: {
+                        attributes: []
+                    },
+                    attributes: ['description', 'fee', 'score']
+                }
+            ]
+        });
+
+        return res.json(violations);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Failed to add fine record' });
     }
 };

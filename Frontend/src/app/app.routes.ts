@@ -51,7 +51,7 @@ export const routes: Routes = [
             },
         ]
     },
-    { path: 'officer/pedestrian/dashboard', component: OfficerDashboardComponent, canActivate: [checkOfficerAuth] },
-    { path: 'officer/driver/dashboard', component: OfficerDashboardComponent, canActivate: [checkOfficerAuth] },
+    { path: 'officer/pedestrian/:id/dashboard', component: OfficerDashboardComponent, canActivate: [checkOfficerAuth] },
+    { path: 'officer/driver/:id/dashboard', component: OfficerDashboardComponent, canActivate: [checkOfficerAuth] },
     { path: '**', redirectTo: '' }
 ];

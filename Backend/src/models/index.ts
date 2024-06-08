@@ -48,6 +48,9 @@ FineRecord.hasMany(OffenceRecord, { foreignKey: 'fineId', onDelete: 'CASCADE', o
 OffenceRecord.belongsTo(Offence, { foreignKey: 'offenceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 Offence.hasMany(OffenceRecord, { foreignKey: 'offenceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
+FineRecord.belongsToMany(Offence, { through: OffenceRecord, foreignKey: 'fineId' });
+Offence.belongsToMany(FineRecord, { through: OffenceRecord, foreignKey: 'offenceId' });
+
 Officer.belongsTo(NIC, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 NIC.hasMany(Officer, { foreignKey: 'nicNumber', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 

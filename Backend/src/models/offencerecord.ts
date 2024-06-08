@@ -22,6 +22,7 @@ class OffenceRecord extends Model<InferAttributes<OffenceRecord>, InferCreationA
                 },
                 offenceId: {
                     type: DataTypes.INTEGER,
+                    primaryKey: true,
                     allowNull: false,
                     references: {
                         model: Offence,

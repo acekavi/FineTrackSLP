@@ -4,9 +4,9 @@ import sequelize from '../sequelize';
 
 class Citizen extends Model<InferAttributes<Citizen>, InferCreationAttributes<Citizen>> {
     declare nicNumber: ForeignKey<NIC['idNumber']>;
-    declare mobile: string;
-    declare username: string;
-    declare password: string;
+    declare mobile: CreationOptional<string>;
+    declare username: CreationOptional<string>;
+    declare password: CreationOptional<string>;
     declare earnedScore: CreationOptional<number>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
@@ -27,16 +27,16 @@ class Citizen extends Model<InferAttributes<Citizen>, InferCreationAttributes<Ci
                 },
                 mobile: {
                     type: DataTypes.STRING(15),
-                    allowNull: false,
+                    allowNull: true,
                 },
                 username: {
                     type: DataTypes.STRING(15),
                     unique: true,
-                    allowNull: false,
+                    allowNull: true,
                 },
                 password: {
                     type: DataTypes.STRING(60),
-                    allowNull: false,
+                    allowNull: true,
                 },
                 earnedScore: {
                     type: DataTypes.DECIMAL(4, 2),

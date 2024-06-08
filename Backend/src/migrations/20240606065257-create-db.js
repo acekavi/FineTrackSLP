@@ -105,16 +105,16 @@ module.exports = {
 			},
 			mobile: {
 				type: Sequelize.STRING(15),
-				allowNull: false,
+				allowNull: true,
 			},
 			username: {
 				type: Sequelize.STRING(15),
 				unique: true,
-				allowNull: false,
+				allowNull: true,
 			},
 			password: {
 				type: Sequelize.STRING(60),
-				allowNull: false,
+				allowNull: true,
 			},
 			earnedScore: {
 				type: Sequelize.DECIMAL(4, 2),
@@ -407,6 +407,7 @@ module.exports = {
 			offenceId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
+				primaryKey: true,
 				references: {
 					model: 'Offences',
 					key: 'offenceId',

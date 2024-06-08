@@ -9,6 +9,12 @@ export const create_user = async (req: Request, res: Response) => {
         const { NIC, username, password, mobile } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        if (!NIC || !username || !password || !mobile) {
+            return res.status(400).json({
+                message: 'Missing required fields',
+            });
+        }
+
         await Citizen.create({
             nicNumber: NIC.toLowerCase(),
             username: username.toLowerCase(),

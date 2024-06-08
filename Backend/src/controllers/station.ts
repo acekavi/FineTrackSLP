@@ -167,3 +167,20 @@ export const add_offence = async (req: RequestWithUser, res: Response) => {
     }
 }
 
+export const get_offences = async (req: RequestWithUser, res: Response) => {
+    try {
+        const offenceType = req.body.offence_type;
+        const offences = await Offence.findAll(
+            {
+                where: { offenceType }
+            }
+        );
+
+        return res.status(200).json(offences);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to get offences',
+        });
+    }
+}

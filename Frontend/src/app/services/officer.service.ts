@@ -4,11 +4,21 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError, switchMap, filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UtilityService } from './utility.service';
-import { Citizen, FineRecord, NIC, OffenceRecord, Officer } from 'src/global-types';
+import { Citizen, FineRecord, NIC, Offence, OffenceRecord, Officer } from 'src/global-types';
 import { environment } from '../enviorenment/dev.enviorenment';
 
 interface NICwithCitizen extends NIC {
-  Citizen: Citizen;
+  Citizen?: Citizen;
+}
+
+interface OffenceResult {
+  description: string;
+  score: number;
+  fee: number;
+}
+
+interface FineRecordWithOffences extends FineRecord {
+  Offences: OffenceResult[];
 }
 
 @Injectable({
@@ -19,8 +29,8 @@ export class OfficerService {
   private officerUserSubject: BehaviorSubject<Officer>;
   public officerUser$: Observable<Officer>;
 
-  private violaterSubject: BehaviorSubject<Citizen>;
-  public violater$: Observable<Citizen>;
+  private violaterSubject: BehaviorSubject<NICwithCitizen>;
+  public violater$: Observable<NICwithCitizen>;
 
   private violaterFineRecordsSubject: BehaviorSubject<FineRecord[]>;
   public violaterFineRecords$: Observable<FineRecord[]>;
@@ -34,7 +44,7 @@ export class OfficerService {
     this.officerUserSubject = new BehaviorSubject<Officer>({} as Officer);
     this.officerUser$ = this.officerUserSubject.asObservable();
 
-    this.violaterSubject = new BehaviorSubject<Citizen>({} as Citizen);
+    this.violaterSubject = new BehaviorSubject<NICwithCitizen>({} as NICwithCitizen);
     this.violater$ = this.violaterSubject.asObservable();
 
     this.violaterFineRecordsSubject = new BehaviorSubject<FineRecord[]>([]);
@@ -65,35 +75,68 @@ export class OfficerService {
 
   public checkDriverLicence(licence_number: string): Observable<NICwithCitizen> {
     const checkDriverInfoUrl = `${this.apiUrl}/officer/check-driver`;
-    return this.http.post<NICwithCitizen>(checkDriverInfoUrl, { licence_number }).pipe(
-      tap((response: NICwithCitizen) => {
-        this.violaterSubject.next(response.Citizen);
-      })
-    );
+    return this.http.post<NICwithCitizen>(checkDriverInfoUrl, { licence_number });
   }
 
-  public checkNICorPassport(body: { nic_number: string, passport_number: string }): Observable<NICwithCitizen> {
+  public checkNICorPassport(body: { nicNumber: string, passport_number: string }): Observable<NICwithCitizen> {
     const checkNicorPassportUrl = `${this.apiUrl}/officer/check-nic-passort`;
-    return this.http.post<NICwithCitizen>(checkNicorPassportUrl, body).pipe(
-      tap((response: NICwithCitizen) => {
-        this.violaterSubject.next(response.Citizen);
-      })
-    );
+    return this.http.post<NICwithCitizen>(checkNicorPassportUrl, body);
   }
 
-  public getViolatorFineRecords(): void {
-    this.violater$.pipe(
-      filter((violater: Citizen) => violater !== null),
-      switchMap((violater: Citizen) =>
-        this.http.post<FineRecord[]>(`${this.apiUrl}/officer/violator/`, { nic_number: violater.NIC.id_number })
-      )
-    ).subscribe({
-      next: ((response: FineRecord[]) => {
-        this.violaterFineRecordsSubject.next(response);
+  public getViolaterDetails(idNumber: string): void {
+    this.http.post<NICwithCitizen>(`${this.apiUrl}/officer/violater/details`, { idNumber }).subscribe({
+      next: ((response: NICwithCitizen) => {
+        this.violaterSubject.next(response);
+        this.getViolatorFineRecords(response.idNumber);
       }),
       error: ((error: HttpErrorResponse) => {
         // handle error
+        console.log(error);
+
+        this.utilityService.handleHttpError(error);
       })
     });
+  }
+
+  public getViolatorFineRecords(nicNumber: string): void {
+    this.http.post<FineRecordWithOffences[]>(`${this.apiUrl}/officer/violater/fine-records`, { nicNumber })
+      .subscribe({
+        next: ((response: FineRecordWithOffences[]) => {
+          console.log(response);
+          this.violaterFineRecordsSubject.next(response);
+        }),
+        error: ((error: HttpErrorResponse) => {
+          if (error.status === 404) {
+            this.violaterFineRecordsSubject.next([]);
+            return;
+          }
+          this.utilityService.handleHttpError(error);
+        })
+      });
+  }
+
+  public addFineToViolator(body: {
+    nicNumber: string
+    offenceIds: number[],
+    locationName: string,
+    locationLink: string,
+    isDriver: boolean,
+  }): void {
+    body.nicNumber = this.violaterSubject.value.idNumber.trim();
+    this.http.post<FineRecordWithOffences[]>(`${this.apiUrl}/officer/violator/add-fine`, body).subscribe({
+      next: ((response: FineRecordWithOffences[]) => {
+        this.utilityService.displaySnackbar('Fine added successfully', 'success-snack');
+        this.violaterFineRecordsSubject.next(response);
+      }),
+      error: ((error: HttpErrorResponse) => {
+        console.log(error);
+        this.utilityService.handleHttpError(error);
+      })
+    });
+  }
+
+  public getOffences(offenceType: string): Observable<Offence[]> {
+    const getOffencesUrl = `${this.apiUrl}/station/offences`;
+    return this.http.post<Offence[]>(getOffencesUrl, { offence_type: offenceType });
   }
 }

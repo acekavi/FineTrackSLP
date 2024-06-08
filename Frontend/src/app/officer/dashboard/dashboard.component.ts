@@ -1,4 +1,4 @@
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgIf, NgStyle } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IconsModule } from 'src/app/modules/icons.module';
@@ -14,7 +14,8 @@ import { ActivatedRoute } from '@angular/router';
     IconsModule,
     MatUiModule,
     DatePipe,
-    NgIf
+    NgIf,
+    NgClass
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -30,8 +31,9 @@ export class OfficerDashboardComponent implements OnInit {
     private dialog: MatDialog
   ) { }
 
-  ngOnInit(): void {
-    this.officerService.getViolatorFineRecords()
+  ngOnInit() {
+    const idNumber = this.route.snapshot.paramMap.get('id');
+    this.officerService.getViolaterDetails(idNumber ? idNumber : '');
   }
   openAddCaseDialog(): void {
     const dialogRef = this.dialog.open(PopupViolationSelectionComponent);

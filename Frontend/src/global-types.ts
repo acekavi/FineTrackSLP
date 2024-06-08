@@ -24,7 +24,7 @@ export interface Citizen {
 }
 
 export interface NIC {
-    id_number: string;
+    idNumber: string;
     firstName: string;
     middleName: string;
     surname: string;

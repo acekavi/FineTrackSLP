@@ -1,5 +1,5 @@
 import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey, Sequelize } from 'sequelize';
-import { Citizen, Officer } from '.';
+import { Citizen, Offence, Officer } from '.';
 import sequelize from '../sequelize';
 
 class FineRecord extends Model<InferAttributes<FineRecord>, InferCreationAttributes<FineRecord>> {
@@ -17,6 +17,8 @@ class FineRecord extends Model<InferAttributes<FineRecord>, InferCreationAttribu
     declare payReferenceId: string | null;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
+
+    public addOffences!: (offences: Offence[]) => Promise<void>;
 
     static initModel(sequelize: Sequelize) {
         FineRecord.init(

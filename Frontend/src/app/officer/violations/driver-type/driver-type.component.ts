@@ -37,12 +37,15 @@ export class DriverTypeComponent {
     this.loading = true;
 
     this.officerService.checkDriverLicence(this.driverForm.value.licence_number).subscribe({
+      next: (response) => {
+        this.router.navigate([`officer/driver/${response.idNumber.trim()}/dashboard`]);
+
+      },
       error: (error) => {
         this.driverForm.controls['licence_number'].setErrors({ invalid: true });
         this.loading = false;
       },
       complete: () => {
-        this.router.navigate(['officer/driver/dashboard']);
         this.loading = false;
       }
     });

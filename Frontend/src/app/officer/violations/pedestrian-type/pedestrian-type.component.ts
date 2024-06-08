@@ -29,7 +29,7 @@ export class PedestrianTypeComponent {
     private formBuilder: FormBuilder
   ) {
     this.pedForm = this.formBuilder.group({
-      nic_number: [''],
+      nicNumber: [''],
       passport_number: [''],
     });
   }
@@ -38,22 +38,22 @@ export class PedestrianTypeComponent {
     this.loading = true;
 
     const body = {
-      nic_number: this.pedForm.value.nic_number,
+      nicNumber: this.pedForm.value.nicNumber,
       passport_number: this.pedForm.value.passport_number
     }
 
-    if (!this.pedForm.value.nic_number && !this.pedForm.value.passport_number) {
-      this.pedForm.controls['nic_number'].setErrors({ invalid: true });
+    if (!this.pedForm.value.nicNumber && !this.pedForm.value.passport_number) {
+      this.pedForm.controls['nicNumber'].setErrors({ invalid: true });
       this.pedForm.controls['passport_number'].setErrors({ invalid: true });
       this.loading = false;
     }
 
     this.officerService.checkNICorPassport(body).subscribe({
       next: (response) => {
-        this.router.navigate(['officer/pedestrian/dashboard']);
+        this.router.navigate([`officer/pedestrian/${response.idNumber.trim()}/dashboard`]);
       },
       error: (error) => {
-        this.pedForm.controls['nic_number'].setErrors({ invalid: true });
+        this.pedForm.controls['nicNumber'].setErrors({ invalid: true });
         this.pedForm.controls['passport_number'].setErrors({ invalid: true });
         this.loading = false;
       },
