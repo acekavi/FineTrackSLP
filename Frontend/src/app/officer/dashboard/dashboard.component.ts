@@ -35,6 +35,19 @@ export class OfficerDashboardComponent implements OnInit {
     const idNumber = this.route.snapshot.paramMap.get('id');
     this.officerService.getViolaterDetails(idNumber ? idNumber : '');
   }
+
+  redirectToDriver() {
+    const currentUrl = this.router.url;
+    const url = currentUrl.replace('pedestrian', 'driver');
+    this.router.navigate([url]);
+  }
+
+  redirectToPedestrian() {
+    const currentUrl = this.router.url;
+    const url = currentUrl.replace('driver', 'pedestrian');
+    this.router.navigate([url]);
+  }
+
   openAddCaseDialog(): void {
     const dialogRef = this.dialog.open(PopupViolationSelectionComponent);
 

@@ -53,9 +53,22 @@
       <button
         mat-raised-button
         color="primary"
-        routerLink="update-password"
         class="square-button"
+        (click)="redirectToDriver()"
       >
+        <mat-icon>directions_car</mat-icon>Driver
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="square-button"
+        (click)="redirectToPedestrian()"
+      >
+        <mat-icon>directions_walk</mat-icon>Pedestrian
+      </button>
+
+      <button mat-raised-button color="primary" class="square-button">
         <mat-icon>help</mat-icon>Help
       </button>
 
