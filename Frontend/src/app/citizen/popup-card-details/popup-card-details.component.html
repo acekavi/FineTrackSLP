@@ -1,0 +1,137 @@
+<form
+  *ngIf="!isSuccessful"
+  [formGroup]="cardForm"
+  (ngSubmit)="onSubmit()"
+  class="relative"
+>
+  <mat-dialog-content
+    class="flex flex-col items-center justify-center space-y-4 gap-4"
+  >
+    <div class="w-full text-center">
+      <h2 class="text-2xl font-bold">Add Card Details</h2>
+    </div>
+    <div class="flex flex-col gap-2">
+      <div class="w-full">
+        <p class="text-lg text-black">Card Number</p>
+        <mat-form-field appearance="outline" class="w-full">
+          <input
+            matInput
+            placeholder="Enter Card Number"
+            formControlName="cardnumber"
+            type="number"
+          />
+          <mat-error *ngIf="cardForm.get('cardnumber')?.hasError('required')"
+            >Card Number is required!</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-row gap-2 justify-between">
+        <div>
+          <p class="text-lg text-black">Expiry Date</p>
+          <mat-form-field appearance="outline" class="w-35">
+            <input
+              matInput
+              placeholder="Enter Expiry Date"
+              formControlName="expDate"
+              type="date"
+            />
+            <mat-error *ngIf="cardForm.get('expDate')?.hasError('required')"
+              >Expiry Date is required!</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div>
+          <p class="text-lg text-black">CVV</p>
+          <mat-form-field appearance="outline" class="w-35">
+            <input
+              matInput
+              placeholder="Enter CVV"
+              formControlName="cvv"
+              type="number"
+            />
+            <mat-error *ngIf="cardForm.get('cvv')?.hasError('required')"
+              >CVV is required!</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="flex flex-row justify-between">
+        <p class="text-lg font-semibold">Fine</p>
+        <p class="text-lg font-semibold">{{ this.data.totalFine }}</p>
+      </div>
+
+      <div class="flex flex-row justify-between">
+        <p class="text-lg font-semibold">Platform Fee</p>
+        <p class="text-lg font-semibold">
+          {{ (this.data.totalFine * 3) / 100 }}.00
+        </p>
+      </div>
+
+      <div class="flex flex-row justify-between border-t border-gray-500/50">
+        <p class="text-lg font-semibold">Total Fee :</p>
+        <p class="text-lg font-semibold">
+          {{
+            convertToNumber(this.data.totalFine.toString()) +
+              (this.data.totalFine * 3) / 100
+          }}.00
+        </p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="flex flex-row justify-between w-full">
+    <button mat-button (click)="onCancelClick()" color="warn" type="reset">
+      Cancel
+    </button>
+    <button
+      mat-button
+      cdkFocusInitial
+      color="primary"
+      type="submit"
+      [disabled]="loading"
+    >
+      <div class="flex flex-row align-middle justify-center gap-2">
+        <ng-icon
+          *ngIf="!loading"
+          name="bootstrapCreditCard2FrontFill"
+        ></ng-icon>
+        <p *ngIf="!loading">Complete Payment</p>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      </div>
+    </button>
+  </mat-dialog-actions>
+</form>
+
+<div *ngIf="isSuccessful" class="p-6 flex items-center flex-col gap-4">
+  <div class="flex-shrink-0 text-center">
+    <ng-icon class="text-5xl" name="bootstrapReceipt"></ng-icon>
+    <div class="text-xl font-medium text-black">Payment Receipt</div>
+  </div>
+
+  <div class="p-10 bg-gray-200">
+    <p class="text-gray-500">
+      <strong>Receipt ID:</strong> {{ responseFineRecord.payReferenceId }}
+    </p>
+    <p class="text-gray-500">
+      <strong>Fine ID:</strong> {{ responseFineRecord.fineId }}
+    </p>
+    <p class="text-gray-500">
+      <strong>Amount:</strong> {{ responseFineRecord.totalFine }}
+    </p>
+    <p class="text-gray-500">
+      <strong>Date:</strong> {{ responseFineRecord.updatedAt | date }}
+    </p>
+  </div>
+
+  <button
+    mat-button
+    (click)="closeDialog()"
+    color="primary"
+    type="button"
+    class="w-full"
+  >
+    Close
+  </button>
+</div>

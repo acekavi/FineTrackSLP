@@ -159,3 +159,97 @@ export const get_fine_records = async (req: RequestWithUser, res: Response) => {
         });
     }
 };
+
+export const check_fine = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { fineId } = req.body;
+        const username = req.user?.username;
+
+        const citizen = await Citizen.findOne({
+            where: { username },
+            attributes: ['nicNumber']
+        });
+
+        const fineRecord = await FineRecord.findOne({
+            where: { fineId: fineId as string },
+            include: [
+                {
+                    model: Offence,
+                    through: {
+                        attributes: []
+                    }
+                }
+            ]
+        });
+
+        if (!fineRecord) {
+            return res.status(404).json({
+                message: 'Fine record not found',
+            });
+        }
+
+        if (fineRecord.nicNumber !== citizen?.nicNumber) {
+            return res.status(403).json({
+                message: 'Unauthorized to view this fine',
+            });
+        }
+
+        return res.status(200).json(fineRecord);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to check fine',
+        });
+    }
+}
+
+export const pay_fine = async (req: RequestWithUser, res: Response) => {
+    try {
+        const { fineId } = req.body;
+        const username = req.user?.username;
+
+        const citizen = await Citizen.findOne({
+            where: { username },
+            attributes: ['nicNumber']
+        });
+
+        const fineRecord = await FineRecord.findOne({
+            where: { fineId },
+            include: [
+                {
+                    model: Offence,
+                    through: {
+                        attributes: []
+                    }
+                }
+            ]
+        });
+
+        if (!fineRecord) {
+            return res.status(404).json({
+                message: 'Fine record not found',
+            });
+        }
+
+        if (fineRecord.nicNumber !== citizen?.nicNumber) {
+            return res.status(403).json({
+                message: 'Unauthorized to pay this fine',
+            });
+        }
+
+        await fineRecord.update({
+            isPaid: true,
+            payReferenceId: Math.floor(Math.random() * 1000000).toString()
+        });
+
+        return res.status(200).json({
+            message: 'Fine paid successfully',
+            fineRecord
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to pay fine',
+        });
+    }
+}

@@ -1,1 +1,102 @@
-<p>payment-details works!</p>
+<div class="flex flex-col gap-4 bg-white">
+  <div class="bg-blue-300">
+    <p class="text-2xl text-center text-black py-2">
+      FineTrackSLP - Payment Gateway
+    </p>
+  </div>
+
+  <form
+    form
+    [formGroup]="paymentForm"
+    (ngSubmit)="onSubmit()"
+    class="flex-flex-col gap-2 p-4 justify-center mx-auto w-96"
+  >
+    <div class="self-center">
+      <p class="text-lg text-black">Name</p>
+      <mat-form-field appearance="outline" class="w-80">
+        <input matInput placeholder="Enter Name" formControlName="name" />
+        <mat-error *ngIf="paymentForm.get('name')?.hasError('required')"
+          >Payer's name is required!</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="self-center">
+      <p class="text-lg text-black">Contact Number</p>
+      <mat-form-field appearance="outline" class="w-80">
+        <input
+          matInput
+          placeholder="Enter Contact Number"
+          formControlName="contactNumber"
+        />
+        <mat-error
+          *ngIf="paymentForm.get('contactNumber')?.hasError('required')"
+          >Contact Number is required!</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="self-center">
+      <p class="text-lg text-black">Address</p>
+      <mat-form-field appearance="outline" class="w-80">
+        <input
+          matInput
+          placeholder="Enter Address "
+          formControlName="address"
+        />
+        <mat-error *ngIf="paymentForm.get('address')?.hasError('required')"
+          >Address is required!</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="self-center">
+      <p class="text-lg text-black">Fine ID</p>
+      <mat-form-field appearance="outline" class="w-80">
+        <input matInput placeholder="Enter Fine ID " formControlName="fineId" />
+        <mat-error *ngIf="paymentForm.get('fineId')?.hasError('required')"
+          >Fine ID is required!</mat-error
+        >
+        <mat-error *ngIf="paymentForm.get('fineId')?.hasError('invalid')"
+          >Fine ID is invalid!</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <button
+      class="w-80"
+      mat-flat-button
+      color="primary"
+      extended
+      matTooltip="Proceed"
+      aria-label="Proceed Button"
+      type="submit"
+      [disabled]="loading"
+    >
+      <div class="flex flex-row align-middle justify-center gap-2">
+        <ng-icon
+          *ngIf="!loading"
+          name="bootstrapCreditCard2FrontFill"
+        ></ng-icon>
+        <p *ngIf="!loading">Proceed for payment</p>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      </div>
+    </button>
+  </form>
+
+  <div class="flex flex-row justify-evenly border-t border-gray-500/50">
+    <div class="py-4 flex flex-row gap-2">
+      <p class="text-blue-600 font-semibold">Online Payment Methods :</p>
+      <img src="assets/images/visa.png" alt="Visa" class="w-8 h-6" />
+      <img
+        src="assets/images/mastercard.png"
+        alt="Mastercard"
+        class="w-10 h-6"
+      />
+    </div>
+
+    <div class="py-4 flex flex-row gap-2">
+      <p class="text-blue-600 font-semibold">Online Support : 077-3456721</p>
+    </div>
+  </div>
+</div>

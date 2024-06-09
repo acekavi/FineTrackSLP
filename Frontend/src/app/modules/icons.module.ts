@@ -21,6 +21,7 @@ import {
     bootstrapBarChartLineFill,
     bootstrapCreditCardFill,
     bootstrapCreditCard2FrontFill,
+    bootstrapReceipt,
 } from '@ng-icons/bootstrap-icons';
 
 @NgModule({
@@ -45,6 +46,7 @@ import {
             bootstrapClipboard2X,
             bootstrapBarChartLineFill,
             bootstrapCreditCard2FrontFill,
+            bootstrapReceipt,
         }),
     ],
     providers: [

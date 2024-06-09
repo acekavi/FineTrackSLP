@@ -4,10 +4,14 @@ import { UtilityService } from './utility.service';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError, tap, BehaviorSubject } from 'rxjs';
-import { Citizen, FineRecord, FineRecordWithOffences, NIC } from 'src/global-types';
+import { Citizen, FineRecord, FineRecordWithOffences, MessageResponse, NIC } from 'src/global-types';
 
 interface CitizenwithNIC extends Citizen {
   NIC?: NIC;
+}
+
+interface MessagewithFineRecord extends MessageResponse {
+  fineRecord: FineRecord;
 }
 
 @Injectable({
@@ -69,5 +73,13 @@ export class CitizenService {
           this.utilityService.handleHttpError(error);
         })
       });
+  }
+
+  public checkFine(body: { fineId: string }): Observable<FineRecord> {
+    return this.http.post<FineRecord>(`${this.apiUrl}/citizen/check-fine`, body);
+  }
+
+  public payFine(body: { fineId: string }): Observable<MessagewithFineRecord> {
+    return this.http.post<MessagewithFineRecord>(`${this.apiUrl}/citizen/pay-fine`, body);
   }
 } 

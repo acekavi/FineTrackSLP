@@ -10,4 +10,7 @@ router.get('/details', checkBearerToken, CitizenController.get_user);
 
 router.get('/fine-records', checkBearerToken, CitizenController.get_fine_records);
 
+router.post('/check-fine', checkBearerToken, CitizenController.check_fine);
+router.post('/pay-fine', checkBearerToken, CitizenController.pay_fine);
+
 export default router;
