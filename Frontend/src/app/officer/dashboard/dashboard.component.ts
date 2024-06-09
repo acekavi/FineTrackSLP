@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-officer-dashboard',
+  selector: 'app-violater-dashboard',
   standalone: true,
   imports: [
     CommonModule,

@@ -69,8 +69,21 @@
       </td>
     </ng-container>
 
+    <!-- No Results Found Row -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="5" class="text-center py-4">
+        No results found!
+      </td>
+    </tr>
+
     <!-- Header and Row Declarations -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
+
+  <mat-paginator
+    [length]="(this.stationService.officersInStation$ | async)?.length || 0"
+    [pageSize]="10"
+    aria-label="Pagination for all officers"
+  ></mat-paginator>
 </div>

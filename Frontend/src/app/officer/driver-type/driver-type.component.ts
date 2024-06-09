@@ -51,10 +51,15 @@ export class DriverTypeComponent {
     this.officerService.checkDriverLicence(body).subscribe({
       next: (response) => {
         this.router.navigate([`officer/driver/${response.idNumber.trim()}/dashboard`]);
-
       },
       error: (error) => {
-        this.driverForm.controls['licenceNumber'].setErrors({ invalid: true });
+        if (error.status === 404 && error.error.message === 'Invalid licence number!') {
+          this.driverForm.controls['licenceNumber'].setErrors({ invalid: true });
+          this.driverForm.controls['nicNumber'].setErrors(null);
+        } else if (error.status === 404 && error.error.message === 'Invalid NIC number!') {
+          this.driverForm.controls['nicNumber'].setErrors({ invalid: true });
+          this.driverForm.controls['licenceNumber'].setErrors(null);
+        }
         this.loading = false;
       },
       complete: () => {

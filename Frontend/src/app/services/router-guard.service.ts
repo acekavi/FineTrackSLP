@@ -37,7 +37,6 @@ export const checkOfficerAuth: CanActivateFn = (
     if (decodedToken.exp! * 1000 > Date.now() && decodedToken.role === 'officer') {
       return true;
     } else {
-      utilityService.deleteAuthorizationToken();
       return router.createUrlTree(['/login']);
     }
   } else {
@@ -58,7 +57,6 @@ export const checkCitizenAuth: CanActivateFn = (
     if (decodedToken.exp! * 1000 > Date.now() && decodedToken.role === 'citizen') {
       return true;
     } else {
-      utilityService.deleteAuthorizationToken();
       return router.createUrlTree(['/login']);
     }
   } else {
@@ -76,11 +74,9 @@ export const checkStationAuth: CanActivateFn = (
   const token = utilityService.getAuthorizationToken();
   if (token) {
     const decodedToken = utilityService.decodeToken(token);
-    console.log(decodedToken);
     if (decodedToken.exp! * 1000 > Date.now() && decodedToken.role === 'station') {
       return true;
     } else {
-      utilityService.deleteAuthorizationToken();
       return router.createUrlTree(['/login']);
     }
   } else {

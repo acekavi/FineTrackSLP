@@ -5,9 +5,7 @@
     <div
       class="flex flex-row md:flex-col justify-center align-middle lg:h-screen md:h-screen gap-2"
     >
-      <div
-        class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-4"
-      >
+      <div class="bg-white shadow-md py-4 hidden md:block">
         <div class="p-2 flex flex-col">
           <ng-icon
             class="text-5xl mt-2 text-blue-500 self-center"
@@ -102,8 +100,12 @@
     <div class="container mat-elevation-z8">
       <table
         mat-table
-        [dataSource]="this.officerService.violaterFineRecords$"
+        [dataSource]="(this.officerService.violaterFineRecords$ | async) || []"
         class="mat-elevation-z8"
+        matSort
+        matSortActive="fine_date"
+        matSortDisableClear
+        matSortDirection="desc"
       >
         <!-- Fine ID Column -->
         <ng-container matColumnDef="fine_id">
@@ -151,10 +153,25 @@
           </td>
         </ng-container>
 
+        <!-- No Results Found Row -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="6" class="text-center py-4">
+            No results found!
+          </td>
+        </tr>
+
         <!-- Header and Row Declarations -->
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
+
+      <mat-paginator
+        [length]="
+          (this.officerService.violaterFineRecords$ | async)?.length || 0
+        "
+        [pageSize]="10"
+        aria-label="Pagination for all cases"
+      ></mat-paginator>
     </div>
   </div>
 </div>
