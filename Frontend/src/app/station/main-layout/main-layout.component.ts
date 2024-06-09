@@ -6,7 +6,6 @@ import { Router, RouterModule } from '@angular/router';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UtilityService } from 'src/app/services/utility.service';
-import { PopupAddOffenceComponent } from '../popup-add-offence/popup-add-offence.component';
 import { StationService } from 'src/app/services/station.service';
 
 @Component({
@@ -31,18 +30,6 @@ export class StationLayoutComponent {
     public stationService: StationService,
   ) {
     this.stationService.loadStationFromServer();
-  }
-
-
-  addOffenceDialog() {
-    const dialogRef = this.dialog.open(PopupAddOffenceComponent, {
-      disableClose: true
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 'cancel') {
-        return;
-      }
-    });
   }
 
   goBack() {

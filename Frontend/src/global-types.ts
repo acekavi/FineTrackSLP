@@ -130,12 +130,6 @@ export interface Violations {
     ]
 }
 
-export interface OffenceResult {
-    description: string;
-    score: number;
-    fee: number;
-}
-
 export interface FineRecordWithOffences extends FineRecord {
-    Offences: OffenceResult[];
+    Offences: Offence[];
 }

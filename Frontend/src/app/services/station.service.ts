@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../enviorenment/dev.enviorenment';
-import { MessageResponse, Officer, Station } from 'src/global-types';
+import { FineRecordWithOffences, MessageResponse, Officer, Station } from 'src/global-types';
 import { BehaviorSubject, catchError, Observable, Subscription, tap } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -17,6 +17,9 @@ export class StationService {
   private officersInStationSubject: BehaviorSubject<Officer[]>;
   public officersInStation$: Observable<Officer[]>;
 
+  private fineRecordsSubject: BehaviorSubject<FineRecordWithOffences[]>;
+  public fineRecords$: Observable<FineRecordWithOffences[]>;
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -27,6 +30,9 @@ export class StationService {
 
     this.officersInStationSubject = new BehaviorSubject<Officer[]>([]);
     this.officersInStation$ = this.officersInStationSubject.asObservable();
+
+    this.fineRecordsSubject = new BehaviorSubject<FineRecordWithOffences[]>([]);
+    this.fineRecords$ = this.fineRecordsSubject.asObservable();
   }
 
   private fetchStationUser(): Observable<Station> {
@@ -93,5 +99,17 @@ export class StationService {
         this.utilityService.displaySnackbar(response.message, 'success-snack');
       })
     );
+  }
+
+  public loadFineRecords(): void {
+    const fineRecordsUrl = `${this.apiUrl}/station/fine-records`;
+    this.http.get<FineRecordWithOffences[]>(fineRecordsUrl).subscribe({
+      next: (fineRecords: FineRecordWithOffences[]) => {
+        this.fineRecordsSubject.next(fineRecords);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.utilityService.handleHttpError(error);
+      }
+    });
   }
 }

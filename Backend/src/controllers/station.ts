@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { NIC, Offence, Officer, Station } from '../models';
+import { FineRecord, NIC, Offence, Officer, Station } from '../models';
 import { RequestWithUser } from '../global-types';
 
 
@@ -181,6 +181,28 @@ export const get_offences = async (req: RequestWithUser, res: Response) => {
         console.log(error);
         return res.status(500).json({
             message: 'Failed to get offences',
+        });
+    }
+}
+
+export const get_fine_records = async (req: RequestWithUser, res: Response) => {
+    try {
+        const fineRecords = await FineRecord.findAll({
+            include: [
+                {
+                    model: Offence,
+                    through: {
+                        attributes: [],
+                    },
+                },
+            ],
+        });
+
+        return res.status(200).json(fineRecords);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: 'Failed to get fine records',
         });
     }
 }

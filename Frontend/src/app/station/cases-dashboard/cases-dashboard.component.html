@@ -1,0 +1,27 @@
+<div class="flex flex-row w-full justify-between mt-4">
+  <div class="flex-col">
+    <p class="font-bold text-xl">Cases Dashboard</p>
+    <p class="text-sm text-green-500">Analytics</p>
+  </div>
+
+  <div class="self-end flex flex-row gap-4 align-middle justify-center">
+    <div class="my-2 flex flex-row gap-4">
+      <button mat-stroked-button (click)="refreshDashboard()">
+        <mat-icon>refresh</mat-icon>Refresh
+      </button>
+
+      <button mat-flat-button color="primary" (click)="addOffenceDialog()">
+        <mat-icon>add</mat-icon>Add offences
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4">
+  <canvas
+    baseChart
+    [data]="lineChartData"
+    [options]="lineChartOptions"
+    [type]="'line'"
+  ></canvas>
+</div>
