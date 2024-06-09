@@ -4,12 +4,13 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, catchError, switchMap, filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UtilityService } from './utility.service';
-import { Citizen, FineRecord, FineRecordWithOffences, NIC, Offence, OffenceRecord, Officer } from 'src/global-types';
+import { Citizen, FineRecord, FineRecordWithOffences, FullCitizen, NIC, Offence, OffenceRecord, Officer } from 'src/global-types';
 import { environment } from '../enviorenment/dev.enviorenment';
 
 interface NICwithCitizen extends NIC {
   Citizen?: Citizen;
 }
+
 
 interface OfficerwithNIC extends Officer {
   NIC?: NIC;
@@ -23,8 +24,8 @@ export class OfficerService {
   private officerUserSubject: BehaviorSubject<OfficerwithNIC>;
   public officerUser$: Observable<OfficerwithNIC>;
 
-  private violaterSubject: BehaviorSubject<NICwithCitizen>;
-  public violater$: Observable<NICwithCitizen>;
+  private violaterSubject: BehaviorSubject<FullCitizen>;
+  public violater$: Observable<FullCitizen>;
 
   private violaterFineRecordsSubject: BehaviorSubject<FineRecord[]>;
   public violaterFineRecords$: Observable<FineRecord[]>;
@@ -37,7 +38,7 @@ export class OfficerService {
     this.officerUserSubject = new BehaviorSubject<OfficerwithNIC>({} as OfficerwithNIC);
     this.officerUser$ = this.officerUserSubject.asObservable();
 
-    this.violaterSubject = new BehaviorSubject<NICwithCitizen>({} as NICwithCitizen);
+    this.violaterSubject = new BehaviorSubject<FullCitizen>({} as FullCitizen);
     this.violater$ = this.violaterSubject.asObservable();
 
     this.violaterFineRecordsSubject = new BehaviorSubject<FineRecord[]>([]);
@@ -77,10 +78,10 @@ export class OfficerService {
   }
 
   public getViolaterDetails(idNumber: string): void {
-    this.http.post<NICwithCitizen>(`${this.apiUrl}/officer/violater/details`, { idNumber }).subscribe({
-      next: ((response: NICwithCitizen) => {
+    this.http.post<FullCitizen>(`${this.apiUrl}/officer/violater/details`, { idNumber }).subscribe({
+      next: ((response: FullCitizen) => {
         this.violaterSubject.next(response);
-        this.getViolatorFineRecords(response.idNumber);
+        this.getViolatorFineRecords(response.nicNumber);
       }),
       error: ((error: HttpErrorResponse) => {
         // handle error
@@ -115,7 +116,7 @@ export class OfficerService {
     locationLink: string,
     isDriver: boolean,
   }): Observable<FineRecordWithOffences[]> {
-    body.nicNumber = this.violaterSubject.value.idNumber.trim();
+    body.nicNumber = this.violaterSubject.value.nicNumber.trim();
     return this.http.post<FineRecordWithOffences[]>(`${this.apiUrl}/officer/violator/add-fine`, body).pipe(
       tap((response: FineRecordWithOffences[]) => {
         this.utilityService.displaySnackbar('Fine added successfully', 'success-snack');

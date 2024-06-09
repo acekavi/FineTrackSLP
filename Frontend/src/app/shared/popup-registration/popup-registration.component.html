@@ -23,15 +23,10 @@
             >NIC is required</mat-error
           >
           <mat-error
-            *ngIf="registrationForm.get('nicNumber')?.hasError('pattern')"
-            >Enter a valid NIC</mat-error
-          >
-          <mat-error
-            *ngIf="registrationForm.get('nicNumber')?.hasError('minLength')"
-            >Enter a valid NIC</mat-error
-          >
-          <mat-error
-            *ngIf="registrationForm.get('nicNumber')?.hasError('maxLength')"
+            *ngIf="
+              registrationForm.get('nicNumber')?.hasError('invalid') ||
+              registrationForm.get('nicNumber')?.hasError('pattern')
+            "
             >Enter a valid NIC</mat-error
           >
           <mat-error

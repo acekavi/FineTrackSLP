@@ -4,11 +4,7 @@ import { UtilityService } from './utility.service';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, throwError, tap, BehaviorSubject } from 'rxjs';
-import { Citizen, FineRecord, FineRecordWithOffences, MessageResponse, NIC } from 'src/global-types';
-
-interface CitizenwithNIC extends Citizen {
-  NIC?: NIC;
-}
+import { Citizen, DrLicence, FineRecord, FineRecordWithOffences, FullCitizen, MessageResponse, NIC, VehicleType } from 'src/global-types';
 
 interface MessagewithFineRecord extends MessageResponse {
   fineRecord: FineRecord;
@@ -20,8 +16,8 @@ interface MessagewithFineRecord extends MessageResponse {
 export class CitizenService {
   private apiUrl = environment.apiUrl;
 
-  private citizenUserSubject: BehaviorSubject<CitizenwithNIC>;
-  public citizenUser$: Observable<CitizenwithNIC>;
+  private citizenUserSubject: BehaviorSubject<FullCitizen>;
+  public citizenUser$: Observable<FullCitizen>;
 
   private citizenFineRecordsSubject: BehaviorSubject<FineRecord[]>;
   public citizenFineRecords$: Observable<FineRecord[]>;
@@ -31,16 +27,16 @@ export class CitizenService {
     private router: Router,
     private utilityService: UtilityService
   ) {
-    this.citizenUserSubject = new BehaviorSubject<CitizenwithNIC>({} as CitizenwithNIC);
+    this.citizenUserSubject = new BehaviorSubject<FullCitizen>({} as FullCitizen);
     this.citizenUser$ = this.citizenUserSubject.asObservable();
 
     this.citizenFineRecordsSubject = new BehaviorSubject<FineRecord[]>([]);
     this.citizenFineRecords$ = this.citizenFineRecordsSubject.asObservable();
   }
 
-  private fetchCitizenUser(): Observable<CitizenwithNIC> {
+  private fetchCitizenUser(): Observable<FullCitizen> {
     const getUserUrl = `${this.apiUrl}/citizen/details`;
-    return this.http.get<CitizenwithNIC>(getUserUrl);
+    return this.http.get<FullCitizen>(getUserUrl);
   }
 
   public loadCitizenFromServer(): void {
@@ -49,7 +45,8 @@ export class CitizenService {
     }
 
     this.fetchCitizenUser().subscribe({
-      next: (user: CitizenwithNIC) => {
+      next: (user: FullCitizen) => {
+        console.log(user);
         this.citizenUserSubject.next(user);
       },
       error: (error: HttpErrorResponse) => {

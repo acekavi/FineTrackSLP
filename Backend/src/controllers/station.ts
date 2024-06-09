@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { FineRecord, NIC, Offence, Officer, Station } from '../models';
 import { RequestWithUser } from '../global-types';
+import { Op } from 'sequelize';
 
 
 export const create_user = async (req: Request, res: Response) => {
@@ -117,20 +118,38 @@ export const add_officer = async (req: RequestWithUser, res: Response) => {
             where: { username: req.user?.username },
             attributes: ['stationId'],
         });
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newOfficer = await Officer.create({
+        const officer = await Officer.findOne({
+            where: {
+                [Op.or]: [
+                    { officerId: officer_ID },
+                    { username: username }
+                ]
+            }
+        });
+
+        if (officer) {
+            return res.status(409).json({
+                message: 'Officer already exists with this ID or username',
+            });
+        }
+
+        const nicProvided = await NIC.findOne({ where: { idNumber: nic } });
+
+        if (!nicProvided) {
+            return res.status(422).json({
+                message: 'NIC number not found',
+            });
+        }
+
+        await Officer.create({
             officerId: officer_ID,
-            nicNumber: nic.toLowerCase(),
+            nicNumber: nic,
             username: username.toLowerCase(),
             stationId: station_ID?.stationId.toLowerCase(),
             password: hashedPassword,
-        }).catch((error) => {
-            if (error.name === 'SequelizeUniqueConstraintError') {
-                return res.status(409).json({
-                    message: 'Username already exists',
-                });
-            }
         });
 
         return res.status(201).json({

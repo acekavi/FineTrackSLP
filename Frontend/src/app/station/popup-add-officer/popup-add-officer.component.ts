@@ -30,9 +30,9 @@ export class PopupAddOfficerComponent {
     private stationService: StationService,
   ) {
     this.registrationForm = this.formBuilder.group({
-      officer_ID: ['', [Validators.required]],
+      officer_ID: ['', [Validators.required, Validators.pattern('^\\d{8}$')]],
       username: ['', [Validators.required]],
-      nic: ['', [Validators.required]],
+      nic: ['', [Validators.required, Validators.pattern('^(\\d{9}[vVxX]|\\d{12})$')]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       conPassword: ['', [Validators.required, Validators.minLength(8)]],
     });
@@ -79,6 +79,10 @@ export class PopupAddOfficerComponent {
       error: (error) => {
         if (error.status === 409) {
           this.registrationForm.controls['username'].setErrors({ alreadyExists: true });
+          this.registrationForm.controls['officer_ID'].setErrors({ alreadyExists: true });
+        }
+        if (error.status === 422) {
+          this.registrationForm.controls['nic'].setErrors({ invalid: true });
         }
         this.loading = false;
       },

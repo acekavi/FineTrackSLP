@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IconsModule } from 'src/app/modules/icons.module';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OfficerService } from 'src/app/services/officer.service';
 import { MatUiModule } from 'src/app/modules/matui.module';
 
@@ -29,7 +29,7 @@ export class PedestrianTypeComponent {
     private formBuilder: FormBuilder
   ) {
     this.pedForm = this.formBuilder.group({
-      nicNumber: [''],
+      nicNumber: ['', Validators.pattern('^(\\d{9}[vVxX]|\\d{12})$')],
       passport_number: [''],
     });
   }

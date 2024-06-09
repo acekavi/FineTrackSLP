@@ -7,9 +7,14 @@
       <mat-form-field class="w-80">
         <mat-label>NIC Number</mat-label>
         <input matInput placeholder="123456789v" formControlName="nicNumber" />
-        <mat-error *ngIf="driverForm.get('nicNumber')?.hasError('invalid')"
+        <mat-error
+          *ngIf="
+            driverForm.get('nicNumber')?.hasError('invalid') ||
+            driverForm.get('nicNumber')?.hasError('pattern')
+          "
           >Invalid NIC Number</mat-error
         >
+
         <mat-error *ngIf="driverForm.get('nicNumber')?.hasError('required')"
           >Either NIC or Licence is required to proceed</mat-error
         >
@@ -26,7 +31,11 @@
           required="true"
           formControlName="licenceNumber"
         />
-        <mat-error *ngIf="driverForm.get('licenceNumber')?.hasError('invalid')"
+        <mat-error
+          *ngIf="
+            driverForm.get('licenceNumber')?.hasError('invalid') ||
+            driverForm.get('licenceNumber')?.hasError('pattern')
+          "
           >Invalid Licence Number</mat-error
         >
         <mat-error *ngIf="driverForm.get('licenceNumber')?.hasError('required')"

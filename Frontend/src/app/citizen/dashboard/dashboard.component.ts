@@ -21,7 +21,7 @@ import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-di
 })
 export class CitizenDashboardComponent implements OnInit {
   displayedColumns: string[] = [
-    'fine_id', 'offence_description', 'case_or_fine', 'fine_date', 'fine_amount', 'payment_status'
+    'fine_id', 'offence_description', 'case_or_fine', 'fine_date', 'fine_amount', 'payment_status', 'referenceId'
   ];
 
   constructor(

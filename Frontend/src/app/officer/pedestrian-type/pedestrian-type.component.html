@@ -7,7 +7,11 @@
       <mat-form-field class="w-80">
         <mat-label>NIC Number</mat-label>
         <input matInput placeholder="123456789v" formControlName="nicNumber" />
-        <mat-error *ngIf="pedForm.get('nicNumber')?.hasError('invalid')"
+        <mat-error
+          *ngIf="
+            pedForm.get('nicNumber')?.hasError('invalid') ||
+            pedForm.get('nicNumber')?.hasError('pattern')
+          "
           >Invalid NIC Number</mat-error
         >
         <mat-error *ngIf="pedForm.get('nicNumber')?.hasError('required')"
@@ -26,7 +30,11 @@
           placeholder="N1234567"
           formControlName="passport_number"
         />
-        <mat-error *ngIf="pedForm.get('passport_number')?.hasError('invalid')"
+        <mat-error
+          *ngIf="
+            pedForm.get('passport_number')?.hasError('invalid') ||
+            pedForm.get('passport_number')?.hasError('pattern')
+          "
           >Invalid Passport Number</mat-error
         >
         <mat-error *ngIf="pedForm.get('passport_number')?.hasError('required')"

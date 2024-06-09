@@ -29,8 +29,8 @@ export class DriverTypeComponent {
     private formBuilder: FormBuilder,
   ) {
     this.driverForm = this.formBuilder.group({
-      nicNumber: [''],
-      licenceNumber: [''],
+      nicNumber: ['', [Validators.pattern('^(\\d{9}[vVxX]|\\d{12})$')]],
+      licenceNumber: ['', [Validators.pattern('^\\d{8}$')]],
     });
   }
 

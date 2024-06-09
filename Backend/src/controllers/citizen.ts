@@ -2,7 +2,11 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { RequestWithUser } from '../global-types';
-import { Citizen, FineRecord, NIC, Offence } from '../models';
+import { Citizen, DrLicence, FineRecord, NIC, Offence, VehicleType } from '../models';
+
+interface CitizenWithDrLicene extends Citizen {
+    DrLicence?: DrLicence;
+}
 
 export const create_user = async (req: Request, res: Response) => {
     try {
@@ -99,10 +103,12 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
         const citizen = await Citizen.findOne({
             where: { username },
             attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
-            include: [{
-                model: NIC,
-                attributes: { exclude: ['createdAt', 'updatedAt'] }
-            }]
+            include: [
+                {
+                    model: NIC,
+                    attributes: { exclude: ['createdAt', 'updatedAt'] }
+                }
+            ]
         });
 
         if (!citizen) {
@@ -111,7 +117,28 @@ export const get_user = async (req: RequestWithUser, res: Response) => {
             });
         }
 
-        return res.status(200).json(citizen);
+        const drLicence = await DrLicence.findOne({
+            where: { nicNumber: citizen.nicNumber },
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            include: [
+                {
+                    model: VehicleType,
+                    attributes: { exclude: ['createdAt', 'updatedAt'] }
+                }
+            ]
+        });
+
+        let responseObject = citizen.toJSON();
+
+        if (drLicence) {
+            responseObject = {
+                ...responseObject,
+                // @ts-ignore
+                DrLicence: drLicence
+            };
+        }
+
+        return res.status(200).json(responseObject);
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -162,7 +189,7 @@ export const get_fine_records = async (req: RequestWithUser, res: Response) => {
 
 export const check_fine = async (req: RequestWithUser, res: Response) => {
     try {
-        const { fineId } = req.query;
+        const { fineId } = req.body;
         const username = req.user?.username;
 
         const citizen = await Citizen.findOne({

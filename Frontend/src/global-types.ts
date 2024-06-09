@@ -134,3 +134,12 @@ export interface Violations {
 export interface FineRecordWithOffences extends FineRecord {
     Offences: Offence[];
 }
+
+interface DrLicenceWithVehicleType extends DrLicence {
+    VehicleType: VehicleType;
+}
+
+export interface FullCitizen extends Citizen {
+    NIC?: NIC;
+    DrLicence?: DrLicenceWithVehicleType;
+}

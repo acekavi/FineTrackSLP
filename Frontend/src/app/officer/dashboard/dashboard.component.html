@@ -6,47 +6,70 @@
       class="flex flex-row md:flex-col justify-center align-middle lg:h-screen md:h-screen gap-2"
     >
       <div class="bg-white shadow-md py-4 hidden md:block">
-        <div class="p-2 flex flex-col">
-          <ng-icon
-            class="text-5xl mt-2 text-blue-500 self-center"
-            name="bootstrapPersonCircle"
-          ></ng-icon>
-          <p
-            class="uppercase tracking-wide text-blue-500 font-semibold text-xl self-center"
-          >
-            Violator Profile
-          </p>
-          <p class="mt-2 text-black">
-            <strong>
-              NIC ID:
-              {{ (officerService.violater$ | async)?.idNumber }}</strong
+        <div class="bg-white shadow-md py-4 hidden md:block">
+          <div class="p-2 flex flex-col">
+            <ng-icon
+              class="text-5xl mt-2 text-blue-500 self-center"
+              name="bootstrapPersonCircle"
+            ></ng-icon>
+            <p
+              class="uppercase tracking-wide text-blue-500 font-semibold text-xl self-center"
             >
-          </p>
-          <p class="mt-2 text-gray-500">
-            <strong>Full Name:</strong>
-            {{ (officerService.violater$ | async)?.firstName }}
-            {{ (officerService.violater$ | async)?.surname }}
-          </p>
-          <p class="mt-2 text-gray-500">
-            <strong>Date of Birth:</strong>
-            {{ (officerService.violater$ | async)?.dob | date }}
-          </p>
-          <p class="mt-2 text-gray-500">
-            <strong>Gender:</strong>
-            {{ (officerService.violater$ | async)?.gender }}
-          </p>
-          <p class="mt-2 text-gray-500">
-            <strong>Address:</strong>
-          </p>
-          <p class="mt-2 ms-2 text-gray-500">
-            {{ (officerService.violater$ | async)?.address1 }}
-          </p>
-          <p class="mt-2 ms-2 text-gray-500">
-            {{ (officerService.violater$ | async)?.address2 }}
-          </p>
-          <p class="mt-2 ms-2 text-gray-500">
-            {{ (officerService.violater$ | async)?.address3 }}
-          </p>
+              Violator Profile
+            </p>
+            <p class="mt-2 text-black">
+              <strong>
+                NIC ID:
+                {{ (officerService.violater$ | async)?.NIC?.idNumber }}</strong
+              >
+            </p>
+            <p class="mt-2 text-gray-500">
+              <strong>Full Name:</strong>
+              {{ (officerService.violater$ | async)?.NIC?.firstName }}
+              {{ (officerService.violater$ | async)?.NIC?.surname }}
+            </p>
+            <p class="mt-2 text-gray-500">
+              <strong>Date of Birth:</strong>
+              {{ (officerService.violater$ | async)?.NIC?.dob | date }}
+            </p>
+            <p class="mt-2 text-gray-500">
+              <strong>Gender:</strong>
+              {{ (officerService.violater$ | async)?.NIC?.gender }}
+            </p>
+
+            <p class="mt-2 text-gray-500">
+              <strong>Earned Fine Score:</strong>
+              <span class="text-red-400 font-semibold">
+                {{ (officerService.violater$ | async)?.earnedScore }}</span
+              >
+            </p>
+
+            <p
+              class="mt-2 text-gray-500"
+              *ngIf="(officerService.violater$ | async)?.DrLicence"
+            >
+              <strong>Vehicles Permitted:</strong>
+              <span class="text-red-400 font-semibold">
+                {{
+                  (officerService.violater$ | async)?.DrLicence?.VehicleType
+                    ?.types
+                }}</span
+              >
+            </p>
+
+            <p class="mt-2 text-gray-500">
+              <strong>Address:</strong>
+            </p>
+            <p class="mt-2 ms-2 text-gray-500">
+              {{ (officerService.violater$ | async)?.NIC?.address1 }}
+            </p>
+            <p class="mt-2 ms-2 text-gray-500">
+              {{ (officerService.violater$ | async)?.NIC?.address2 }}
+            </p>
+            <p class="mt-2 ms-2 text-gray-500">
+              {{ (officerService.violater$ | async)?.NIC?.address3 }}
+            </p>
+          </div>
         </div>
       </div>
 

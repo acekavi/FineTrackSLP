@@ -22,6 +22,16 @@
             *ngIf="registrationForm.get('officer_ID')?.hasError('required')"
             >Officer ID is required</mat-error
           >
+          <mat-error
+            *ngIf="
+              registrationForm.get('officer_ID')?.hasError('alreadyExists')
+            "
+            >Officer ID already exist</mat-error
+          >
+          <mat-error
+            *ngIf="registrationForm.get('officer_ID')?.hasError('pattern')"
+            >Enter a valid Officer ID</mat-error
+          >
         </mat-form-field>
 
         <mat-form-field appearance="fill">
@@ -37,10 +47,11 @@
           <mat-error *ngIf="registrationForm.get('nic')?.hasError('required')"
             >NIC is required</mat-error
           >
-          <mat-error *ngIf="registrationForm.get('nic')?.hasError('pattern')"
-            >Enter a valid NIC</mat-error
-          >
-          <mat-error *ngIf="registrationForm.get('nic')?.hasError('minlength')"
+          <mat-error
+            *ngIf="
+              registrationForm.get('nic')?.hasError('invalid') ||
+              registrationForm.get('nic')?.hasError('pattern')
+            "
             >Enter a valid NIC</mat-error
           >
         </mat-form-field>

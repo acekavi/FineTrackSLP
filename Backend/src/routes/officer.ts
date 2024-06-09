@@ -4,7 +4,6 @@ import checkBearerToken from '../middleware/authentication-handler';
 
 const router = express.Router();
 
-router.post('/register', OfficerController.create_user);
 router.post('/login', OfficerController.signin_user);
 router.get('/details', checkBearerToken, OfficerController.get_user);
 
