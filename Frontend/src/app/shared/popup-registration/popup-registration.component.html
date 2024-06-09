@@ -27,7 +27,11 @@
             >Enter a valid NIC</mat-error
           >
           <mat-error
-            *ngIf="registrationForm.get('nicNumber')?.hasError('minlength')"
+            *ngIf="registrationForm.get('nicNumber')?.hasError('minLength')"
+            >Enter a valid NIC</mat-error
+          >
+          <mat-error
+            *ngIf="registrationForm.get('nicNumber')?.hasError('maxLength')"
             >Enter a valid NIC</mat-error
           >
           <mat-error

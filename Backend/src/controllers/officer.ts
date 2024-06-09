@@ -237,7 +237,7 @@ export const get_violator_fine_records = async (req: RequestWithUser, res: Respo
 
 export const add_fine_record = async (req: RequestWithUser, res: Response) => {
     try {
-        const { nicNumber, offenceIds, locationName, locationLink, isDriver } = req.body;
+        const { nicNumber, offenceIds, fineDescription, locationName, locationLink, isDriver } = req.body;
 
         // Ensure the NIC number exists in the Citizens table, or create a new citizen
         let citizen = await Citizen.findOne({ where: { nicNumber } });
@@ -270,6 +270,7 @@ export const add_fine_record = async (req: RequestWithUser, res: Response) => {
         // Create a new fine record for the citizen with the given NIC number
         const fineRecord = await FineRecord.create({
             nicNumber,
+            fineDescription,
             totalFine: parseFloat(totalFine.toFixed(2)), // Ensure totalFine is stored as a float with 2 decimal places
             totalScore: parseFloat(totalScore.toFixed(2)), // Ensure totalScore is stored as a float with 2 decimal places
             fineDate,

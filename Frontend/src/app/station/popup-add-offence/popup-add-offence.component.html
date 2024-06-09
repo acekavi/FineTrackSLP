@@ -44,6 +44,12 @@
         <mat-error *ngIf="offenceAddForm.get('score')?.hasError('required')"
           >Score is required</mat-error
         >
+        <mat-error *ngIf="offenceAddForm.get('score')?.hasError('min')"
+          >Score should be greater than 0</mat-error
+        >
+        <mat-error *ngIf="offenceAddForm.get('score')?.hasError('max')"
+          >Score should be lower than 100</mat-error
+        >
       </mat-form-field>
 
       <mat-form-field appearance="fill">
@@ -58,6 +64,9 @@
         <mat-hint>Enter Fee here</mat-hint>
         <mat-error *ngIf="offenceAddForm.get('fee')?.hasError('required')"
           >Fee is required</mat-error
+        >
+        <mat-error *ngIf="offenceAddForm.get('fee')?.hasError('min')"
+          >Fee should be greater than 0</mat-error
         >
       </mat-form-field>
 
@@ -76,7 +85,7 @@
       [disabled]="loading"
     >
       <div class="flex flex-row align-middle justify-center gap-2">
-        <ng-icon *ngIf="!loading" name="bootstrapPersonPlus"></ng-icon>
+        <ng-icon *ngIf="!loading" name="bootstrapPlusCircle"></ng-icon>
         <p *ngIf="!loading">Add Offence</p>
         <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
       </div>

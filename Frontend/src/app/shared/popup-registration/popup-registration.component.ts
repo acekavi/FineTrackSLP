@@ -38,7 +38,7 @@ export class PopupRegistrationComponent {
       username: ['', [Validators.required]],
       password: ['', [Validators.required]],
       conPassword: ['', [Validators.required]],
-      nicNumber: ['', [Validators.required, Validators.pattern('^[0-9]{9}[vVxX]$'), Validators.minLength(10)]],
+      nicNumber: ['', [Validators.required, Validators.pattern('^[0-9]{9}[vVxX]$'), Validators.minLength(10), Validators.maxLength(12)]],
       mobile: ['', [Validators.required, Validators.pattern('^[0-9]{10}$'), Validators.minLength(10)]],
     });
   }

@@ -162,7 +162,7 @@ export const get_fine_records = async (req: RequestWithUser, res: Response) => {
 
 export const check_fine = async (req: RequestWithUser, res: Response) => {
     try {
-        const { fineId } = req.body;
+        const { fineId } = req.query;
         const username = req.user?.username;
 
         const citizen = await Citizen.findOne({

@@ -61,6 +61,7 @@ export interface Feedback {
 export interface FineRecord {
     fineId: number;
     NIC: Citizen;
+    fineDescription?: string;
     totalFine: number;
     totalScore: number;
     fineDate: Date;

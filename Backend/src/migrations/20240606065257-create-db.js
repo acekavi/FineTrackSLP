@@ -338,6 +338,10 @@ module.exports = {
 					key: 'nicNumber',
 				},
 			},
+			fineDescription: {
+				type: Sequelize.TEXT,
+				allowNull: true,
+			},
 			totalFine: {
 				type: Sequelize.DECIMAL(12, 2),
 				allowNull: false,

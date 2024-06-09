@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { max, min } from 'rxjs';
 import { IconsModule } from 'src/app/modules/icons.module';
 import { MatUiModule } from 'src/app/modules/matui.module';
 import { StationService } from 'src/app/services/station.service';
@@ -31,8 +32,8 @@ export class PopupAddOffenceComponent {
   ) {
     this.offenceAddForm = this.formBuilder.group({
       description: ['', [Validators.required]],
-      score: [0, [Validators.required]],
-      fee: [0, [Validators.required]],
+      score: [0, [Validators.required, Validators.min(1), Validators.max(100)]],
+      fee: [0, [Validators.required, Validators.min(1)]],
     });
   }
 

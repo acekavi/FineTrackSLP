@@ -1,11 +1,14 @@
-<h2 mat-dialog-title>Add Offences</h2>
+<form
+  [formGroup]="finesForm"
+  (ngSubmit)="onSubmit()"
+  class="flex-flex-col gap-2 p-4 justify-center"
+>
+  <h2 mat-dialog-title>Add Offences</h2>
 
-<mat-dialog-content>
-  <div class="flex flex-row justify-between align-middle gap-2">
+  <div class="flex flex-row justify-between align-middle gap-4">
     <mat-form-field>
       <mat-label>Select an Offence</mat-label>
       <mat-select #offenceSelect="matSelect">
-        <!-- Replace 'offence' with the actual variable name in your component -->
         <mat-option
           *ngFor="let offence of offences"
           [value]="offence.offenceId"
@@ -14,22 +17,107 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-button (click)="addOffence(offenceSelect.value)" class="my-2">
+    <button
+      mat-button
+      (click)="addOffence(offenceSelect.value)"
+      class="my-2"
+      type="button"
+    >
       Add
     </button>
   </div>
 
-  <div *ngIf="selectedOffences.length > 0" class="mt-4">
+  <div *ngIf="selectedOffences.length > 0" class="w-full">
     <h3 class="text-lg font-semibold text-gray-700">Selected Offences:</h3>
-    <ul class="list-disc list-inside mt-2">
-      <li *ngFor="let offence of selectedOffences" class="text-gray-600">
-        {{ offence.description }}
-      </li>
+    <ul class="list-disc list-inside my-2">
+      <div
+        *ngFor="let offence of selectedOffences"
+        class="text-gray-600 flex flex-row align-middle"
+      >
+        <li class="py-2">
+          {{ offence.description }}
+        </li>
+
+        <button
+          mat-icon-button
+          (click)="removeOffence(offence.offenceId)"
+          type="button"
+          class="ms-2"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
     </ul>
   </div>
-</mat-dialog-content>
 
-<mat-dialog-actions>
-  <button mat-button color="warn" mat-dialog-close>Cancel</button>
-  <button mat-raised-button (click)="addFineToUser()">Add Fine</button>
-</mat-dialog-actions>
+  <div>
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="fineDescription"
+        placeholder="Description"
+      ></textarea>
+      <mat-hint>Enter Description here</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full">
+      <mat-label>Location</mat-label>
+      <input
+        type="text"
+        placeholder="Pick one"
+        aria-label="Location"
+        matInput
+        formControlName="location"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option
+          *ngFor="let option of filteredOptions$ | async"
+          [value]="option"
+        >
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="finesForm.get('location')?.hasError('required')">
+        Location is required
+      </mat-error>
+      <mat-hint>Enter Fined Location here</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Location Link</mat-label>
+      <textarea
+        matInput
+        formControlName="locationLink"
+        placeholder="Location Link"
+      ></textarea>
+      <mat-hint>Paste Location Link here</mat-hint>
+      <mat-error *ngIf="finesForm.get('locationLink')?.hasError('required')">
+        Location Link is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-dialog-actions>
+      <button mat-button color="warn" mat-dialog-close>Cancel</button>
+      <button
+        mat-button
+        cdkFocusInitial
+        color="primary"
+        type="submit"
+        [disabled]="loading"
+      >
+        <div class="flex flex-row align-middle justify-center gap-2">
+          <ng-icon *ngIf="!loading" name="bootstrapPlusCircle"></ng-icon>
+          <p *ngIf="!loading">Add Fine</p>
+          <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+        </div>
+      </button>
+    </mat-dialog-actions>
+  </div>
+</form>

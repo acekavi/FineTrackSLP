@@ -32,7 +32,7 @@ export class PopupAddOfficerComponent {
     this.registrationForm = this.formBuilder.group({
       officer_ID: ['', [Validators.required]],
       username: ['', [Validators.required]],
-      nic: ['', [Validators.required, Validators.pattern('^[0-9]{9}[vVxX]$'), Validators.minLength(10)]],
+      nic: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       conPassword: ['', [Validators.required, Validators.minLength(8)]],
     });

@@ -5,7 +5,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IconsModule } from 'src/app/modules/icons.module';
 import { MatUiModule } from 'src/app/modules/matui.module';
 import { CitizenService } from 'src/app/services/citizen.service';
-import { StationService } from 'src/app/services/station.service';
 import { FineRecord } from 'src/global-types';
 
 interface PaymentDetails {

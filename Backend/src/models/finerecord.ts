@@ -5,6 +5,7 @@ import sequelize from '../sequelize';
 class FineRecord extends Model<InferAttributes<FineRecord>, InferCreationAttributes<FineRecord>> {
     declare fineId: CreationOptional<number>;
     declare nicNumber: ForeignKey<Citizen['nicNumber']>;
+    declare fineDescription: CreationOptional<string>;
     declare totalFine: number;
     declare totalScore: number;
     declare fineDate: Date;
@@ -36,6 +37,10 @@ class FineRecord extends Model<InferAttributes<FineRecord>, InferCreationAttribu
                         model: Citizen,
                         key: 'nicNumber',
                     },
+                },
+                fineDescription: {
+                    type: DataTypes.TEXT,
+                    allowNull: true,
                 },
                 totalFine: {
                     type: DataTypes.DECIMAL(12, 2),

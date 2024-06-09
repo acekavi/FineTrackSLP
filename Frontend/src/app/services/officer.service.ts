@@ -110,21 +110,23 @@ export class OfficerService {
   public addFineToViolator(body: {
     nicNumber: string
     offenceIds: number[],
+    fineDescription: string,
     locationName: string,
     locationLink: string,
     isDriver: boolean,
-  }): void {
+  }): Observable<FineRecordWithOffences[]> {
     body.nicNumber = this.violaterSubject.value.idNumber.trim();
-    this.http.post<FineRecordWithOffences[]>(`${this.apiUrl}/officer/violator/add-fine`, body).subscribe({
-      next: ((response: FineRecordWithOffences[]) => {
+    return this.http.post<FineRecordWithOffences[]>(`${this.apiUrl}/officer/violator/add-fine`, body).pipe(
+      tap((response: FineRecordWithOffences[]) => {
         this.utilityService.displaySnackbar('Fine added successfully', 'success-snack');
         this.violaterFineRecordsSubject.next(response);
       }),
-      error: ((error: HttpErrorResponse) => {
+      catchError((error: HttpErrorResponse) => {
         console.log(error);
         this.utilityService.handleHttpError(error);
+        throw error;
       })
-    });
+    );
   }
 
   public getOffences(offenceType: string): Observable<Offence[]> {
