@@ -16,16 +16,7 @@ import { MatUiModule } from 'src/app/modules/matui.module';
 export class PopupLanguageSelectionComponent {
   constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<PopupLanguageSelectionComponent>) { }
 
-  // popup-language-selection.component.ts
-  onSinhalaClick(): void {
-    this.dialogRef.close('sinhala');
-  }
-
   onEnglishClick(): void {
     this.dialogRef.close('english');
-  }
-
-  onTamilClick(): void {
-    this.dialogRef.close('tamil');
   }
 }

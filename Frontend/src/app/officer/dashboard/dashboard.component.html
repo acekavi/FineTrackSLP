@@ -1,0 +1,213 @@
+<div class="flex flex-col md:flex-row">
+  <div
+    class="min-w-[20rem] bg-blue-300 bg-opacity-60 border-r border-gray-500/50"
+  >
+    <div
+      class="flex flex-row md:flex-col justify-center align-middle lg:h-screen md:h-screen gap-2"
+    >
+      <div class="bg-white shadow-md py-4 hidden md:block">
+        <div class="bg-white shadow-md py-4 hidden md:block">
+          <div class="p-2 flex flex-col">
+            <ng-icon
+              class="text-5xl mt-2 text-blue-500 self-center"
+              name="bootstrapPersonCircle"
+            ></ng-icon>
+            <p
+              class="uppercase tracking-wide text-blue-500 font-semibold text-xl self-center"
+            >
+              Violator Profile
+            </p>
+            <p class="mt-2 text-black">
+              <strong>
+                NIC ID:
+                {{ (officerService.violater$ | async)?.NIC?.idNumber }}</strong
+              >
+            </p>
+            <p class="mt-2 text-gray-500">
+              <strong>Full Name:</strong>
+              {{ (officerService.violater$ | async)?.NIC?.firstName }}
+              {{ (officerService.violater$ | async)?.NIC?.surname }}
+            </p>
+            <p class="mt-2 text-gray-500">
+              <strong>Date of Birth:</strong>
+              {{ (officerService.violater$ | async)?.NIC?.dob | date }}
+            </p>
+            <p class="mt-2 text-gray-500">
+              <strong>Gender:</strong>
+              {{ (officerService.violater$ | async)?.NIC?.gender }}
+            </p>
+
+            <p class="mt-2 text-gray-500">
+              <strong>Earned Fine Score:</strong>
+              <span class="text-red-400 font-semibold">
+                {{ (officerService.violater$ | async)?.earnedScore }}</span
+              >
+            </p>
+
+            <p
+              class="mt-2 text-gray-500"
+              *ngIf="(officerService.violater$ | async)?.DrLicence"
+            >
+              <strong>Vehicles Permitted:</strong>
+              <span class="text-red-400 font-semibold">
+                {{
+                  (officerService.violater$ | async)?.DrLicence?.VehicleType
+                    ?.types
+                }}</span
+              >
+            </p>
+
+            <p class="mt-2 text-gray-500">
+              <strong>Address:</strong>
+            </p>
+            <p class="mt-2 ms-2 text-gray-500">
+              {{ (officerService.violater$ | async)?.NIC?.address1 }}
+            </p>
+            <p class="mt-2 ms-2 text-gray-500">
+              {{ (officerService.violater$ | async)?.NIC?.address2 }}
+            </p>
+            <p class="mt-2 ms-2 text-gray-500">
+              {{ (officerService.violater$ | async)?.NIC?.address3 }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="square-button"
+        (click)="redirectToDriver()"
+      >
+        <mat-icon>directions_car</mat-icon>Driver
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="square-button"
+        (click)="redirectToPedestrian()"
+      >
+        <mat-icon>directions_walk</mat-icon>Pedestrian
+      </button>
+
+      <button mat-raised-button color="primary" class="square-button">
+        <mat-icon>help</mat-icon>Help
+      </button>
+
+      <button
+        mat-flat-button
+        color="warn"
+        class="square-button"
+        (click)="goBack()"
+      >
+        <mat-icon>arrow_back</mat-icon>Go Back
+      </button>
+    </div>
+  </div>
+
+  <div class="w-[100vw] h-full border-l px-4 md:px-12">
+    <div class="flex flex-row">
+      <div class="flex flex-row w-full justify-between mt-4">
+        <div class="flex-col">
+          <p class="font-bold text-xl">All Cases</p>
+          <p class="text-sm text-green-500">Active Cases</p>
+        </div>
+
+        <div class="self-end flex flex-row gap-4 align-middle justify-center">
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Search" />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          <div class="my-2">
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="openAddCaseDialog()"
+            >
+              <mat-icon>add</mat-icon>Add
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table goes here -->
+    <div class="container mat-elevation-z8">
+      <table
+        mat-table
+        [dataSource]="(this.officerService.violaterFineRecords$ | async) || []"
+        class="mat-elevation-z8"
+        matSort
+        matSortActive="fine_date"
+        matSortDisableClear
+        matSortDirection="desc"
+      >
+        <!-- Fine ID Column -->
+        <ng-container matColumnDef="fine_id">
+          <th mat-header-cell *matHeaderCellDef>Fine ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.fineId }}</td>
+        </ng-container>
+
+        <!-- Offence Description Column -->
+        <ng-container matColumnDef="offence_description">
+          <th mat-header-cell *matHeaderCellDef>Offence</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.fineDescription }}
+          </td>
+        </ng-container>
+
+        <!-- Case/Fine Column -->
+        <ng-container matColumnDef="case_or_fine">
+          <th mat-header-cell *matHeaderCellDef>Case/Fine</th>
+          <td mat-cell *matCellDef="let element">Fine</td>
+        </ng-container>
+
+        <!-- Fined Date Column -->
+        <ng-container matColumnDef="fine_date">
+          <th mat-header-cell *matHeaderCellDef>Fined Date</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.fineDate | date : "dd/MM/yyyy" }}
+          </td>
+        </ng-container>
+
+        <!-- Fine Amount Column -->
+        <ng-container matColumnDef="fine_amount">
+          <th mat-header-cell *matHeaderCellDef>Fine Amount</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.totalFine }}
+          </td>
+        </ng-container>
+
+        <!-- Payment Column -->
+        <ng-container matColumnDef="payment_status">
+          <th mat-header-cell *matHeaderCellDef>Payment</th>
+          <td mat-cell *matCellDef="let element">
+            <span [ngClass]="element.isPaid ? 'paid' : 'unpaid'">
+              {{ element.isPaid ? "Paid" : "Unpaid" }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- No Results Found Row -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="6" class="text-center py-4">
+            No results found!
+          </td>
+        </tr>
+
+        <!-- Header and Row Declarations -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [length]="
+          (this.officerService.violaterFineRecords$ | async)?.length || 0
+        "
+        [pageSize]="10"
+        aria-label="Pagination for all cases"
+      ></mat-paginator>
+    </div>
+  </div>
+</div>

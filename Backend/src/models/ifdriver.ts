@@ -1,38 +1,42 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import sequelize from '../sequelize';
 
-interface IfDriverAttributes {
-  fine_ID: number;
-  vehicle: string;
+class IfDriver extends Model<InferAttributes<IfDriver>, InferCreationAttributes<IfDriver>> {
+    declare fineId: number;
+    declare vehicle: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+
+    static initModel(sequelize: any) {
+        IfDriver.init(
+            {
+                fineId: {
+                    type: DataTypes.INTEGER,
+                    primaryKey: true,
+                    allowNull: false,
+                },
+                vehicle: {
+                    type: DataTypes.CHAR(10),
+                    allowNull: false,
+                },
+                createdAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+                updatedAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'IfDrivers',
+                timestamps: true,
+            }
+        );
+    }
 }
 
-class IfDriver extends Model<IfDriverAttributes> implements IfDriverAttributes {
-  public fine_ID!: number;
-  public vehicle!: string;
-
-  static associate(models: any) {
-    IfDriver.belongsTo(models.FineRecord, {
-      foreignKey: 'fine_ID',
-      as: 'fineRecord',
-    });
-  }
-}
-
-export default (sequelize: Sequelize) => {
-  IfDriver.init({
-    fine_ID: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-    },
-    vehicle: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  }, {
-    sequelize,
-    modelName: 'IfDriver',
-    timestamps: true,
-  });
-
-  return IfDriver;
-};
+export default IfDriver;

@@ -1,6 +1,11 @@
 import express, { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
-import sequelize from './config/sequelize';
+
+// User Controller Routes
+import stationRoutes from './routes/station';
+import officerRoutes from './routes/officer';
+import citizenRoutes from './routes/citizen';
+import sequelize from './sequelize';
 
 const app = express();
 
@@ -20,11 +25,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   }
   next();
 });
-
-// User Controller Routes
-import stationRoutes from './routes/station';
-import officerRoutes from './routes/officer';
-import citizenRoutes from './routes/citizen';
 
 app.get("/api/v1/", (req: Request, res: Response) => {
   res.status(200).json({ message: "Hello, World!" });

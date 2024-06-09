@@ -1,51 +1,51 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, Sequelize } from 'sequelize';
+import sequelize from '../sequelize';
 
-interface StationAttributes {
-  station_ID: string;
-  username: string;
-  password: string;
-  location: string;
+class Station extends Model<InferAttributes<Station>, InferCreationAttributes<Station>> {
+    declare stationId: string;
+    declare username: string;
+    declare password: string;
+    declare location: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+
+    static initModel(sequelize: Sequelize) {
+        Station.init(
+            {
+                stationId: {
+                    type: DataTypes.CHAR(8),
+                    primaryKey: true,
+                    allowNull: false,
+                },
+                username: {
+                    type: DataTypes.STRING(15),
+                    allowNull: false,
+                },
+                password: {
+                    type: DataTypes.STRING(60),
+                    allowNull: false,
+                },
+                location: {
+                    type: DataTypes.STRING(512),
+                    allowNull: false,
+                },
+                createdAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+                updatedAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'Stations',
+                timestamps: true,
+            }
+        );
+    }
 }
-
-class Station extends Model<StationAttributes> implements StationAttributes {
-  public station_ID!: string;
-  public username!: string;
-  public password!: string;
-  public location!: string;
-
-  static associate(models: any) {
-    Station.hasMany(models.Officer, {
-      foreignKey: 'station_ID',
-      as: 'officers',
-    });
-  }
-}
-
-export default (sequelize: Sequelize) => {
-  Station.init({
-    station_ID: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      primaryKey: true,
-    },
-    username: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    location: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  }, {
-    sequelize,
-    modelName: 'Station',
-    timestamps: true,
-  });
-
-  return Station;
-};
+export default Station;

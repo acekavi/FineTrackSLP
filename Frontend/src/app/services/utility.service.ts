@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import { CustomSnackbarComponent } from '../shared/custom-snackbar/custom-snackbar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +15,19 @@ export class UtilityService {
   constructor(
     private cookieService: CookieService,
     private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   public setAuthorizationToken(token: string): void {
-    const decodedToken = jwtDecode<CustomJWTpayload>(token);
+    const decodedToken = this.decodeToken(token);
     const expiresAt = new Date(decodedToken.exp! * 1000);
 
     this.cookieService.set('userToken', token, expiresAt, '/', '', true, 'Strict');
+  }
+
+  public decodeToken(token: string): CustomJWTpayload {
+    const decodedToken = jwtDecode<CustomJWTpayload>(token);
+    return decodedToken;
   }
 
   public getAuthorizationToken(): string {
@@ -32,7 +39,7 @@ export class UtilityService {
   }
 
   public handleHttpError(error: HttpErrorResponse): void {
-    let message = error.error;
+    let message = error.error.message;
     if (error.error instanceof ErrorEvent) {
       message = error.error.message;
     } else if (error.status === 401) {
@@ -50,5 +57,10 @@ export class UtilityService {
       horizontalPosition: 'center',
       verticalPosition: 'top',
     });
+  }
+
+  public logoutUser(): void {
+    this.deleteAuthorizationToken();
+    this.router.navigate(['']);
   }
 }

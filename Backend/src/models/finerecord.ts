@@ -1,123 +1,108 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey, Sequelize } from 'sequelize';
+import { Citizen, Offence, Officer } from '.';
+import sequelize from '../sequelize';
 
-interface FineRecordAttributes {
-  fine_ID: number;
-  NIC: string;
-  total_fine: number;
-  total_score: number;
-  fine_date: Date;
-  fine_time: string;
-  location_name: string | null;
-  location_link: string;
-  isDriver: boolean;
-  officer_ID: number;
-  is_payed: boolean | null;
-  pay_reference_id: string | null;
+class FineRecord extends Model<InferAttributes<FineRecord>, InferCreationAttributes<FineRecord>> {
+    declare fineId: CreationOptional<number>;
+    declare nicNumber: ForeignKey<Citizen['nicNumber']>;
+    declare fineDescription: CreationOptional<string>;
+    declare totalFine: number;
+    declare totalScore: number;
+    declare fineDate: Date;
+    declare fineTime: string;
+    declare locationName: string | null;
+    declare locationLink: string;
+    declare isDriver: boolean;
+    declare officerId: ForeignKey<Officer['officerId']>;
+    declare isPaid: boolean | null;
+    declare payReferenceId: string | null;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+
+    public addOffences!: (offences: Offence[]) => Promise<void>;
+
+    static initModel(sequelize: Sequelize) {
+        FineRecord.init(
+            {
+                fineId: {
+                    type: DataTypes.INTEGER,
+                    primaryKey: true,
+                    autoIncrement: true,
+                    allowNull: false,
+                },
+                nicNumber: {
+                    type: DataTypes.CHAR(12),
+                    allowNull: false,
+                    references: {
+                        model: Citizen,
+                        key: 'nicNumber',
+                    },
+                },
+                fineDescription: {
+                    type: DataTypes.TEXT,
+                    allowNull: true,
+                },
+                totalFine: {
+                    type: DataTypes.DECIMAL(12, 2),
+                    allowNull: false,
+                },
+                totalScore: {
+                    type: DataTypes.DECIMAL(4, 2),
+                    allowNull: false,
+                },
+                fineDate: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                },
+                fineTime: {
+                    type: DataTypes.TIME,
+                    allowNull: false,
+                },
+                locationName: {
+                    type: DataTypes.STRING,
+                    allowNull: true,
+                },
+                locationLink: {
+                    type: DataTypes.STRING(512),
+                    allowNull: false,
+                },
+                isDriver: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                },
+                officerId: {
+                    type: DataTypes.INTEGER,
+                    allowNull: false,
+                    references: {
+                        model: Officer,
+                        key: 'officerId',
+                    },
+                },
+                isPaid: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: true,
+                },
+                payReferenceId: {
+                    type: DataTypes.TEXT,
+                    allowNull: true,
+                },
+                createdAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+                updatedAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'FineRecords',
+                timestamps: true,
+            }
+        );
+    }
 }
-
-class FineRecord extends Model<FineRecordAttributes> implements FineRecordAttributes {
-  public fine_ID!: number;
-  public NIC!: string;
-  public total_fine!: number;
-  public total_score!: number;
-  public fine_date!: Date;
-  public fine_time!: string;
-  public location_name!: string | null;
-  public location_link!: string;
-  public isDriver!: boolean;
-  public officer_ID!: number;
-  public is_payed!: boolean | null;
-  public pay_reference_id!: string | null;
-
-  static associate(models: any) {
-    FineRecord.belongsTo(models.Citizen, {
-      foreignKey: 'NIC',
-      as: 'citizen',
-    });
-    FineRecord.belongsTo(models.Officer, {
-      foreignKey: 'officer_ID',
-      as: 'officer',
-    });
-    FineRecord.hasMany(models.Evidence, {
-      foreignKey: 'fine_ID',
-      as: 'evidences',
-    });
-    FineRecord.hasMany(models.IfDriver, {
-      foreignKey: 'fine_ID',
-      as: 'ifDrivers',
-    });
-    FineRecord.hasMany(models.OffenceRecord, {
-      foreignKey: 'fine_ID',
-      as: 'offenceRecords',
-    });
-  }
-}
-
-export default (sequelize: Sequelize) => {
-  FineRecord.init({
-    fine_ID: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    NIC: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      references: {
-        model: 'Citizens',
-        key: 'NIC',
-      },
-    },
-    total_fine: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
-    },
-    total_score: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
-    },
-    fine_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    fine_time: {
-      type: DataTypes.TIME,
-      allowNull: false,
-    },
-    location_name: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    location_link: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    isDriver: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    officer_ID: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Officers',
-        key: 'officer_ID',
-      },
-    },
-    is_payed: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-    },
-    pay_reference_id: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-  }, {
-    sequelize,
-    modelName: 'FineRecord',
-    timestamps: true,
-  });
-
-  return FineRecord;
-};
+export default FineRecord;

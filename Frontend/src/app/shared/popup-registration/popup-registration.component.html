@@ -1,0 +1,163 @@
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="relative">
+  <mat-dialog-content
+    class="flex flex-col items-center justify-center space-y-4 gap-4"
+  >
+    <div class="w-full text-center">
+      <ng-icon class="text-6xl mt-2" name="bootstrapPersonCircle"></ng-icon>
+      <h2 class="text-2xl font-bold">Citizen Registration</h2>
+    </div>
+    <div class="flex flex-col gap-2">
+      <div class="flex flex-row gap-2 justify-between">
+        <mat-form-field appearance="fill">
+          <mat-label>NIC</mat-label>
+          <input
+            matInput
+            formControlName="nicNumber"
+            placeholder="NIC"
+            required
+          />
+          <mat-icon matSuffix>id_card</mat-icon>
+          <mat-hint>Enter NIC here</mat-hint>
+          <mat-error
+            *ngIf="registrationForm.get('nicNumber')?.hasError('required')"
+            >NIC is required</mat-error
+          >
+          <mat-error
+            *ngIf="
+              registrationForm.get('nicNumber')?.hasError('invalid') ||
+              registrationForm.get('nicNumber')?.hasError('pattern')
+            "
+            >Enter a valid NIC</mat-error
+          >
+          <mat-error
+            *ngIf="registrationForm.get('nicNumber')?.hasError('invalid')"
+            >Invalid NIC number</mat-error
+          >
+          <mat-error
+            *ngIf="registrationForm.get('nicNumber')?.hasError('alreadyExists')"
+            >NIC already exists</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            formControlName="username"
+            placeholder="Username"
+            required
+          />
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-hint>Enter username here</mat-hint>
+          <mat-error
+            *ngIf="registrationForm.get('username')?.hasError('required')"
+            >Username is required</mat-error
+          >
+          <mat-error
+            *ngIf="registrationForm.get('username')?.hasError('alreadyExists')"
+            >User already exist</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-row gap-2 justify-between">
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [type]="hide ? 'password' : 'text'"
+            placeholder="Password"
+            formControlName="password"
+            required
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="showPassword($event)"
+            type="button"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide"
+          >
+            <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+          <mat-hint>Enter password here</mat-hint>
+          <mat-error
+            *ngIf="registrationForm.get('password')?.hasError('required')"
+            >Password is required</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Confirm Password</mat-label>
+          <input
+            matInput
+            [type]="hideConPassword ? 'password' : 'text'"
+            placeholder="Confirm Password"
+            formControlName="conPassword"
+            required
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="showConPassword($event)"
+            type="button"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hideConPassword"
+          >
+            <mat-icon>{{
+              hideConPassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
+          <mat-hint>Confirm password here</mat-hint>
+          <mat-error
+            *ngIf="registrationForm.get('conPassword')?.hasError('required')"
+            >Password is required</mat-error
+          >
+          <mat-error
+            *ngIf="registrationForm.get('conPassword')?.hasError('notMatched')"
+            >Passwords do not match</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Mobile Number</mat-label>
+        <input
+          matInput
+          formControlName="mobile"
+          placeholder="0771234567"
+          required
+        />
+        <mat-icon matSuffix>dialpad</mat-icon>
+        <mat-hint>Enter Mobile Number here</mat-hint>
+        <mat-error *ngIf="registrationForm.get('mobile')?.hasError('required')"
+          >Mobile Number is required</mat-error
+        >
+        <mat-error *ngIf="registrationForm.get('mobile')?.hasError('pattern')"
+          >Enter a valid number</mat-error
+        >
+        <mat-error *ngIf="registrationForm.get('mobile')?.hasError('minlength')"
+          >Enter a valid number</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="flex flex-row justify-between w-full">
+    <button mat-button (click)="onCancelClick()" color="warn" type="reset">
+      Cancel
+    </button>
+    <button
+      mat-button
+      cdkFocusInitial
+      color="primary"
+      type="submit"
+      [disabled]="loading"
+    >
+      <div class="flex flex-row align-middle justify-center gap-2">
+        <ng-icon *ngIf="!loading" name="bootstrapPersonPlus"></ng-icon>
+        <p *ngIf="!loading">Register</p>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      </div>
+    </button>
+  </mat-dialog-actions>
+</form>

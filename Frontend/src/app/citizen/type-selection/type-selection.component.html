@@ -1,0 +1,31 @@
+<div
+  class="flex flex-row justify-center align-middle w-full gap-8 lg:mt-40 mt-10"
+>
+  <div>
+    <button
+      mat-flat-button
+      extended
+      matTooltip="Dashboard"
+      aria-label="Dashboard Button"
+      class="big-square-button"
+      (click)="navigateToDashboard()"
+    >
+      <ng-icon class="text-5xl" name="bootstrapBarChartLineFill"></ng-icon>
+      <p class="text-2xl font-bold">Dashboard</p>
+    </button>
+  </div>
+
+  <div>
+    <button
+      mat-flat-button
+      extended
+      matTooltip="Payments"
+      aria-label="Payments Button"
+      class="big-square-button"
+      (click)="navigateToPayments()"
+    >
+      <ng-icon class="text-5xl" name="bootstrapCreditCard2FrontFill"></ng-icon>
+      <p class="text-2xl font-bold">Payments</p>
+    </button>
+  </div>
+</div>

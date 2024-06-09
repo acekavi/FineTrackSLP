@@ -13,6 +13,15 @@ import {
     bootstrapPhone,
     bootstrapPersonCircle,
     bootstrapBoxArrowInRight,
+    bootstrapPersonPlus,
+    bootstrapCarFrontFill,
+    bootstrapPersonWalking,
+    bootstrapBank,
+    bootstrapClipboard2X,
+    bootstrapBarChartLineFill,
+    bootstrapCreditCard2FrontFill,
+    bootstrapReceipt,
+    bootstrapPlusCircle,
 } from '@ng-icons/bootstrap-icons';
 
 @NgModule({
@@ -30,6 +39,15 @@ import {
             bootstrapPhone,
             bootstrapPersonCircle,
             bootstrapBoxArrowInRight,
+            bootstrapPersonPlus,
+            bootstrapCarFrontFill,
+            bootstrapPersonWalking,
+            bootstrapBank,
+            bootstrapClipboard2X,
+            bootstrapBarChartLineFill,
+            bootstrapCreditCard2FrontFill,
+            bootstrapReceipt,
+            bootstrapPlusCircle,
         }),
     ],
     providers: [

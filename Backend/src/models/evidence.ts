@@ -1,41 +1,42 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, Sequelize } from 'sequelize';
+import sequelize from '../sequelize';
 
-interface EvidenceAttributes {
-  fine_ID: number;
-  evi_link: string;
+class Evidence extends Model<InferAttributes<Evidence>, InferCreationAttributes<Evidence>> {
+    declare fineId: number;
+    declare evidenceLink: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+
+    static initModel(sequelize: Sequelize) {
+        Evidence.init(
+            {
+                fineId: {
+                    type: DataTypes.INTEGER,
+                    primaryKey: true,
+                    allowNull: false,
+                },
+                evidenceLink: {
+                    type: DataTypes.STRING(512),
+                    allowNull: false,
+                },
+                createdAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+                updatedAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'Evidences',
+                timestamps: true,
+            }
+        );
+    }
 }
 
-class Evidence extends Model<EvidenceAttributes> implements EvidenceAttributes {
-  public fine_ID!: number;
-  public evi_link!: string;
-
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-
-  static associate(models: any) {
-    Evidence.belongsTo(models.FineRecord, {
-      foreignKey: 'fine_ID',
-      as: 'fineRecord',
-    });
-  }
-}
-
-export default (sequelize: Sequelize) => {
-  Evidence.init({
-    fine_ID: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-    },
-    evi_link: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  }, {
-    sequelize,
-    modelName: 'Evidence',
-    timestamps: true,
-  });
-
-  return Evidence;
-};
+export default Evidence;

@@ -1,56 +1,64 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, Sequelize } from 'sequelize';
+import sequelize from '../sequelize';
 
-interface OffenceAttributes {
-  offence_ID: number;
-  offence_description: string;
-  score: number;
-  enable_stat: boolean;
-  fee: number;
+class Offence extends Model<InferAttributes<Offence>, InferCreationAttributes<Offence>> {
+    declare offenceId: CreationOptional<number>;
+    declare offenceType: 'Driver' | 'Pedestrian';
+    declare description: string;
+    declare score: number;
+    declare enabled: boolean;
+    declare fee: number;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+
+    static initModel(sequelize: Sequelize) {
+        Offence.init(
+            {
+                offenceId: {
+                    type: DataTypes.INTEGER,
+                    primaryKey: true,
+                    autoIncrement: true,
+                    allowNull: false,
+                },
+                offenceType: {
+                    type: DataTypes.ENUM('Driver', 'Pedestrian'),
+                    allowNull: false,
+                    defaultValue: 'Driver',
+                },
+                description: {
+                    type: DataTypes.TEXT,
+                    allowNull: false,
+                },
+                score: {
+                    type: DataTypes.DECIMAL(4, 2),
+                    allowNull: false,
+                },
+                enabled: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: true,
+                },
+                fee: {
+                    type: DataTypes.DECIMAL(10, 2),
+                    allowNull: false,
+                },
+                createdAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+                updatedAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'Offences',
+                timestamps: true,
+            }
+        );
+    }
 }
-
-class Offence extends Model<OffenceAttributes> implements OffenceAttributes {
-  public offence_ID!: number;
-  public offence_description!: string;
-  public score!: number;
-  public enable_stat!: boolean;
-  public fee!: number;
-
-  static associate(models: any) {
-    Offence.hasMany(models.OffenceRecord, {
-      foreignKey: 'offence_ID',
-      as: 'offenceRecords',
-    });
-  }
-}
-
-export default (sequelize: Sequelize) => {
-  Offence.init({
-    offence_ID: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-    },
-    offence_description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    score: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
-    },
-    enable_stat: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    fee: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
-    },
-  }, {
-    sequelize,
-    modelName: 'Offence',
-    timestamps: true,
-  });
-
-  return Offence;
-};
+export default Offence;

@@ -1,36 +1,47 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey, Sequelize } from 'sequelize';
+import { Citizen } from '.';
+import sequelize from '../sequelize';
 
-interface FeedbackAttributes {
-  NIC: string;
-  feedback: string;
+class Feedback extends Model<InferAttributes<Feedback>, InferCreationAttributes<Feedback>> {
+    declare nicNumber: ForeignKey<Citizen['nicNumber']>;
+    declare feedback: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+
+    static initModel(sequelize: Sequelize) {
+        Feedback.init(
+            {
+                nicNumber: {
+                    type: DataTypes.CHAR(12),
+                    allowNull: false,
+                    references: {
+                        model: Citizen,
+                        key: 'nicNumber',
+                    },
+                    onDelete: 'CASCADE',
+                    onUpdate: 'CASCADE',
+                },
+                feedback: {
+                    type: DataTypes.TEXT,
+                    allowNull: false,
+                },
+                createdAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+                updatedAt: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    defaultValue: DataTypes.NOW,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'Feedbacks',
+                timestamps: true,
+            }
+        );
+    }
 }
-
-class Feedback extends Model<FeedbackAttributes> implements FeedbackAttributes {
-  public NIC!: string;
-  public feedback!: string;
-
-  static associate(models: any) {
-    Feedback.belongsTo(models.Citizen, {
-      foreignKey: 'NIC',
-      as: 'citizen',
-    });
-  }
-}
-
-export default (sequelize: Sequelize) => {
-  Feedback.init({
-    NIC: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    feedback: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-  }, {
-    sequelize,
-    modelName: 'Feedback',
-  });
-
-  return Feedback;
-};
+export default Feedback;

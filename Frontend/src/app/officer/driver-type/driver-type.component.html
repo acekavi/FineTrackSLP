@@ -1,0 +1,67 @@
+<form form [formGroup]="driverForm" (ngSubmit)="onSubmit()">
+  <div
+    class="flex md:flex-row md:gap-8 flex-col gap-4 justify-center align-middle w-full"
+  >
+    <div>
+      <p class="text-lg text-white">Enter NIC Number</p>
+      <mat-form-field class="w-80">
+        <mat-label>NIC Number</mat-label>
+        <input matInput placeholder="123456789v" formControlName="nicNumber" />
+        <mat-error
+          *ngIf="
+            driverForm.get('nicNumber')?.hasError('invalid') ||
+            driverForm.get('nicNumber')?.hasError('pattern')
+          "
+          >Invalid NIC Number</mat-error
+        >
+
+        <mat-error *ngIf="driverForm.get('nicNumber')?.hasError('required')"
+          >Either NIC or Licence is required to proceed</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div>
+      <p class="text-lg text-white">Enter Driving License Number</p>
+      <mat-form-field class="w-80">
+        <mat-label>License Number</mat-label>
+        <input
+          matInput
+          placeholder="12345678"
+          required="true"
+          formControlName="licenceNumber"
+        />
+        <mat-error
+          *ngIf="
+            driverForm.get('licenceNumber')?.hasError('invalid') ||
+            driverForm.get('licenceNumber')?.hasError('pattern')
+          "
+          >Invalid Licence Number</mat-error
+        >
+        <mat-error *ngIf="driverForm.get('licenceNumber')?.hasError('required')"
+          >Either NIC or Licence is required to proceed</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div
+    class="flex flex-col lg:flex-row w-full px-32 lg:px-0 justify-center align-middle gap-4 mt-16"
+  >
+    <button
+      mat-flat-button
+      color="accent"
+      extended
+      matTooltip="Proceed"
+      aria-label="Login Button"
+      type="submit"
+      [disabled]="loading"
+    >
+      <div class="flex flex-row align-middle justify-center gap-2">
+        <ng-icon *ngIf="!loading" name="bootstrapBoxArrowInRight"></ng-icon>
+        <p *ngIf="!loading">Proceed</p>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      </div>
+    </button>
+  </div>
+</form>

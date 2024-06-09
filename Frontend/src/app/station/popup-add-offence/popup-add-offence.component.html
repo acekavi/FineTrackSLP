@@ -1,0 +1,94 @@
+<form [formGroup]="offenceAddForm" (ngSubmit)="onSubmit()" class="relative">
+  <mat-dialog-content
+    class="flex flex-col items-center justify-center space-y-4 gap-4"
+  >
+    <div class="w-full text-center">
+      <h2 class="text-2xl font-bold">Add New Offence</h2>
+    </div>
+    <div class="flex flex-col gap-2">
+      <div class="flex flex-row gap-2 justify-between">
+        <mat-form-field class="w-full">
+          <mat-label>Offence Types</mat-label>
+          <mat-select [(value)]="selectedOffence">
+            <mat-option value="Pedestrian">Pedestrian</mat-option>
+            <mat-option value="Driver">Driver</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          placeholder="Description"
+          required
+        ></textarea>
+        <mat-hint>Enter Description here</mat-hint>
+        <mat-error
+          *ngIf="offenceAddForm.get('description')?.hasError('required')"
+          >Description is required</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Score</mat-label>
+        <input
+          matInput
+          formControlName="score"
+          placeholder="5"
+          type="number"
+          required
+        />
+        <mat-hint>Enter Score here</mat-hint>
+        <mat-error *ngIf="offenceAddForm.get('score')?.hasError('required')"
+          >Score is required</mat-error
+        >
+        <mat-error *ngIf="offenceAddForm.get('score')?.hasError('min')"
+          >Score should be greater than 0</mat-error
+        >
+        <mat-error *ngIf="offenceAddForm.get('score')?.hasError('max')"
+          >Score should be lower than 100</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Fee in lkr</mat-label>
+        <input
+          matInput
+          formControlName="fee"
+          placeholder="2500"
+          type="number"
+          required
+        />
+        <mat-hint>Enter Fee here</mat-hint>
+        <mat-error *ngIf="offenceAddForm.get('fee')?.hasError('required')"
+          >Fee is required</mat-error
+        >
+        <mat-error *ngIf="offenceAddForm.get('fee')?.hasError('min')"
+          >Fee should be greater than 0</mat-error
+        >
+      </mat-form-field>
+
+      <div class="flex flex-row gap-2 justify-between"></div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="flex flex-row justify-between w-full">
+    <button mat-button (click)="onCancelClick()" color="warn" type="reset">
+      Cancel
+    </button>
+    <button
+      mat-button
+      cdkFocusInitial
+      color="primary"
+      type="submit"
+      [disabled]="loading"
+    >
+      <div class="flex flex-row align-middle justify-center gap-2">
+        <ng-icon *ngIf="!loading" name="bootstrapPlusCircle"></ng-icon>
+        <p *ngIf="!loading">Add Offence</p>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      </div>
+    </button>
+  </mat-dialog-actions>
+</form>

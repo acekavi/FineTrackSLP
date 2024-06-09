@@ -29,7 +29,6 @@ export class RoleSelectionComponent {
       if (result === 'cancel') {
         return;
       }
-      console.log(result);
     });
   }
   onBackClick(): void {

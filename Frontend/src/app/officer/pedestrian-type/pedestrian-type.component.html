@@ -1,0 +1,66 @@
+<form form [formGroup]="pedForm" (ngSubmit)="onSubmit()">
+  <div
+    class="flex md:flex-row md:gap-8 flex-col gap-4 justify-center align-middle w-full"
+  >
+    <div>
+      <p class="text-lg text-white">Enter NIC Number</p>
+      <mat-form-field class="w-80">
+        <mat-label>NIC Number</mat-label>
+        <input matInput placeholder="123456789v" formControlName="nicNumber" />
+        <mat-error
+          *ngIf="
+            pedForm.get('nicNumber')?.hasError('invalid') ||
+            pedForm.get('nicNumber')?.hasError('pattern')
+          "
+          >Invalid NIC Number</mat-error
+        >
+        <mat-error *ngIf="pedForm.get('nicNumber')?.hasError('required')"
+          >Either NIC or Passport is required to proceed</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div>
+      <p class="text-lg text-white">Enter Passport Number</p>
+
+      <mat-form-field class="w-80">
+        <mat-label>Passport Number</mat-label>
+        <input
+          matInput
+          placeholder="N1234567"
+          formControlName="passport_number"
+        />
+        <mat-error
+          *ngIf="
+            pedForm.get('passport_number')?.hasError('invalid') ||
+            pedForm.get('passport_number')?.hasError('pattern')
+          "
+          >Invalid Passport Number</mat-error
+        >
+        <mat-error *ngIf="pedForm.get('passport_number')?.hasError('required')"
+          >Either NIC or Passport is required to proceed</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div
+    class="flex flex-col lg:flex-row w-full px-32 lg:px-0 justify-center align-middle gap-4 mt-16"
+  >
+    <button
+      mat-flat-button
+      color="accent"
+      extended
+      matTooltip="Proceed"
+      aria-label="Login Button"
+      type="submit"
+      [disabled]="loading"
+    >
+      <div class="flex flex-row align-middle justify-center gap-2">
+        <ng-icon *ngIf="!loading" name="bootstrapBoxArrowInRight"></ng-icon>
+        <p *ngIf="!loading">Proceed</p>
+        <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      </div>
+    </button>
+  </div>
+</form>

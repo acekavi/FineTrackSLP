@@ -1,0 +1,74 @@
+<div class="flex flex-col md:flex-row">
+  <div
+    class="min-w-[20rem] bg-blue-300 bg-opacity-60 border-r border-gray-500/50"
+  >
+    <div
+      class="flex flex-row md:flex-col justify-center align-middle lg:h-screen md:h-screen gap-2"
+    >
+      <div class="bg-white shadow-md py-4 hidden md:block">
+        <div class="p-2 flex flex-col">
+          <ng-icon
+            class="text-5xl mt-2 text-blue-500 self-center"
+            name="bootstrapBank"
+          ></ng-icon>
+          <p
+            class="uppercase tracking-wide text-blue-500 font-semibold text-xl self-center"
+          >
+            Station Details
+          </p>
+          <p class="mt-2 text-black">
+            <strong
+              >Location:
+              {{
+                (stationService.stationUser$ | async)?.location?.toUpperCase()
+              }}</strong
+            >
+          </p>
+          <p class="mt-2 text-gray-500">
+            <strong> Station ID:</strong>
+            {{ (stationService.stationUser$ | async)?.stationId }}
+          </p>
+          <p class="mt-2 text-gray-500">
+            <strong>Username:</strong>
+            {{ (stationService.stationUser$ | async)?.username }}
+          </p>
+        </div>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="square-button"
+        routerLink="officers"
+      >
+        <mat-icon>local_police</mat-icon>Officers
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="square-button"
+        routerLink="cases"
+      >
+        <mat-icon>gavel</mat-icon>Cases
+      </button>
+
+      <button mat-raised-button color="primary" class="square-button">
+        <mat-icon>help</mat-icon>Help
+      </button>
+
+      <button
+        mat-flat-button
+        color="warn"
+        class="square-button"
+        (click)="logOut()"
+      >
+        <mat-icon>logout</mat-icon>Logout
+      </button>
+    </div>
+  </div>
+
+  <div class="w-[100vw] h-full border-l px-4 md:px-12">
+    <router-outlet></router-outlet>
+  </div>
+</div>
