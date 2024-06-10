@@ -253,17 +253,12 @@ export const add_fine_record = async (req: RequestWithUser, res: Response) => {
             where: { offenceId: { [Op.in]: offenceIds } }
         });
 
-        let totalFine = 0;
-        let totalScore = 0;
         const fineDate = new Date();
         const fineTime = fineDate.toTimeString().split(' ')[0];
 
-        offences.forEach(offence => {
-            totalFine += parseFloat(offence.fee.toString());
-            totalScore += parseFloat(offence.score.toString());
-        });
-
-        totalScore = Math.min(totalScore, 99);
+        const totalFine = offences.reduce((sum, offence) => sum + parseFloat(offence.fee.toString()), 0);
+        let totalScore = offences.reduce((sum, offence) => sum + parseFloat(offence.score.toString()), 0);
+        totalScore = Math.min(totalScore, 99);  // Ensure totalScore does not exceed 99
         const averageScore = totalScore / offences.length;
 
         const officer = await Officer.findOne({
@@ -271,10 +266,23 @@ export const add_fine_record = async (req: RequestWithUser, res: Response) => {
             attributes: ['officerId']
         });
 
-        const fineRecordCount = await FineRecord.count({ where: { nicNumber: citizen.nicNumber } }) ?? 1;
+        const fineRecords = await FineRecord.findAll({
+            where: { nicNumber: citizen.nicNumber },
+            include: [
+                {
+                    model: Offence,
+                    through: {
+                        attributes: []
+                    },
+                    attributes: ['description', 'fee', 'score']
+                }
+            ]
+        });
 
-        let newAverageScore = (citizen.earnedScore * fineRecordCount + totalScore) / (fineRecordCount + 1);
-        newAverageScore = Math.min(newAverageScore, 99);
+        // @ts-ignore
+        const totalOffencesCount = fineRecords.reduce((count, fineRecord) => count + fineRecord.Offences.length, 0);
+        let newAverageScore = (citizen.earnedScore + totalScore) / (totalOffencesCount + offences.length + 1);
+        newAverageScore = Math.min(newAverageScore, 99);  // Ensure newAverageScore does not exceed 99
 
         await citizen.update({ earnedScore: newAverageScore });
 
