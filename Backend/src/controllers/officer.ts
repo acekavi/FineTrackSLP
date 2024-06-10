@@ -246,7 +246,7 @@ export const add_fine_record = async (req: RequestWithUser, res: Response) => {
         let citizen = await Citizen.findOne({ where: { nicNumber } });
 
         if (!citizen) {
-            citizen = await Citizen.create({ nicNumber });
+            citizen = await Citizen.create({ nicNumber, earnedScore: 0 });
         }
 
         const offences = await Offence.findAll({
@@ -281,10 +281,10 @@ export const add_fine_record = async (req: RequestWithUser, res: Response) => {
 
         // @ts-ignore
         const totalOffencesCount = fineRecords.reduce((count, fineRecord) => count + fineRecord.Offences.length, 0);
-        let newAverageScore = (citizen.earnedScore + totalScore) / (totalOffencesCount + offences.length + 1);
+        let newAverageScore = (parseFloat(citizen.earnedScore.toString()) + totalScore) / (totalOffencesCount + offences.length);
         newAverageScore = Math.min(newAverageScore, 99);  // Ensure newAverageScore does not exceed 99
 
-        await citizen.update({ earnedScore: newAverageScore });
+        await citizen.update({ earnedScore: parseFloat(newAverageScore.toFixed(2)) });
 
         const fineRecord = await FineRecord.create({
             nicNumber,
