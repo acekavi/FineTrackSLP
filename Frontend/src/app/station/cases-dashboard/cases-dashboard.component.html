@@ -38,13 +38,23 @@
     ></canvas>
   </div>
 
-  <div class="chart-item full-width">
+  <div class="chart-item">
     <p class="chart-title">Fines Distribution by Day</p>
     <canvas
       baseChart
       [data]="pieChartData"
       [type]="'pie'"
       [options]="pieChartOptions"
+    ></canvas>
+  </div>
+
+  <div class="chart-item">
+    <p class="chart-title">Fines by Location</p>
+    <canvas
+      baseChart
+      [data]="polarAreaChartData"
+      [type]="'polarArea'"
+      [options]="polarAreaChartOptions"
     ></canvas>
   </div>
 </div>

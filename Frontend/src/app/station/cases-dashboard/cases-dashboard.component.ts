@@ -1,14 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
-import { StationService } from 'src/app/services/station.service';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChartConfiguration, ChartData, ChartDataset } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { MatUiModule } from 'src/app/modules/matui.module';
 import { IconsModule } from 'src/app/modules/icons.module';
+import { StationService } from 'src/app/services/station.service';
+import { FineRecordWithOffences } from 'src/global-types';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupAddOffenceComponent } from '../popup-add-offence/popup-add-offence.component';
-import { FineRecord, FineRecordWithOffences } from 'src/global-types';
 
 @Component({
   selector: 'app-cases-dashboard',
@@ -23,34 +22,48 @@ import { FineRecord, FineRecordWithOffences } from 'src/global-types';
   styleUrls: ['./cases-dashboard.component.scss']
 })
 export class CasesDashboardComponent implements OnInit {
-  @ViewChild(BaseChartDirective) barChart: BaseChartDirective<'bar'> | undefined;
-  @ViewChild(BaseChartDirective) pieChart: BaseChartDirective<'pie'> | undefined;
-  @ViewChild(BaseChartDirective) lineChart: BaseChartDirective<'line'> | undefined;
 
-  constructor(public stationService: StationService,
-    private cdRef: ChangeDetectorRef,
+  lineChartDataset: number[][] = [[], []];
+  barChartDataset: number[] = [];
+  pieChartDataset: number[] = [];
+
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+
+  constructor(
+    private stationService: StationService,
     private dialog: MatDialog,
   ) {
     this.stationService.loadStationFromServer();
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.stationService.fineRecords$.subscribe((fineRecords: FineRecordWithOffences[]) => {
-      this.updateLineChartData(fineRecords);
-      this.updatePieChartData(fineRecords);
-      this.updateBarChartData(fineRecords);
+      this.lineChartDataset = this.updateLineChartData(fineRecords);
+      this.pieChartDataset = this.updatePieChartData(fineRecords);
+      this.barChartDataset = this.updateBarChartData(fineRecords);
+      this.polarAreaChartData = this.updatePolarAreaChartData(fineRecords);
+      this.updateChartData();
     });
   }
 
+  updateChartData() {
+    // Line Chart
+    this.lineChartData.datasets[0].data = this.lineChartDataset[0];
+    this.lineChartData.datasets[1].data = this.lineChartDataset[1];
 
-  refreshDashboard() {
-    this.lineChart?.update();
-    this.pieChart?.update();
-    this.barChart?.update();
-    this.cdRef.detectChanges();
+    // Pie Chart
+    this.pieChartData.datasets[0].data = this.pieChartDataset;
+
+    // Bar Chart
+    this.barChartData.datasets[0].data = this.barChartDataset;
+
+    // Trigger chart update
+    if (this.chart) {
+      this.chart.update();
+    }
   }
 
-  updateLineChartData(fineRecords: FineRecordWithOffences[]) {
+  updateLineChartData(fineRecords: FineRecordWithOffences[]): number[][] {
     let driverFinesAccordingToMonth = Array(12).fill(0);
     let pedestrianFinesAccordingToMonth = Array(12).fill(0);
 
@@ -66,27 +79,22 @@ export class CasesDashboardComponent implements OnInit {
       }
     });
 
-    this.lineChartData.datasets[0].data = driverFinesAccordingToMonth;
-    this.lineChartData.datasets[1].data = pedestrianFinesAccordingToMonth;
-    this.lineChart?.update();
-    this.cdRef.detectChanges();
+    return [driverFinesAccordingToMonth, pedestrianFinesAccordingToMonth];
   }
 
-  updatePieChartData(fineRecords: FineRecordWithOffences[]) {
+  updatePieChartData(fineRecords: FineRecordWithOffences[]): number[] {
     let finesByDay = Array(7).fill(0);
 
     fineRecords.forEach(fineRecord => {
       const date = new Date(fineRecord.createdAt);
-      const day = date.getDay();  // Get the day of the week (0 - Sunday, 6 - Saturday)
+      const day = date.getDay();
       finesByDay[day]++;
     });
 
-    this.pieChartData.datasets[0].data = finesByDay;
-    this.pieChart?.update();
-    this.cdRef.detectChanges();
+    return finesByDay;
   }
 
-  updateBarChartData(fineRecords: FineRecordWithOffences[]) {
+  updateBarChartData(fineRecords: FineRecordWithOffences[]): number[] {
     let sueCasesByDay = Array(7).fill(0);
     const now = new Date();
 
@@ -100,27 +108,43 @@ export class CasesDashboardComponent implements OnInit {
       }
     });
 
-    this.barChartData.datasets[0].data = sueCasesByDay;
-    this.barChart?.update();
-    this.cdRef.detectChanges();
+    return sueCasesByDay;
   }
 
-  addOffenceDialog() {
-    const dialogRef = this.dialog.open(PopupAddOffenceComponent, {
-      disableClose: true
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 'cancel') {
-        return;
+  updatePolarAreaChartData(fineRecords: FineRecordWithOffences[]): ChartData<'polarArea'> {
+    const finesByLocation: { [key: string]: number } = {};
+
+    fineRecords.forEach(fineRecord => {
+      const locationName = fineRecord.locationName || 'Unknown';
+      if (!finesByLocation[locationName]) {
+        finesByLocation[locationName] = 0;
       }
+      finesByLocation[locationName]++;
     });
+
+    const labels = Object.keys(finesByLocation);
+    const data = Object.values(finesByLocation);
+
+    return {
+      labels,
+      datasets: [
+        {
+          data,
+          label: 'Fines by Location',
+        }
+      ]
+    };
+  }
+
+  refreshDashboard() {
+    console.log('Data Refreshed');
   }
 
   // Line Chart
   public lineChartData: ChartConfiguration['data'] = {
     datasets: [
       {
-        data: [30, 25, 45, 50, 55, 60, 70, 75, 80, 85, 90, 95],
+        data: this.lineChartDataset[0],
         label: 'Total Driver Fines',
         backgroundColor: 'rgba(54,162,235,0.2)',
         borderColor: 'rgba(54,162,235,1)',
@@ -131,7 +155,7 @@ export class CasesDashboardComponent implements OnInit {
         fill: 'origin',
       },
       {
-        data: [15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70],
+        data: this.lineChartDataset[1],
         label: 'Total Pedestrian Fines',
         backgroundColor: 'rgba(255,99,132,0.2)',
         borderColor: 'rgba(255,99,132,1)',
@@ -166,7 +190,7 @@ export class CasesDashboardComponent implements OnInit {
     labels: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     datasets: [
       {
-        data: [4, 5, 8, 1, 0, 9, 3],
+        data: this.pieChartDataset,
         backgroundColor: [
           'rgba(255,99,132,0.2)',
           'rgba(54,162,235,0.2)',
@@ -200,7 +224,14 @@ export class CasesDashboardComponent implements OnInit {
   };
 
   // Bar Chart
-  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
+  public barChartData: ChartConfiguration['data'] = {
+    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+    datasets: [
+      { data: this.barChartDataset, label: 'Upcoming Sue Cases' },
+    ],
+  };
+
+  public barChartOptions: ChartConfiguration['options'] = {
     scales: {
       x: {},
       y: {
@@ -214,10 +245,30 @@ export class CasesDashboardComponent implements OnInit {
     },
   };
 
-  public barChartData: ChartData<'bar'> = {
-    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
-    datasets: [
-      { data: [3, 5, 4, 1, 8, 7, 3], label: 'Upcoming Sue Cases' },
-    ],
+  // Polar Area Chart
+  public polarAreaChartData: ChartData<'polarArea'> = {
+    labels: [],
+    datasets: [],
   };
+
+  public polarAreaChartOptions: ChartConfiguration<'polarArea'>['options'] = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
+  };
+
+
+  addOffenceDialog() {
+    const dialogRef = this.dialog.open(PopupAddOffenceComponent, {
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'cancel') {
+        return;
+      }
+    });
+  }
 }
