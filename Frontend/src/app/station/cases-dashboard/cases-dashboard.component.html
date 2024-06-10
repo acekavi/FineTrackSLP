@@ -17,11 +17,44 @@
   </div>
 </div>
 
-<div class="mt-4">
-  <canvas
-    baseChart
-    [data]="lineChartData"
-    [options]="lineChartOptions"
-    [type]="'line'"
-  ></canvas>
+<div class="charts-container">
+  <div class="chart-item">
+    <p class="chart-title">Upcoming Sue Cases</p>
+    <canvas
+      baseChart
+      [data]="barChartData"
+      [type]="'bar'"
+      [options]="barChartOptions"
+    ></canvas>
+  </div>
+
+  <div class="chart-item">
+    <p class="chart-title">Total Fines by Month</p>
+    <canvas
+      baseChart
+      [data]="lineChartData"
+      [type]="'line'"
+      [options]="lineChartOptions"
+    ></canvas>
+  </div>
+
+  <div class="chart-item">
+    <p class="chart-title">Fines Distribution by Day</p>
+    <canvas
+      baseChart
+      [data]="pieChartData"
+      [type]="'pie'"
+      [options]="pieChartOptions"
+    ></canvas>
+  </div>
+
+  <div class="chart-item">
+    <p class="chart-title">Fines by Location</p>
+    <canvas
+      baseChart
+      [data]="polarAreaChartData"
+      [type]="'polarArea'"
+      [options]="polarAreaChartOptions"
+    ></canvas>
+  </div>
 </div>

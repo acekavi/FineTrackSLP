@@ -48,6 +48,7 @@ export class StationService {
     this.fetchStationUser().subscribe({
       next: (user: Station) => {
         this.stationUserSubject.next(user);
+        this.loadFineRecords();
       },
       error: (error: HttpErrorResponse) => {
         this.utilityService.handleHttpError(error);
@@ -101,10 +102,11 @@ export class StationService {
     );
   }
 
-  public loadFineRecords(): void {
+  private loadFineRecords(): void {
     const fineRecordsUrl = `${this.apiUrl}/station/fine-records`;
     this.http.get<FineRecordWithOffences[]>(fineRecordsUrl).subscribe({
       next: (fineRecords: FineRecordWithOffences[]) => {
+        console.log(fineRecords);
         this.fineRecordsSubject.next(fineRecords);
       },
       error: (error: HttpErrorResponse) => {
