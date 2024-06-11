@@ -52,7 +52,7 @@ export class PopupAddFineComponent implements OnInit {
     this.finesForm = this.formBuilder.group({
       fineDescription: [''],
       location: ['', [Validators.required]],
-      locationLink: ['', [Validators.required]],
+      locationLink: [''],
     });
   }
 

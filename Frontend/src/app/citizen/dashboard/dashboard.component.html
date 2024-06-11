@@ -50,8 +50,9 @@
             <strong>Vehicles Permitted:</strong>
             <span class="text-red-400 font-semibold">
               {{
-                (citizenService.citizenUser$ | async)?.DrLicence?.VehicleType
-                  ?.types
+                (
+                  citizenService.citizenUser$ | async
+                )?.DrLicence?.VehicleType?.types?.sort()
               }}</span
             >
           </p>

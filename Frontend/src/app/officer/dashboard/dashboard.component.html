@@ -51,8 +51,9 @@
               <strong>Vehicles Permitted:</strong>
               <span class="text-red-400 font-semibold">
                 {{
-                  (officerService.violater$ | async)?.DrLicence?.VehicleType
-                    ?.types
+                  (
+                    officerService.violater$ | async
+                  )?.DrLicence?.VehicleType?.types?.sort()
                 }}</span
               >
             </p>

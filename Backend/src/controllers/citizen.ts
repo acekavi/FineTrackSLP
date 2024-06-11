@@ -178,7 +178,6 @@ export const get_fine_records = async (req: RequestWithUser, res: Response) => {
 
         return res.status(200).json(violations);
 
-        return res.status(200).json(violations);
     } catch (error) {
         console.log(error);
         return res.status(500).json({

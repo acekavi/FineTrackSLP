@@ -95,16 +95,16 @@ export class CasesDashboardComponent implements OnInit {
   }
 
   updateBarChartData(fineRecords: FineRecordWithOffences[]): number[] {
-    let sueCasesByDay = Array(7).fill(0);
+    let sueCasesByDay = Array(15).fill(0);
     const now = new Date();
 
     fineRecords.forEach(fineRecord => {
       const fineDate = new Date(fineRecord.fineDate);
-      const diffDays = Math.floor((now.getTime() - fineDate.getTime()) / (1000 * 60 * 60 * 24));
+      const diffTime = fineDate.getTime() - now.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-      if (diffDays >= 14 && diffDays < 21) {
-        const day = (diffDays - 14) % 7;
-        sueCasesByDay[day]++;
+      if (diffDays >= -14 && diffDays <= 0) {
+        sueCasesByDay[14 + diffDays]++;
       }
     });
 
@@ -224,8 +224,15 @@ export class CasesDashboardComponent implements OnInit {
   };
 
   // Bar Chart
+  // Generating labels for the next 15 days
+  UpcomingSueCasesLabels = Array.from({ length: 15 }, (_, i) => {
+    let date = new Date();
+    date.setDate(date.getDate() + i);
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  });
+
   public barChartData: ChartConfiguration['data'] = {
-    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+    labels: this.UpcomingSueCasesLabels,
     datasets: [
       { data: this.barChartDataset, label: 'Upcoming Sue Cases' },
     ],
