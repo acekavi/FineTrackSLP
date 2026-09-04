@@ -2,6 +2,7 @@ import NIC from './nic';
 import Evidence from './evidence';
 import Feedback from './feedback';
 import Offence from './offence';
+import OffenceFee from './offencefee';
 import Station from './station';
 import Officer from './officer';
 import FineRecord from './finerecord';
@@ -20,6 +21,7 @@ Evidence.initModel(sequelize);
 Feedback.initModel(sequelize);
 IfDriver.initModel(sequelize);
 Offence.initModel(sequelize);
+OffenceFee.initModel(sequelize);
 Station.initModel(sequelize);
 Officer.initModel(sequelize);
 FineRecord.initModel(sequelize);
@@ -48,6 +50,9 @@ FineRecord.hasMany(OffenceRecord, { foreignKey: 'fineId', onDelete: 'CASCADE', o
 OffenceRecord.belongsTo(Offence, { foreignKey: 'offenceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 Offence.hasMany(OffenceRecord, { foreignKey: 'offenceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
+OffenceFee.belongsTo(Offence, { foreignKey: 'offenceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Offence.hasMany(OffenceFee, { foreignKey: 'offenceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
 FineRecord.belongsToMany(Offence, { through: OffenceRecord, foreignKey: 'fineId' });
 Offence.belongsToMany(FineRecord, { through: OffenceRecord, foreignKey: 'offenceId' });
 
@@ -72,5 +77,6 @@ export {
   Officer,
   FineRecord,
   OffenceRecord,
+  OffenceFee,
   VehicleType,
 };
